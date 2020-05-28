@@ -3,14 +3,17 @@ from flask import Flask, send_from_directory, redirect
 
 app = Flask(__name__)
 
+VIEWS = ('home', 'planner')  # TODO any reason why doing this is wrong?
+
 
 @app.route("/")
 def index():
-    return redirect("/app/index.html")
+    return redirect("/app/home")
 
 
 @app.route('/app/<path:path>')
 def web_root(path):
+    path = 'index.html' if path in VIEWS else path
     return send_from_directory("web", path)
 
 
@@ -20,4 +23,4 @@ def api():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
