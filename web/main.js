@@ -93,9 +93,6 @@ const renderApp = () => {
 const addEventListeners = () => {
     // redirects
     $('[data-rd]').click(redirectTo);
-    $(".foobarbaz").click(() => {
-        apiTest().then(alert, alert)
-    });
     addPlannerEvents(STATE);  // TODO maybe only call view specific events ?
 
 };
