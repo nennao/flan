@@ -1,4 +1,5 @@
 import { MACRO_CAL_MAP, MEAL_PLAN_BY_DAY, MEAL_PLAN_CALS, MEAL_PLAN_MACROS } from "./mealplan_config.js";
+import Api from './api.js'
 
 
 const _createPlanCreatorGrid = state => {
@@ -110,6 +111,10 @@ const addPlannerModalEvents = state => {
         const data = updatePlannerModalData(newState);
         state._update({plannerModal: { ...newState, data }})
     });
+
+    $("#generatePlan").click(() => {
+        Api.generatePlan(state.plannerModal.data)
+    })
 };
 
 
@@ -153,7 +158,7 @@ export const renderPlanner = () => {  // TODO this naming might be confusing (re
               </div>
               <div class="modal-footer">
                 <!-- TODO disable this button based on invalid data (might have to move to dynamic section) -->
-                <button type="button" class="btn btn-primary btn-lg">Generate Plan</button>
+                <button type="button" id="generatePlan" class="btn btn-primary btn-lg">Generate Plan</button>
               </div>
             </div>
           </div>
