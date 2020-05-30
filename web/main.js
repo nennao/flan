@@ -1,3 +1,5 @@
+import { apiTest } from "./api.js"
+
 let STATE = {};
 
 const INITIAL_STATE = {
@@ -53,6 +55,8 @@ const renderHome = () => {
         <button class="btn btn-outline-primary btn-lg btn-block" data-rd="${PLANNER}">Meal Planner</button>
         <button class="btn btn-outline-primary btn-lg btn-block">Daily Tracker</button>
         <button class="btn btn-outline-primary btn-lg btn-block">Weekly Tracker</button>
+
+        <button class="btn btn-outline-primary btn-lg btn-block foobarbaz">get me a recipe dawg</button>
     `
 };
 
@@ -87,6 +91,11 @@ const renderApp = () => {
 const addEventListeners = () => {
     // redirects
     $('[data-rd]').click(redirectTo);
+    
+    $(".foobarbaz").click(() => {
+        apiTest().then(alert, alert)
+    })
+    
     addPlannerEvents();  // TODO maybe only call view specific events ?
 
 };
