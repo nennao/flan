@@ -5,7 +5,10 @@ import { avg } from "./utils.js"
 =======
 import { MACRO_CAL_MAP, MEAL_PLAN_BY_DAY, MEAL_PLAN_CALS, MEAL_PLAN_MACROS } from "./mealplan_config.js";
 import Api from './api.js'
+<<<<<<< HEAD
 >>>>>>> generate plan button and real api response and improved database scripts
+=======
+>>>>>>> 8b7c19864f9d791160c19d571c6bf943da7c4ccd
 
 
 const _createPlanCreatorGrid = state => {
@@ -120,7 +123,10 @@ const addPlannerModalEvents = state => {
         state._update({plannerModal: { ...newState, data }})
     });
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 8b7c19864f9d791160c19d571c6bf943da7c4ccd
 
     $("#generatePlan").click(() => {
         Api.generatePlan(state.plannerModal.data)
