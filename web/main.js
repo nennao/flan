@@ -1,5 +1,4 @@
 import { renderPlanner, renderPlannerModal, addPlannerEvents, getPlans } from "./planner.js";
-import { apiTest } from "./api.js"
 
 let STATE = {};
 
