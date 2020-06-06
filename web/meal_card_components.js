@@ -1,5 +1,5 @@
 import { MACROS } from "./mealplan_config.js";
-import { sum, avg } from "./utils.js"
+import { sum, avg, percent, strMap } from "./utils.js"
 
 export const PLAN_BUFFER = 40;  // px
 
@@ -17,24 +17,24 @@ const caloriesCard = (id, d, i, editable) => {
         <div class="mealTypeContainer">
           <div class="mealTypeHead">PLAN <span>${d.planType}</span></div>
         </div>
-        ${mealTypes.map(mt => `
+        ${strMap(mealTypes, mt => `
           <div class="mealTypeContainer">
             <div class="mealTypeHead">${mt} <span>${sum(mealMap[mt].map(mm => mm.calories))}</span></div>
-            ${mealMap[mt].map(mm => `<div class="mealItem">${mm.name} ... ${mm.calories}</div>`).join('')}
+            ${strMap(mealMap[mt], mm => `<div class="mealItem">${mm.name} ... ${mm.calories}</div>`)}
           </div>
-        `).join('')}
+        `)}
     `};
     const sumBody = () => `
         <div class="mealTypeContainer">
           <div class="mealTypeHead">AVERAGE <span>${d.avg}</span></div>
           <div class="mealItem">total <span>${d.tot}</span></div>
         </div>
-        ${mealTypes.map(mt => `
+        ${strMap(mealTypes, mt => `
             <div class="mealTypeContainer">
               <div class="mealTypeHead">${mt} <span>${d[mt].avg}</span></div>
               <div class="mealItem">total <span>${d[mt].tot}</span></div>
             </div>
-        `).join('')}
+        `)}
     `;
 
     return `
@@ -70,9 +70,9 @@ const macrosCard = (id, d, i) => {
       
           <div id="${id}_mealCardMacrosBody${i}" class="collapse show">
             <div class="card-body">
-              ${MACROS.map(macro => `
+              ${strMap(MACROS, macro => `
                 <div>${macro}: ${d.isSum ? d.macros[macro] : Math.round(avg(d.elements.map(el => el.macros[macro])))}%</div>
-              `).join('')}
+              `)}
             </div>
           </div>
         </div>
@@ -95,7 +95,7 @@ const getSum = days => {
     }
     const calsAvg = Math.round(calsTot / len);
     for (let mt of mealTypes) mealMap[mt] = {avg: Math.round(mealMap[mt] / len), tot: mealMap[mt]};
-    for (let m of MACROS) macroMap[m] = Math.round((macroMap[m] * 100) / calsTot);
+    for (let m of MACROS) macroMap[m] = percent(macroMap[m], calsTot);
     return {
         isSum: true,
         avg: calsAvg,
@@ -114,7 +114,7 @@ const _weekPlan = (_days, id, editable) => {
 
     return `
         <div class="mealDaysContainer${editable ? ' editable': ''}">
-            ${days.map((d, i) => {
+            ${strMap(days, (d, i) => {
                 return `
                   <div class="cardContainer">
                     ${caloriesCard(id, d, i, editable)}
@@ -122,7 +122,7 @@ const _weekPlan = (_days, id, editable) => {
                     ${macrosCard(id, d, i)}
                   </div>
                 `
-            }).join('')}
+            })}
         </div>
     `
 };

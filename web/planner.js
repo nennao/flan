@@ -1,6 +1,6 @@
 import { MACROS, MACRO_CAL_MAP, MEAL_PLAN_BY_DAY, MEAL_PLAN_CALS, MEAL_PLAN_MACROS } from "./mealplan_config.js";
 import { editableWeekPlan, readonlyWeekPlan, PLAN_BUFFER } from "./meal_card_components.js";
-import { avg } from "./utils.js"
+import { avg, percent, strMap } from "./utils.js"
 import Api from "./api.js";
 
 
@@ -24,7 +24,7 @@ const _createPlanCreatorGrid = state => {
     const getMacroAvg = macro => {
         if (data.length < 2) return '';
         const avgGrams = avg(macroGrams[macro]);
-        return `<td><div><div>${Math.round((avgGrams * MACRO_CAL_MAP[macro] * 100) / avgCals)}%</div><div>${Math.round(avgGrams)}g</div></div></td>`;
+        return `<td><div><div>${percent(avgGrams * MACRO_CAL_MAP[macro], avgCals)}%</div><div>${Math.round(avgGrams)}g</div></div></td>`;
     };
 
     const getAvg = key => {
@@ -34,7 +34,7 @@ const _createPlanCreatorGrid = state => {
         if (['planType'].includes(key)) return `<td></td>`;
     };
 
-    const dMap = f => data.map((d, i) => f(d, i)).join('');  // TODO use strMap
+    const dMap = f => strMap(data, f);
 
     return `
         <table class="table table-hover${data.length < 2 ? ' single': ''}">
@@ -48,13 +48,13 @@ const _createPlanCreatorGrid = state => {
           <tbody>
             <tr><th>kcal</th>${dMap(d => `<td>${d.calories}</td>`) + getAvg('calories')}</tr>
             <tr><th>plan</th>${dMap(d => `<td>${d.planType}</td>`) + getAvg('planType')}</tr>
-            ${MACROS.map(macro => `
+            ${strMap(MACROS, macro => `
                 <tr class="row-sm">
                   <th>${macro}</th>
                   ${dMap((d, i) => `<td><div><div>${d.macros[macro]}%</div><div>${macroGrams[macro][i]}g</div></div></td>`)}
                   ${getMacroAvg(macro)}
                 </tr>
-            `).join('')}
+            `)}
           </tbody>
         </table>
     `
@@ -139,6 +139,11 @@ const addPlannerModalEvents = state => {
             state._update(newPlannerState)
             // if unsuccessful, stop fetch-toast, toast error message
         }, console.error)
+    });
+
+    $("#cancelPlanButton").click(() => {
+        const plannerModalState = state.plannerModal;
+        state._update({plannerModal: { ...plannerModalState, draft: null }})
     });
 
     computeStyles();
@@ -232,7 +237,7 @@ const plansHtml = state => {
     }
     return `
 <div class="accordion" id="plansAccordion">
-  ${plans.map((plan, i) => {
+  ${strMap(plans, (plan, i) => {
       return `
       <div class="card">
         <div class="card-header" id="planHead${i}">
@@ -251,8 +256,7 @@ const plansHtml = state => {
           </div>
         </div>
       </div>
-  `}).join('')}
-  
+  `})}
 </div>`
 };
 
