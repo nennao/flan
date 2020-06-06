@@ -41,7 +41,10 @@ const apiRequest = (method, path, body) => {
 }
 
 const Api = {
-    generatePlan: (planData) => {
+    getPlans: (userId) => {
+        return apiRequest("GET", "/getPlans/")
+    },
+    generatePlan: (params) => {
         /* Request schema:
         planData = {
             "startDate": "YYYY-MM-DD",
@@ -57,10 +60,11 @@ const Api = {
             },
             ...]
         } */
-        return apiRequest("POST", "/generatePlan/", planData)
+        return apiRequest("POST", "/generatePlan/", params)
         /* Response schema {
             "startDate": <date>,
             "endDate": <date>,
+            "planType": <str>,
             "days": [{
                 "date": <date>,
                 "elements": [{
@@ -76,6 +80,9 @@ const Api = {
          }
          */
     },
+    savePlan: (plan) => {
+        return apiRequest("POST", "/savePlan/", plan)
+    }
 }
 
 export default Api
