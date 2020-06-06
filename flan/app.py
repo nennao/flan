@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+from datetime import datetime, timedelta
 
 from flask import send_from_directory, redirect, request, jsonify
 
@@ -28,8 +29,17 @@ def api():
 @app.route("/api/generatePlan/", methods=["POST"])
 @transaction
 def generate_plan():
-    log.info(request.json)
-    return jsonify({ "message": "thanks m8", "original": { "hello": "world" } })
+    # create a new plan
+
+
+    user_id = 1 ## james
+    begin_date = datetime.now()
+    end_date = begin_date + timedelta(days=3)
+    id = sql("insert into plans(draft, begin_date, end_date, user_id) values(%s, %s, %s, %s) returning id", (True, begin_date, end_date, user_id))
+    ## TODO: insert plan elements
+    log.info(f"New plan: id {id[0][0]}")
+
+    return jsonify({"id": id})
 
 
 if __name__ == '__main__':

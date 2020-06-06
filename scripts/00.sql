@@ -30,6 +30,7 @@ create table users (
 
 create table plans (
     id              serial primary key,
+    draft           boolean not null default true,
     begin_date      timestamp,
     end_date        timestamp,
     user_id         integer references users(id) on delete cascade
@@ -44,6 +45,10 @@ create table plan_elements (
 
 -- populate some stuff
 begin transaction;
+
+insert into users(name) values('james');
+insert into users(name) values('nenna');
+
 insert into recipes(name) values('guacamole');
 insert into foods(name, calories, protein, fat, carbs) values('avocado', 100, 10, 10, 0);
 insert into foods(name, calories, protein, fat, carbs) values('onion',   50,  0,  0,  5);
