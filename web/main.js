@@ -1,11 +1,12 @@
-import { renderPlanner, renderPlannerModal, addPlannerEvents } from "./planner.js";
+import { renderPlanner, renderPlannerModal, addPlannerEvents, getPlans } from "./planner.js";
 import { apiTest } from "./api.js"
 
 let STATE = {};
 
 const INITIAL_STATE = {
     view: null,
-    plannerModal: {startDate: '', endDate: '', minDate: '', maxDate: '', data: null},
+    plannerModal: {startDate: '', endDate: '', minDate: '', maxDate: '', data: null, draft: null, fetching: false},
+    planner: {plans: null},
 };
 
 const APP_LEVEL_STATE = ['view'];
@@ -57,13 +58,15 @@ const titleMap = {
 
 const renderHome = () => {
     return `
-        <div class="jumbotron"><h1 class="display-4">Welcome to Flan!</h1></div>
-        <hr class="my-4">
-        <button class="btn btn-outline-primary btn-lg btn-block" data-rd="${PLANNER}">Meal Planner</button>
-        <button class="btn btn-outline-primary btn-lg btn-block">Daily Tracker</button>
-        <button class="btn btn-outline-primary btn-lg btn-block">Weekly Tracker</button>
-
-        <button class="btn btn-outline-primary btn-lg btn-block foobarbaz">get me a recipe dawg</button>
+        <div class="container">
+            <div class="jumbotron"><h1 class="display-4">Welcome to Flan!</h1></div>
+            <hr class="my-4">
+            <button class="btn btn-outline-primary btn-lg btn-block" data-rd="${PLANNER}">Meal Planner</button>
+            <button class="btn btn-outline-primary btn-lg btn-block">Daily Tracker</button>
+            <button class="btn btn-outline-primary btn-lg btn-block">Weekly Tracker</button>
+    
+            <button class="btn btn-outline-primary btn-lg btn-block foobarbaz">get me a recipe dawg</button>
+        </div>
     `
 };
 
@@ -73,14 +76,14 @@ const renderCurrentView = () => {
         case HOME:
             return renderHome();
         case PLANNER:
-            return renderPlanner();
+            return renderPlanner(STATE);
     }
 };
 
 
 const renderApp = () => {
     $('#app').html(`
-        <div id="currentView" class="container">
+        <div id="currentView">
             ${renderCurrentView()}
         <div>
     `);
@@ -123,11 +126,14 @@ const setInitialEventHandlers = () => {
 const setInitialState = () => {
     Object.defineProperty(STATE, '_update', { value: setState, writable: false });
     const view = locViewMap[window.location.pathname];
+    const plans = getPlans();  // TODO do this here? or only when planner page is opened?
+    const stateHistory = {view: view};
     const initialState = {
         ...INITIAL_STATE,
-        view,
+        ...stateHistory,
+        planner: { ...INITIAL_STATE.planner, plans }
     };
-    history.replaceState(initialState, view);
+    history.replaceState(stateHistory, view);
     setState(initialState);
 };
 
