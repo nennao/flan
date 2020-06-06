@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 import { MACROS, MACRO_CAL_MAP, MEAL_PLAN_BY_DAY, MEAL_PLAN_CALS, MEAL_PLAN_MACROS, DUMMY_PLAN_RESPONSE } from "./mealplan_config.js";
 import { editableWeekPlan, PLAN_BUFFER } from "./meal_card_components.js";
 import { avg } from "./utils.js"
+=======
+import { MACRO_CAL_MAP, MEAL_PLAN_BY_DAY, MEAL_PLAN_CALS, MEAL_PLAN_MACROS } from "./mealplan_config.js";
+import Api from './api.js'
+>>>>>>> generate plan button and real api response and improved database scripts
 
 
 const _createPlanCreatorGrid = state => {
@@ -114,6 +119,14 @@ const addPlannerModalEvents = state => {
         const data = updatePlannerModalData(newState);
         state._update({plannerModal: { ...newState, data }})
     });
+<<<<<<< HEAD
+=======
+
+    $("#generatePlan").click(() => {
+        Api.generatePlan(state.plannerModal.data)
+    })
+};
+>>>>>>> generate plan button and real api response and improved database scripts
 
     $("#generatePlan").click(() => {
         const plannerModalState = state.plannerModal;
@@ -202,6 +215,7 @@ const plansHtml = state => {
         return ''
     }
     return `
+<<<<<<< HEAD
 <div class="accordion" id="plansAccordion">
   ${plans.map((plan, i) => {
       return `
@@ -218,6 +232,29 @@ const plansHtml = state => {
           <div class="card-body">
             <div class="planContainer">
               ${editableWeekPlan(plan.days)}
+=======
+        <!-- Button for planner modal -->
+        <button type="button" class="btn btn-outline-primary btn-lg" data-toggle="modal" data-target="#plannerModal">
+          + Add a plan
+        </button>
+        
+        
+        <!-- Modal -->
+        <div class="modal fade" id="plannerModal" data-backdrop="static" data-keyboard="false" tabindex="-1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Create Meal Plan</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+              </div>
+              <div class="modal-body" id="plannerModalBody">
+                <!--  dynamically created body-->
+              </div>
+              <div class="modal-footer">
+                <!-- TODO disable this button based on invalid data (might have to move to dynamic section) -->
+                <button type="button" id="generatePlan" class="btn btn-primary btn-lg">Generate Plan</button>
+              </div>
+>>>>>>> generate plan button and real api response and improved database scripts
             </div>
           </div>
         </div>

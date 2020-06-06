@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from flask import Flask, send_from_directory, redirect, request, g
+from flask import Flask, send_from_directory, redirect, request, g, jsonify
 from functools import wraps
 import logging
 import psycopg2
@@ -67,6 +67,12 @@ def web_root(path):
 @transaction
 def api():
     return str(sql("select * from recipes"))
+
+@app.route("/api/generatePlan/", methods=["POST"])
+@transaction
+def generate_plan():
+    log.info(request.json)
+    return jsonify({ "message": "thanks m8", "original": request.json })
 
 
 if __name__ == '__main__':

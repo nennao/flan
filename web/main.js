@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 import { renderPlanner, renderPlannerModal, addPlannerEvents, getPlans } from "./planner.js";
 import { apiTest } from "./api.js"
+=======
+import { renderPlanner, renderPlannerModal, addPlannerEvents } from "./planner.js";
+import Api from "./api.js"
+>>>>>>> generate plan button and real api response and improved database scripts
 
 let STATE = {};
 
