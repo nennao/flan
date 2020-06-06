@@ -1,6 +1,7 @@
-import { MACROS, MACRO_CAL_MAP, MEAL_PLAN_BY_DAY, MEAL_PLAN_CALS, MEAL_PLAN_MACROS, DUMMY_PLAN_RESPONSE } from "./mealplan_config.js";
+import { MACROS, MACRO_CAL_MAP, MEAL_PLAN_BY_DAY, MEAL_PLAN_CALS, MEAL_PLAN_MACROS } from "./mealplan_config.js";
 import { editableWeekPlan, PLAN_BUFFER } from "./meal_card_components.js";
 import { avg } from "./utils.js"
+import Api from "./api.js";
 
 
 const _createPlanCreatorGrid = state => {
@@ -118,7 +119,16 @@ const addPlannerModalEvents = state => {
     $("#generatePlan").click(() => {
         const plannerModalState = state.plannerModal;
         // TODO await actual response here
-        state._update({plannerModal: { ...plannerModalState, draft: DUMMY_PLAN_RESPONSE }});
+        Api.generatePlan(state.plannerModal.data).then(response => {
+          state._update({plannerModal: { ...plannerModalState, draft: response }});
+        }, console.error)
+
+    });
+
+    $("#acceptButton").click(() => {
+        Api.savePlan(state.plannerModal.draft).then(() => {
+          alert("Plan saved successfully!")
+        }, console.error)
     });
 
     computeStyles();
@@ -156,7 +166,7 @@ const planDraftHtml = state => {
         ${editableWeekPlan(days)}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Accept</button>
+        <button type="button" class="btn btn-primary" id="acceptButton">Accept</button>
         <button type="button" class="btn btn-secondary">Cancel</button>
       </div>
     `
@@ -241,12 +251,4 @@ export const renderPlanner = state => {  // TODO this naming might be confusing 
             ${plansHtml(state)}
         </div>
     `
-};
-
-
-export const getPlans = () => {
-    // TODO this will be actually have to be fetched from database
-    const plan1 = { ...DUMMY_PLAN_RESPONSE, startDate: '2020-06-01', endDate: '2020-06-07', days: DUMMY_PLAN_RESPONSE.days.map((d, i) => ({ ...d, date: `2020-06-0${1+i}`})) };
-    const plan2 = { ...DUMMY_PLAN_RESPONSE, startDate: '2020-05-25', endDate: '2020-05-31', days: DUMMY_PLAN_RESPONSE.days.map((d, i) => ({ ...d, date: `2020-05-${25+i}`})) };
-    return [plan1, plan2]
 };

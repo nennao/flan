@@ -1,4 +1,5 @@
-import { renderPlanner, renderPlannerModal, addPlannerEvents, getPlans } from "./planner.js";
+import { renderPlanner, renderPlannerModal, addPlannerEvents } from "./planner.js";
+import Api from './api.js'
 
 let STATE = {};
 
@@ -122,15 +123,19 @@ const setInitialEventHandlers = () => {
 const setInitialState = () => {
     Object.defineProperty(STATE, '_update', { value: setState, writable: false });
     const view = locViewMap[window.location.pathname];
-    const plans = getPlans();  // TODO do this here? or only when planner page is opened?
     const stateHistory = {view: view};
-    const initialState = {
-        ...INITIAL_STATE,
-        ...stateHistory,
-        planner: { ...INITIAL_STATE.planner, plans }
-    };
     history.replaceState(stateHistory, view);
-    setState(initialState);
+    
+    //const plans = Api.getPlans().plans  // TODO do this here? or only when planner page is opened?
+    Api.getPlans().then(response => {
+        const initialState = {
+            ...INITIAL_STATE,
+            ...stateHistory,
+            planner: { ...INITIAL_STATE.planner, plans: response.plans }
+        };
+        setState(initialState);
+    }, console.log)
+    
 };
 
 
