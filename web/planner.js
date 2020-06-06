@@ -1,7 +1,10 @@
 import { MACROS, MACRO_CAL_MAP, MEAL_PLAN_BY_DAY, MEAL_PLAN_CALS, MEAL_PLAN_MACROS } from "./mealplan_config.js";
-import { editableWeekPlan, PLAN_BUFFER } from "./meal_card_components.js";
+import { editableWeekPlan, readonlyWeekPlan, PLAN_BUFFER } from "./meal_card_components.js";
 import { avg } from "./utils.js"
 import Api from "./api.js";
+
+
+export const initialPlannerModalState = {startDate: '', endDate: '', minDate: '', maxDate: '', data: null, draft: null};
 
 
 const _createPlanCreatorGrid = state => {
@@ -68,7 +71,7 @@ const updatePlannerModalData = newState => {
     while (dayCount >= 0) {
         const plan = MEAL_PLAN_BY_DAY[day.format('ddd')];
         const dayData = {
-            date: day.format('YYYY-MM-DD'),  // TODO preferred date format for db ?
+            date: day.format('YYYY-MM-DD'),
             calories: MEAL_PLAN_CALS[plan],
             planType: plan,
             macros: { ...MEAL_PLAN_MACROS[plan] }
@@ -118,16 +121,23 @@ const addPlannerModalEvents = state => {
 
     $("#generatePlan").click(() => {
         const plannerModalState = state.plannerModal;
-        // TODO await actual response here
         Api.generatePlan(state.plannerModal.data).then(response => {
           state._update({plannerModal: { ...plannerModalState, draft: response }});
         }, console.error)
 
     });
 
-    $("#acceptButton").click(() => {
-        Api.savePlan(state.plannerModal.draft).then(() => {
-          alert("Plan saved successfully!")
+    $("#acceptPlanButton").click(() => {  // TODO start a 'fetching' toast
+        Api.savePlan(state.plannerModal.draft).then(response => {
+            // stop fetch-toast
+            console.log("Plan saved successfully!") // TODO toast message instead for this (and others?)
+            $('#plannerModal').modal('hide');
+            const newPlannerState = {
+                plannerModal: { ...initialPlannerModalState },
+                planner: { ...state.planner, plans: [response, ...state.planner.plans] }
+            };
+            state._update(newPlannerState)
+            // if unsuccessful, stop fetch-toast, toast error message
         }, console.error)
     });
 
@@ -163,11 +173,11 @@ const planDraftHtml = state => {
     }
     return `
       <div class="modal-body">
-        ${editableWeekPlan(days)}
+        ${editableWeekPlan(days, 'pmb')}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="acceptButton">Accept</button>
-        <button type="button" class="btn btn-secondary">Cancel</button>
+        <button type="button" class="btn btn-primary" id="acceptPlanButton">Accept</button>
+        <button type="button" class="btn btn-secondary" id="cancelPlanButton">Cancel</button>
       </div>
     `
 };
@@ -176,14 +186,23 @@ const computeStyles = () => {
     const totWidth = window.screen.width;
     const maxModalWidth = totWidth - PLAN_BUFFER + 10;
     const cardMargins = 6 * 7;  // 6px * 7 spaces
-    const cardWidth = (totWidth - (PLAN_BUFFER * 2) - cardMargins - 2) / 8;
+    const cardWidth = (totWidth - (PLAN_BUFFER * 2) - cardMargins - 2 - 8) / 8;
     $('#plannerModal .modal-dialog').css('max-width', `${maxModalWidth}px`);
-    $('.cardContainer').css({'min-width': `${cardWidth}px`, 'max-width': `${cardWidth}px`});  // TODO this needs to cover all cards not just the modal
+    $('.mealDaysContainer .cardContainer').css({'min-width': `${cardWidth}px`, 'max-width': `${cardWidth}px`});
 };
 
 
+export const renderPlannerPlans = state => {
+    $('#plannerPlansList').html(plansHtml(state));
+    computeStyles();  // TODO there should eventually be a plans events handler for this to go into
+};
+
 export const renderPlannerModal = state => {
-    const { draft } = state.plannerModal;
+    const { data, draft } = state.plannerModal;
+    if (data === null) {
+        $('#plannerModalBody').html('');
+        return
+    }
     $('#plannerModalBody').html(draft ? planDraftHtml(state) : planCreatorHtml(state));
     $('#plannerModal .modal-title').html(`${draft ? 'Edit' : 'Create'} Meal Plan`);
     addPlannerModalEvents(state);
@@ -219,7 +238,7 @@ const plansHtml = state => {
         <div class="card-header" id="planHead${i}">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#planBody${i}">
-              ${moment(plan.startDate, 'YYYY-MM-DD').format('ddd Do MMM YYYY')} - ${moment(plan.endDate, 'YYYY-MM-DD').format('ddd Do MMM YYYY')}
+              ${moment(plan.startDate, 'YYYY-MM-DD').format('ddd Do MMM YYYY')} &ndash; ${moment(plan.endDate, 'YYYY-MM-DD').format('ddd Do MMM YYYY')}
             </button>
           </h2>
         </div>
@@ -227,7 +246,7 @@ const plansHtml = state => {
         <div id="planBody${i}" class="collapse" data-parent="#plansAccordion">
           <div class="card-body">
             <div class="planContainer">
-              ${editableWeekPlan(plan.days)}
+              ${readonlyWeekPlan(plan.days, `pa${i}`)}
             </div>
           </div>
         </div>
@@ -248,7 +267,7 @@ export const renderPlanner = state => {  // TODO this naming might be confusing 
             
             ${modalHtml()}
             
-            ${plansHtml(state)}
+            <div id="plannerPlansList">${plansHtml(state)}</div>
         </div>
     `
 };

@@ -161,7 +161,7 @@ def index():
 def web_root(path):
     VIEWS = ("home", "planner")
     path = 'index.html' if path in VIEWS else path
-    return send_from_directory("web", path)
+    return send_from_directory(os.path.join(os.getcwd(), "web"), path)
 
 
 # backend
@@ -173,7 +173,8 @@ def api():
 @app.route("/api/savePlan/", methods=["POST"])
 @transaction
 def save_plan():
-    return jsonify({"message": "success"})
+    # return jsonify({"message": "success"})
+    return jsonify(dummy_plan)
 
 @app.route("/api/getPlans/", methods=["GET"])
 @transaction

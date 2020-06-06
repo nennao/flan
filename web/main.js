@@ -1,11 +1,11 @@
-import { renderPlanner, renderPlannerModal, addPlannerEvents } from "./planner.js";
+import { initialPlannerModalState, renderPlanner, renderPlannerModal, renderPlannerPlans, addPlannerEvents } from "./planner.js";
 import Api from './api.js'
 
 let STATE = {};
 
 const INITIAL_STATE = {
     view: null,
-    plannerModal: {startDate: '', endDate: '', minDate: '', maxDate: '', data: null, draft: null, fetching: false},
+    plannerModal: { ...initialPlannerModalState },
     planner: {plans: null},
 };
 
@@ -41,8 +41,12 @@ const _assignState = newState => {
 };
 
 const renderComponent = stateKey => {
-    // TODO this only works for plannerModal component right now
-    renderPlannerModal(STATE)
+    const renderers = {
+        // 'planner.plans': renderPlannerPlans,
+        planner: renderPlannerPlans,
+        plannerModal: renderPlannerModal,
+    };
+    renderers[stateKey](STATE)
 };
 
 const locViewMap = {
@@ -80,8 +84,11 @@ const renderCurrentView = () => {
     }
 };
 
+const renderNav = () => `<a class="navbar-brand btn" data-rd="${HOME}">F L A N</a>`;
+
 
 const renderApp = () => {
+    $('body nav').addClass('navbar fixed-top navbar-expand-lg navbar-dark bg-dark').html(renderNav());
     $('#app').html(`
         <div id="currentView">
             ${renderCurrentView()}
@@ -126,7 +133,6 @@ const setInitialState = () => {
     const stateHistory = {view: view};
     history.replaceState(stateHistory, view);
     
-    //const plans = Api.getPlans().plans  // TODO do this here? or only when planner page is opened?
     Api.getPlans().then(response => {
         const initialState = {
             ...INITIAL_STATE,

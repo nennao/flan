@@ -6,7 +6,7 @@ export const PLAN_BUFFER = 40;  // px
 const mealTypes = ['breakfast', 'lunch', 'dinner', 'snacks'];
 
 
-const caloriesCard = (d, i, editable) => {
+const caloriesCard = (id, d, i, editable) => {
     const dayBody = () => {
         const mealMap = {breakfast: [], lunch: [], dinner: [], snacks: []};
         for (let el of d.elements) mealMap[el.type.toLowerCase()].push(el);
@@ -39,15 +39,15 @@ const caloriesCard = (d, i, editable) => {
 
     return `
         <div class="card">
-          <div class="card-header" id="mealCardCalsHead${i}">
+          <div class="card-header" id="${id}_mealCardCalsHead${i}">
             <h2 class="mb-0">
-              <button class="btn btn-link btn-block" type="button" data-toggle="collapse" data-target="#mealCardCalsBody${i}">
+              <button class="btn btn-link btn-block" type="button" data-toggle="collapse" data-target="#${id}_mealCardCalsBody${i}">
                 ${d.isSum ? 'Average' : moment(d.date, 'YYYY-MM-DD').format('ddd Do MMM')}
               </button>
             </h2>
           </div>
         
-          <div id="mealCardCalsBody${i}" class="collapse show">
+          <div id="${id}_mealCardCalsBody${i}" class="collapse show">
             <div class="card-body">
               ${d.isSum ? sumBody() : dayBody()}
             </div>
@@ -57,18 +57,18 @@ const caloriesCard = (d, i, editable) => {
 };
 
 
-const macrosCard = (d, i) => {
+const macrosCard = (id, d, i) => {
     return `
         <div class="card">
-          <div class="card-header" id="mealCardMacrosHead${i}">
+          <div class="card-header" id="${id}_mealCardMacrosHead${i}">
             <h2 class="mb-0">
-              <button class="btn btn-link btn-block" type="button" data-toggle="collapse" data-target="#mealCardMacrosBody${i}">
+              <button class="btn btn-link btn-block" type="button" data-toggle="collapse" data-target="#${id}_mealCardMacrosBody${i}">
                 macros
               </button>
             </h2>
           </div>
       
-          <div id="mealCardMacrosBody${i}" class="collapse show">
+          <div id="${id}_mealCardMacrosBody${i}" class="collapse show">
             <div class="card-body">
               ${MACROS.map(macro => `
                 <div>${macro}: ${d.isSum ? d.macros[macro] : Math.round(avg(d.elements.map(el => el.macros[macro])))}%</div>
@@ -106,20 +106,20 @@ const getSum = days => {
 };
 
 
-const _weekPlan = (_days, editable) => {  // TODO need to add ids in here
+const _weekPlan = (_days, id, editable) => {
     const days = [ ..._days ];
     if (days.length > 1) {
         days.push(getSum(days))
     }
 
     return `
-        <div class="mealDaysContainer editable">
+        <div class="mealDaysContainer${editable ? ' editable': ''}">
             ${days.map((d, i) => {
                 return `
                   <div class="cardContainer">
-                    ${caloriesCard(d, i)}
+                    ${caloriesCard(id, d, i, editable)}
                     
-                    ${macrosCard(d, i)}
+                    ${macrosCard(id, d, i)}
                   </div>
                 `
             }).join('')}
@@ -128,5 +128,5 @@ const _weekPlan = (_days, editable) => {  // TODO need to add ids in here
 };
 
 
-export const editableWeekPlan = days => _weekPlan(days, true);
-export const readonlyWeekPlan = days => _weekPlan(days, false);
+export const editableWeekPlan = (days, id) => _weekPlan(days, id, true);
+export const readonlyWeekPlan = (days, id) => _weekPlan(days, id, false);
