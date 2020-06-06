@@ -2,7 +2,7 @@
 
 const apiRequest = (method, path, body) => {
     const data = JSON.stringify(body)
-    const apiBase = "http://localhost:5000/api" // TODO: configurable
+    const apiBase = window.location.origin + "/api"
     const options = {
         method: method,
         headers: {} // TODO: authn/z
