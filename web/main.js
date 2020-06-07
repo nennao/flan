@@ -88,7 +88,7 @@ const renderNav = () => `<a class="navbar-brand btn" data-rd="${HOME}">F L A N</
 
 
 const renderApp = () => {
-    $('body nav').addClass('navbar fixed-top navbar-expand-lg navbar-dark bg-dark').html(renderNav());
+    $('body nav').addClass('navbar navbar-expand-lg navbar-dark bg-dark').html(renderNav());
     $('#app').html(`
         <div id="currentView">
             ${renderCurrentView()}

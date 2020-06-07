@@ -6,33 +6,43 @@ export const PLAN_BUFFER = 40;  // px
 const mealTypes = ['breakfast', 'lunch', 'dinner', 'snacks'];
 
 
+const sbFlex = (x, y) => {
+    return `<div class="sbFlexMCC"><div>${x}</div><div>${y}</div></div>`
+};
+
+
 const caloriesCard = (id, d, i, editable) => {
     const dayBody = () => {
         const mealMap = {breakfast: [], lunch: [], dinner: [], snacks: []};
         for (let el of d.elements) mealMap[el.type.toLowerCase()].push(el);
         return `
         <div class="mealTypeContainer">
-          <div class="mealTypeHead">TOTAL <span>${sum(d.elements.map(el => el.calories))}</span></div>
+          <div class="mealTypeHead">${sbFlex('TOTAL', `<span>${sum(d.elements.map(el => el.calories))}</span>`)}</div>
         </div>
         <div class="mealTypeContainer">
-          <div class="mealTypeHead">PLAN <span>${d.planType}</span></div>
+          <div class="mealTypeHead">${sbFlex('PLAN', `<span>${d.planType}</span>`)}</div>
         </div>
         ${strMap(mealTypes, mt => `
           <div class="mealTypeContainer">
-            <div class="mealTypeHead">${mt} <span>${sum(mealMap[mt].map(mm => mm.calories))}</span></div>
-            ${strMap(mealMap[mt], mm => `<div class="mealItem">${mm.name} ... ${mm.calories}</div>`)}
+            <div class="mealTypeHead">${sbFlex(mt, `<span>${sum(mealMap[mt].map(mm => mm.calories))}</span>`)}</div>
+            ${strMap(mealMap[mt], mm => `
+                <div class="mealItem">${sbFlex(
+                    `<div>${mm.name}</div><div class="mealItemQty">${mm.qty} ${mm.unit}</div>`,
+                    mm.calories
+                )}</div>
+            `)}
           </div>
         `)}
     `};
     const sumBody = () => `
         <div class="mealTypeContainer">
-          <div class="mealTypeHead">AVERAGE <span>${d.avg}</span></div>
-          <div class="mealItem">total <span>${d.tot}</span></div>
+          <div class="mealTypeHead">${sbFlex('AVERAGE', `<span>${d.avg}</span>`)}</span></div>
+          <div class="mealItem">${sbFlex('total', `<span>${d.tot}</span>`)}</span></div>
         </div>
         ${strMap(mealTypes, mt => `
             <div class="mealTypeContainer">
-              <div class="mealTypeHead">${mt} <span>${d[mt].avg}</span></div>
-              <div class="mealItem">total <span>${d[mt].tot}</span></div>
+              <div class="mealTypeHead">${sbFlex(mt, `<span>${d[mt].avg}</span>`)}</span></div>
+              <div class="mealItem">${sbFlex('total', `<span>${d[mt].tot}</span>`)}</span></div>
             </div>
         `)}
     `;
