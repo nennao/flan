@@ -1,1 +1,1 @@
-psql -p 5433 -d flan -c "$1"
+psql -p 5433 -d flan "$@"

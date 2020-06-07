@@ -48,4 +48,6 @@ def transaction(fn):
 def sql(query, args=()):
     with _db().cursor() as cursor:
         cursor.execute(query, args)
-        return cursor.fetchall()
+        if cursor.description is not None:
+            return cursor.fetchall()
+        return None
