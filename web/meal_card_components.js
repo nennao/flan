@@ -12,7 +12,13 @@ const sbFlex = (x, y) => {
 };
 
 
-const relIngQty = ing => Math.round((ing.qty/ing.basis.qty) * ing.basis.calories);
+const relIngCals = ing => Math.round((ing.qty/ing.basis.qty) * ing.basis.calories);
+
+const mealItemCals = mi => mi.ingredients ? sum(mi.ingredients.map(ing => relIngCals(ing))) : mi.calories;
+
+const mealItemMacroCals = (mi, macro) => mi.ingredients ?
+        sum(mi.ingredients.map(ing => ((ing.macros[macro] / 100) * relIngCals(ing)))) :
+        ((mi.macros[macro]/100) * mi.calories);
 
 
 const collapsible = (heading, content, show=true, classes=[]) => {
@@ -35,23 +41,23 @@ const caloriesCard = (id, d, i, editable) => {
         for (let el of d.elements) mealMap[el.type.toLowerCase()].push(el);
         return `
         <div class="mealTypeContainer">
-          <div class="mealTypeHead">${sbFlex('TOTAL', `<span>${sum(d.elements.map(el => el.calories))}</span>`)}</div>
+          <div class="mealTypeHead">${sbFlex('TOTAL', `<span>${sum(d.elements.map(el => mealItemCals(el)))}</span>`)}</div>
         </div>
         <div class="mealTypeContainer">
           <div class="mealTypeHead">${sbFlex('PLAN', `<span>${d.planType}</span>`)}</div>
         </div>
         ${strMap(mealTypes, mt => collapsible(
-             `<div class="mealTypeHead">${sbFlex(mt, `<span>${sum(mealMap[mt].map(mm => mm.calories))}</span>`)}</div>`,
+             `<div class="mealTypeHead">${sbFlex(mt, `<span>${sum(mealMap[mt].map(mm => mealItemCals(mm)))}</span>`)}</div>`,
             strMap(mealMap[mt], mm => collapsible(
                 sbFlex(
                     `<div>${mm.name}</div><div class="mealItemQty">${mm.qty} ${mm.unit}</div>`,
-                    mm.calories
+                    mealItemCals(mm)
                 ),
                 mm.ingredients && strMap(mm.ingredients, ing => {
                     return `
                         <div class="mealItemIng">${sbFlex(
                             `<div>${ing.name}</div><div class="mealItemQty">${ing.qty} ${ing.basis.unit || ing.name}</div>`,
-                            relIngQty(ing)
+                            relIngCals(ing)
                         )}</div>
                     `
                 }),
@@ -93,7 +99,9 @@ const caloriesCard = (id, d, i, editable) => {
 };
 
 
+
 const macrosCard = (id, d, i) => {
+    const totalCals = d.elements && sum(d.elements.map(el => mealItemCals(el)));
     return `
         <div class="card">
           <div class="card-header" id="${id}_mealCardMacrosHead${i}">
@@ -107,7 +115,7 @@ const macrosCard = (id, d, i) => {
           <div id="${id}_mealCardMacrosBody${i}" class="collapse show">
             <div class="card-body">
               ${strMap(MACROS, macro => `
-                <div>${macro}: ${d.isSum ? d.macros[macro] : Math.round(avg(d.elements.map(el => el.macros[macro])))}%</div>
+                <div>${macro}: ${d.isSum ? d.macros[macro] : percent(sum(d.elements.map(el => mealItemMacroCals(el, macro))), totalCals)}%</div>
               `)}
             </div>
           </div>
@@ -122,10 +130,11 @@ const getSum = days => {
     const macroMap = {carbs: 0, fat: 0, protein: 0};
     for (let d of days) {
         for (let el of d.elements) {
-            calsTot += el.calories;
-            mealMap[el.type] += el.calories;
+            const cals = mealItemCals(el);
+            calsTot += cals;
+            mealMap[el.type] += cals;
             for (let m of MACROS) {
-                macroMap[m] += (el.macros[m] / 100) * el.calories
+                macroMap[m] += mealItemMacroCals(el, m)
             }
         }
     }
