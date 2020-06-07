@@ -1,5 +1,6 @@
 import { MACROS } from "./mealplan_config.js";
-import { sum, avg, percent, strMap } from "./utils.js"
+import { nextId, sum, avg, percent, strMap } from "./utils.js"
+
 
 export const PLAN_BUFFER = 40;  // px
 
@@ -8,6 +9,23 @@ const mealTypes = ['breakfast', 'lunch', 'dinner', 'snacks'];
 
 const sbFlex = (x, y) => {
     return `<div class="sbFlexMCC"><div>${x}</div><div>${y}</div></div>`
+};
+
+
+const relIngQty = ing => Math.round((ing.qty/ing.basis.qty) * ing.basis.calories);
+
+
+const collapsible = (heading, content, show=true, classes=[]) => {
+    if (!content) {
+        return `<div class="${classes.join(' ')}">${heading}</div>`
+    }
+    const id = nextId();
+    return `
+        <div class="collapsible ${classes.join(' ')}">
+            <div class="collapsibleHead" data-toggle="collapse" data-target="#${id}_collapsible">${heading}</div>
+            <div class="collapsibleBody collapse${show ? ' show' : ''}" id="${id}_collapsible">${content}</div>
+        </div>
+    `
 };
 
 
@@ -22,17 +40,25 @@ const caloriesCard = (id, d, i, editable) => {
         <div class="mealTypeContainer">
           <div class="mealTypeHead">${sbFlex('PLAN', `<span>${d.planType}</span>`)}</div>
         </div>
-        ${strMap(mealTypes, mt => `
-          <div class="mealTypeContainer">
-            <div class="mealTypeHead">${sbFlex(mt, `<span>${sum(mealMap[mt].map(mm => mm.calories))}</span>`)}</div>
-            ${strMap(mealMap[mt], mm => `
-                <div class="mealItem">${sbFlex(
+        ${strMap(mealTypes, mt => collapsible(
+             `<div class="mealTypeHead">${sbFlex(mt, `<span>${sum(mealMap[mt].map(mm => mm.calories))}</span>`)}</div>`,
+            strMap(mealMap[mt], mm => collapsible(
+                sbFlex(
                     `<div>${mm.name}</div><div class="mealItemQty">${mm.qty} ${mm.unit}</div>`,
                     mm.calories
-                )}</div>
-            `)}
-          </div>
-        `)}
+                ),
+                mm.ingredients && strMap(mm.ingredients, ing => {
+                    return `
+                        <div class="mealItemIng">${sbFlex(
+                            `<div>${ing.name}</div><div class="mealItemQty">${ing.qty} ${ing.basis.unit || ing.name}</div>`,
+                            relIngQty(ing)
+                        )}</div>
+                    `
+                }),
+                false, ['mealItem']
+            )),
+            true, ['mealTypeContainer']
+          ))}
     `};
     const sumBody = () => `
         <div class="mealTypeContainer">

@@ -23,6 +23,34 @@ dummy_plan = {
                     "macros": {"carbs": 5, "fat": 35, "protein": 60},
                     "qty": 1,
                     "unit": "serving",
+                    "ingredients": [{
+                        "name": "eggs",
+                        "qty": 2,
+                        "basis": {
+                            "qty": 1,
+                            "unit": None,
+                            "calories": 80,
+                        },
+                        "macros": {"carbs": 5, "fat": 25, "protein": 70},
+                    }, {
+                        "name": "butter",
+                        "qty": 8,
+                        "basis": {
+                            "qty": 100,
+                            "unit": "g",
+                            "calories": 750,
+                        },
+                        "macros": {"carbs": 5, "fat": 55, "protein": 40},
+                    }, {
+                        "name": "creme fresh",
+                        "qty": 25,
+                        "basis": {
+                            "qty": 100,
+                            "unit": "g",
+                            "calories": 320,
+                        },
+                        "macros": {"carbs": 5, "fat": 40, "protein": 55},
+                    }],
                 }, {
                     "type": "dinner",
                     "name": "pepper-soup",

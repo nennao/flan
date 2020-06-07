@@ -150,6 +150,18 @@ input[type=date]::-webkit-inner-spin-button {
 .mealDaysContainer .mealItem {
     padding-left: 15px;
     padding-bottom: 7px;
+    color: #1e2848;
+}
+
+.mealDaysContainer .mealItemIng {
+    padding-left: 15px;
+    padding-bottom: 2px;
+    color: #374884;
+    font-size: 0.9rem;
+}
+
+.mealDaysContainer .mealItem:last-child, .mealDaysContainer .mealItemIng:last-child {
+    padding-bottom: 0;
 }
 
 .mealDaysContainer .mealItem .mealItemQty {
@@ -182,4 +194,8 @@ input[type=date]::-webkit-inner-spin-button {
 .planContainer {
     width: fit-content;
     margin: auto;
+}
+
+.collapsibleHead {
+    cursor: pointer;
 }
