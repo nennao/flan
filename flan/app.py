@@ -19,8 +19,8 @@ dummy_plan = {
                 "elements": [{
                     "type": "lunch",
                     "name": "ramsled eggs",
-                    "calories": 300,
-                    "macros": {"carbs": 5, "fat": 35, "protein": 60},
+                    # "calories": 300,
+                    # "macros": {"carbs": 5, "fat": 35, "protein": 60},
                     "qty": 1,
                     "unit": "serving",
                     "ingredients": [{
@@ -29,27 +29,27 @@ dummy_plan = {
                         "basis": {
                             "qty": 1,
                             "unit": None,
-                            "calories": 80,
+                            "calories": 80,  # TODO is calories necessary? can be calc'd from macros
+                            "macros": {"carbs": 1, "fat": 2.222, "protein": 14},
                         },
-                        "macros": {"carbs": 5, "fat": 25, "protein": 70},
                     }, {
                         "name": "butter",
-                        "qty": 8,
+                        "qty": 0.08,
                         "basis": {
                             "qty": 100,
                             "unit": "g",
                             "calories": 750,
+                            "macros": {"carbs": 9.375, "fat": 45.833, "protein": 75},
                         },
-                        "macros": {"carbs": 5, "fat": 55, "protein": 40},
                     }, {
                         "name": "creme fresh",
-                        "qty": 25,
+                        "qty": 0.25,
                         "basis": {
                             "qty": 100,
                             "unit": "g",
                             "calories": 320,
+                            "macros": {"carbs": 4, "fat": 14.222, "protein": 44},
                         },
-                        "macros": {"carbs": 5, "fat": 40, "protein": 55},
                     }],
                 }, {
                     "type": "dinner",

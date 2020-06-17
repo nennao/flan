@@ -1,4 +1,4 @@
-import { MACROS, MACRO_CAL_MAP, MEAL_PLAN_BY_DAY, MEAL_PLAN_CALS, MEAL_PLAN_MACROS } from "./mealplan_config.js";
+import { MACROS, MACRO_CAL_MAP, MEAL_PLAN_BY_DAY, MEAL_PLAN_CALS, MEAL_PLAN_MACROS, macroPercentToGrams } from "./mealplan_config.js";
 import { editableWeekPlan, readonlyWeekPlan, PLAN_BUFFER } from "./meal_card_components.js";
 import { avg, percent, strMap } from "./utils.js"
 import Api from "./api.js";
@@ -12,11 +12,10 @@ const _createPlanCreatorGrid = state => {
     if (!data || !data.length) {
         return ''
     }
-    const calcGrams = (d, macro) => Math.round((d.macros[macro] / 100) * d.calories / MACRO_CAL_MAP[macro]);
     const macroGrams = {
-        carbs: data.map(d => calcGrams(d, 'carbs')),
-        fat: data.map(d => calcGrams(d, 'fat')),
-        protein: data.map(d => calcGrams(d, 'protein')),
+        carbs: data.map(d => macroPercentToGrams('carbs', d.macros.carbs, d.calories)),
+        fat: data.map(d => macroPercentToGrams('fat', d.macros.fat, d.calories)),
+        protein: data.map(d => macroPercentToGrams('protein', d.macros.protein, d.calories)),
     };
 
     const avgCals = avg(data.map(d => d.calories));
@@ -121,7 +120,12 @@ const addPlannerModalEvents = state => {
 
     $("#generatePlan").click(() => {
         const plannerModalState = state.plannerModal;
-        Api.generatePlan(state.plannerModal.data).then(response => {
+        const data = plannerModalState.data.map(d => ( { ...d, macros: {
+            carbs: macroPercentToGrams('carbs', d.macros.carbs, d.calories),
+            fat: macroPercentToGrams('fat', d.macros.fat, d.calories),
+            protein: macroPercentToGrams('protein', d.macros.protein, d.calories),
+        }}));
+        Api.generatePlan(data).then(response => {
           state._update({plannerModal: { ...plannerModalState, draft: response }});
         }, console.error)
 
@@ -174,7 +178,7 @@ const planCreatorHtml = state => {
 const planDraftHtml = state => {
     const { days } = state.plannerModal.draft;
     if (!days || !days.length) {
-        return 'error'
+        return 'error'  // TODO ???
     }
     return `
       <div class="modal-body">

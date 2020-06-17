@@ -1,4 +1,4 @@
-import { MACROS } from "./mealplan_config.js";
+import { MACROS, MACRO_CAL_MAP } from "./mealplan_config.js";
 import { nextId, sum, avg, percent, strMap } from "./utils.js"
 
 
@@ -12,12 +12,12 @@ const sbFlex = (x, y) => {
 };
 
 
-const relIngCals = ing => Math.round((ing.qty/ing.basis.qty) * ing.basis.calories);
+const relIngCals = ing => Math.round(ing.qty * ing.basis.calories);
 
 const mealItemCals = mi => mi.ingredients ? sum(mi.ingredients.map(ing => relIngCals(ing))) : mi.calories;
 
 const mealItemMacroCals = (mi, macro) => mi.ingredients ?
-        sum(mi.ingredients.map(ing => ((ing.macros[macro] / 100) * relIngCals(ing)))) :
+        sum(mi.ingredients.map(ing => ing.qty * ing.basis.macros[macro] * MACRO_CAL_MAP[macro])) :
         ((mi.macros[macro]/100) * mi.calories);
 
 
@@ -56,7 +56,7 @@ const caloriesCard = (id, d, i, editable) => {
                 mm.ingredients && strMap(mm.ingredients, ing => {
                     return `
                         <div class="mealItemIng">${sbFlex(
-                            `<div>${ing.name}</div><div class="mealItemQty">${ing.qty} ${ing.basis.unit || ing.name}</div>`,
+                            `<div>${ing.name}</div><div class="mealItemQty">${ing.qty * ing.basis.qty} ${ing.basis.unit || ing.name}</div>`,
                             relIngCals(ing)
                         )}</div>
                     `
