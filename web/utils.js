@@ -11,3 +11,5 @@ export const percent = (a, b) => Math.round((a/b)*100);
 export const capWord = string => string[0].toUpperCase() + string.slice(1).toLowerCase();
 
 export const strMap = (arr, f, sep='') => arr.map((d, i) => f(d, i)).join(sep);
+
+export const Mr = (val, places=0) => Math.round((val + Number.EPSILON) * Math.pow(10, places)) / Math.pow(10, places);

@@ -1,5 +1,6 @@
 import { MACROS, MACRO_CAL_MAP } from "./mealplan_config.js";
-import { nextId, sum, avg, percent, strMap } from "./utils.js"
+import { nextId, sum, avg, percent, strMap, Mr } from "./utils.js"
+import { _assignState } from "./main.js";
 
 
 export const PLAN_BUFFER = 40;  // px
@@ -21,7 +22,7 @@ const mealItemMacroCals = (mi, macro) => mi.ingredients ?
         ((mi.macros[macro]/100) * mi.calories);
 
 
-const collapsible = (heading, content, show=true, classes=[]) => {
+const collapsible = (heading, content, uiLoc, collapsed=true, classes=[]) => {
     if (!content) {
         return `<div class="${classes.join(' ')}">${heading}</div>`
     }
@@ -29,8 +30,19 @@ const collapsible = (heading, content, show=true, classes=[]) => {
     return `
         <div class="collapsible ${classes.join(' ')}">
             <div class="collapsibleHead" data-toggle="collapse" data-target="#${id}_collapsible">${heading}</div>
-            <div class="collapsibleBody collapse${show ? ' show' : ''}" id="${id}_collapsible">${content}</div>
+            <div class="collapsibleBody collapse${collapsed ? '' : ' show'}" id="${id}_collapsible" data-uiloc="${uiLoc.join('-')}">${content}</div>
         </div>
+    `
+};
+
+
+const getQtyInput = (val, id, ids, editable) => {
+    if (!editable) {
+        return val
+    }
+    // return  `<span contenteditable="true" id="qty-${id}-${ids.join('-')}">${val}</span>`
+    return  `
+        <input name="qty-${id}-${ids.join('-')}" value="${val}" class="temp">
     `
 };
 
@@ -38,7 +50,7 @@ const collapsible = (heading, content, show=true, classes=[]) => {
 const caloriesCard = (id, d, i, editable) => {
     const dayBody = () => {
         const mealMap = {breakfast: [], lunch: [], dinner: [], snacks: []};
-        for (let el of d.elements) mealMap[el.type.toLowerCase()].push(el);
+        d.elements.map((el, ii) => mealMap[el.type.toLowerCase()].push({ ...el, ii: ii }));
         return `
         <div class="mealTypeContainer">
           <div class="mealTypeHead">${sbFlex('TOTAL', `<span>${sum(d.elements.map(el => mealItemCals(el)))}</span>`)}</div>
@@ -50,20 +62,20 @@ const caloriesCard = (id, d, i, editable) => {
              `<div class="mealTypeHead">${sbFlex(mt, `<span>${sum(mealMap[mt].map(mm => mealItemCals(mm)))}</span>`)}</div>`,
             strMap(mealMap[mt], mm => collapsible(
                 sbFlex(
-                    `<div>${mm.name}</div><div class="mealItemQty">${mm.qty} ${mm.unit}</div>`,
+                    `<div>${mm.name}</div><div class="mealItemQty">${getQtyInput(mm.qty, id, [i,mm.ii], editable)} ${mm.unit || mm.name}</div>`,
                     mealItemCals(mm)
                 ),
-                mm.ingredients && strMap(mm.ingredients, ing => {
+                mm.ingredients && strMap(mm.ingredients, (ing) => {
                     return `
                         <div class="mealItemIng">${sbFlex(
-                            `<div>${ing.name}</div><div class="mealItemQty">${ing.qty * ing.basis.qty} ${ing.basis.unit || ing.name}</div>`,
+                            `<div>${ing.name}</div><div class="mealItemQty">${Mr(ing.qty * ing.basis.qty, 3)} ${ing.basis.unit || ing.name}</div>`,
                             relIngCals(ing)
                         )}</div>
                     `
                 }),
-                false, ['mealItem']
-            )),
-            true, ['mealTypeContainer']
+                ['days', i, 'elements', mm.ii, 'ui'], mm.ui.collapsed, ['mealItem']
+            )), 
+            ['days', i, 'ui', mt], d.ui[mt].collapsed, ['mealTypeContainer'],
           ))}
     `};
     const sumBody = () => `
@@ -78,6 +90,7 @@ const caloriesCard = (id, d, i, editable) => {
             </div>
         `)}
     `;
+    const uiLoc = d.isSum ? ['ui', 'caloriesSum'] : ['days', i, 'ui', 'calories'];
 
     return `
         <div class="card">
@@ -89,7 +102,7 @@ const caloriesCard = (id, d, i, editable) => {
             </h2>
           </div>
         
-          <div id="${id}_mealCardCalsBody${i}" class="collapse show">
+          <div id="${id}_mealCardCalsBody${i}" class="collapse${d.ui.calories.collapsed ? '' : ' show'}" data-uiloc="${uiLoc.join('-')}">
             <div class="card-body">
               ${d.isSum ? sumBody() : dayBody()}
             </div>
@@ -102,6 +115,7 @@ const caloriesCard = (id, d, i, editable) => {
 
 const macrosCard = (id, d, i) => {
     const totalCals = d.elements && sum(d.elements.map(el => mealItemCals(el)));
+    const uiLoc = d.isSum ? ['ui', 'macrosSum'] : ['days', i, 'ui', 'macros'];
     return `
         <div class="card">
           <div class="card-header" id="${id}_mealCardMacrosHead${i}">
@@ -112,7 +126,7 @@ const macrosCard = (id, d, i) => {
             </h2>
           </div>
       
-          <div id="${id}_mealCardMacrosBody${i}" class="collapse show">
+          <div id="${id}_mealCardMacrosBody${i}" class="collapse${d.ui.macros.collapsed ? '' : ' show'}" data-uiloc="${uiLoc.join('-')}">
             <div class="card-body">
               ${strMap(MACROS, macro => `
                 <div>${macro}: ${d.isSum ? d.macros[macro] : percent(sum(d.elements.map(el => mealItemMacroCals(el, macro))), totalCals)}%</div>
@@ -123,7 +137,7 @@ const macrosCard = (id, d, i) => {
     `
 };
 
-const getSum = days => {
+const getSum = (days, plan) => {
     const len = days.length;
     let calsTot = 0;
     const mealMap = {breakfast: 0, lunch: 0, dinner: 0, snacks: 0};
@@ -147,18 +161,42 @@ const getSum = days => {
         tot: calsTot,
         ...mealMap,
         macros: macroMap,
+        ui: {
+            calories: plan.ui.caloriesSum,
+            macros: plan.ui.macrosSum,
+        },
     }
 };
 
+const getContId = id => `#${id}-mdcCont`;
 
-const _weekPlan = (_days, id, editable) => {
+const _getPlanFromState = (state, loc) => {
+    let node = state;
+    for (let l of loc) {
+        if (!node) break;  // TODO what is this for?
+        node = node[l]
+    }
+    return node
+};
+
+const _renderWeekPlan = (id, state, loc, editable) => {
+    const container = $(getContId(id));
+
+    const _plan = _getPlanFromState(state, loc);
+    const _days = _plan.days;
+
+    if (!_days || !_days.length) {
+        container.html('error');  // TODO ???
+        return
+    }
     const days = [ ..._days ];
+
     if (days.length > 1) {
-        days.push(getSum(days))
+        days.push(getSum(days, _plan))
     }
 
-    return `
-        <div class="mealDaysContainer${editable ? ' editable': ''}">
+    container.html( `
+        <div id="mdc-${id}" class="mealDaysContainer${editable ? ' editable': ''}">
             ${strMap(days, (d, i) => {
                 return `
                   <div class="cardContainer">
@@ -169,9 +207,116 @@ const _weekPlan = (_days, id, editable) => {
                 `
             })}
         </div>
-    `
+    `);
+    addMealCardEvents(id, state, loc);
 };
 
 
-export const editableWeekPlan = (days, id) => _weekPlan(days, id, true);
-export const readonlyWeekPlan = (days, id) => _weekPlan(days, id, false);
+const addMealCardEvents = (id, state, loc) => {
+    const dupe = obj => $.isArray(obj) ? [ ...obj ] : { ...obj };
+
+    const handleCollapse = (e, collapsed) => {
+            const uiLoc = $(e.target).data('uiloc').split('-');
+            let node = state;
+            for (let l of [ ...loc, ...uiLoc ]) node = node[l];
+            if (node.collapsed !== collapsed) node.collapsed = collapsed;
+    };
+
+    $('[data-uiloc]')
+        .on('show.bs.collapse', e => handleCollapse(e, false))
+        .on('hide.bs.collapse', e => handleCollapse(e, true ));
+
+    $(`${getContId(id)} input`).change(e => {  // TODO maybe make this oninput or something
+        const [ type, _id, ...ids ] = e.target.name.split('-');
+        const newState = { ...state };
+        console.log('onchange:', e.target.name, e.target.value, loc);
+
+        // convoluted duplication of relevant nodes of the state tree
+        let node = newState;
+        for (let l of loc) {
+            node[l] = dupe(node[l]);
+            node = node[l]
+        }
+        ids.forEach((i, k) => {
+            const key = k === 0 ? 'days' : k === 1 ? 'elements' : 'ingredients';
+            for (let idx of [key, i]) {
+                node[idx] = dupe(node[idx]);
+                node = node[idx];
+            }
+        });
+        const oldVal = node[type];
+        const newVal = +e.target.value;  // TODO validate the input
+        const factor = newVal / oldVal;
+        node[type] = newVal;
+        if (node.ingredients) {
+            node.ingredients = dupe(node.ingredients);
+            node.ingredients.forEach((ing, i) => {
+                node.ingredients[i] = dupe(node.ingredients[i]);
+                node.ingredients[i][type] = factor * node.ingredients[i][type]
+            })
+        }
+        if (node.calories) {
+            node.calories = node.calories * factor
+        }
+        updateMCCState(state, newState, id, loc, true)
+    });
+
+    computeMCCStyles();
+};
+
+
+const computeMCCStyles = () => {
+    const totWidth = window.screen.width;
+    const cardMargins = 6 * 7;  // 6px * 7 spaces
+    const cardWidth = (totWidth - (PLAN_BUFFER * 2) - cardMargins - 2 - 8) / 8;
+    $('.mealDaysContainer .cardContainer').css({'min-width': `${cardWidth}px`, 'max-width': `${cardWidth}px`});
+};
+
+const updateMCCState = (state, newState, id, loc, editable) => {
+    _assignState(newState);
+    _renderWeekPlan(id, state, loc, editable)
+};
+
+export const addUIState = (plan) => {
+    plan['ui'] = {
+        'caloriesSum': {collapsed: false},
+        'macrosSum':   {collapsed: false},
+    };
+    for (let day of plan.days) {
+        day['ui'] = {};
+        for (let ct of ['calories', 'macros']) {
+            day['ui'][ct] = {collapsed: false}
+        }
+        for (let mt of mealTypes) {
+            day['ui'][mt] = {collapsed: false}
+        }
+        for (let el of day.elements) {
+            el['ui'] = {collapsed: true}
+        }
+    }
+    return plan
+};
+
+export const removeUIState = (_plan) => {
+    // TODO feels like there should be a simpler way to do this
+    const plan = { ..._plan };
+    delete plan['ui'];
+    const days = [];
+    for (let _day of plan.days) {
+        const day = { ..._day };
+        delete day['ui'];
+        const els = [];
+        for (let _el of day.elements) {
+            const el = { ..._el };
+            delete el['ui'];
+            els.push(el)
+        }
+        day.elements = els;
+        days.push(day)
+    }
+    plan.days = days;
+    return plan
+};
+
+export const editableWeekPlan = (id, state, loc) => _renderWeekPlan(id, state, loc,true);
+export const readonlyWeekPlan = (id, state, loc) => _renderWeekPlan(id, state, loc,false);

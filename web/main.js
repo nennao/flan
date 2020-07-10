@@ -1,4 +1,5 @@
 import { initialPlannerModalState, renderPlanner, renderPlannerModal, renderPlannerPlans, addPlannerEvents } from "./planner.js";
+import { addUIState } from "./meal_card_components.js";
 import Api from './api.js'
 
 let STATE = {};
@@ -36,7 +37,7 @@ const setState = newState => {
     }
 };
 
-const _assignState = newState => {
+export const _assignState = newState => {
     Object.assign(STATE, newState)
 };
 
@@ -60,8 +61,8 @@ const titleMap = {
 };
 
 
-const renderHome = () => {
-    return `
+const renderHome = (viewId) => {
+    $(`#${viewId}`).html( `
         <div class="container">
             <div class="jumbotron"><h1 class="display-4">Welcome to Flan!</h1></div>
             <hr class="my-4">
@@ -71,16 +72,16 @@ const renderHome = () => {
     
             <button class="btn btn-outline-primary btn-lg btn-block foobarbaz">get me a recipe dawg</button>
         </div>
-    `
+    `)
 };
 
 
-const renderCurrentView = () => {
+const renderCurrentView = (viewId) => {
     switch (STATE.view) {
         case HOME:
-            return renderHome();
+            return renderHome(viewId);
         case PLANNER:
-            return renderPlanner(STATE);
+            return renderPlanner(viewId, STATE);
     }
 };
 
@@ -89,11 +90,11 @@ const renderNav = () => `<a class="navbar-brand btn" data-rd="${HOME}">F L A N</
 
 const renderApp = () => {
     $('body nav').addClass('navbar navbar-expand-lg navbar-dark bg-dark').html(renderNav());
+    const currentView = 'currentView';
     $('#app').html(`
-        <div id="currentView">
-            ${renderCurrentView()}
-        <div>
+        <div id="${currentView}"><div>
     `);
+    renderCurrentView(currentView);
     document.title = `Flan: ${titleMap[STATE.view]}`;
     addEventListeners();
 };
@@ -134,10 +135,14 @@ const setInitialState = () => {
     history.replaceState(stateHistory, view);
     
     Api.getPlans().then(response => {
+        const plans = [];
+        for (let plan of response.plans) {
+            plans.push(addUIState(plan))
+        }
         const initialState = {
             ...INITIAL_STATE,
             ...stateHistory,
-            planner: { ...INITIAL_STATE.planner, plans: response.plans }
+            planner: { ...INITIAL_STATE.planner, plans: plans }
         };
         setState(initialState);
     }, console.log)

@@ -199,3 +199,9 @@ input[type=date]::-webkit-inner-spin-button {
 .collapsibleHead {
     cursor: pointer;
 }
+
+.temp {
+    width: 20px;
+    border: none;
+    padding: 0;
+}
