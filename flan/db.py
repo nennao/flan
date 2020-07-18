@@ -1,9 +1,10 @@
 import os
 import uuid
+import contextlib
+from functools import wraps
 
 import psycopg2
 from flask import g
-from functools import wraps
 
 from services import app, log
 
@@ -30,9 +31,13 @@ def _close_db(exc):
         log.info(f"Closing DB connection: {g.dbid}")
         g.db.close()
 
-def transaction(fn):
+def transaction(fn=None):
+    """
+    Decorator if there's an argument
+    Otherwise, context manager
+    """
     @wraps(fn)
-    def wrapper(*a, **k):
+    def decorator(*a, **k):
         try:
             retval = fn(*a, **k)
             log.info("Committing transaction")
@@ -42,7 +47,23 @@ def transaction(fn):
             log.exception("Rolling back transaction")
             _db().rollback()
             raise
-    return wrapper
+    
+    @contextlib.contextmanager
+    def context_manager():
+        try:
+            yield
+        except:
+            log.exception("Rolling back transaction")
+            _db().rollback()
+            raise
+        else:
+            log.info("Committing transaction")
+            _db().commit()
+    
+    if fn is not None:
+        return decorator
+    else:
+        return context_manager()
 
 
 def sql(query, args=()):
