@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 import cmd
 import shlex
@@ -35,7 +36,7 @@ def getline(prompt):
     return input()
 
 
-class CommandLine(cmd.Cmd):
+class CommandLine2(cmd.Cmd):
     intro = """==== FLAN ===="""
 
     ## CRUD commands and some aliases
@@ -54,7 +55,10 @@ class CommandLine(cmd.Cmd):
         elif resource == "recipe":
             recipe_name = getline("Recipe name: ")
             ingredients = []
-            while x := getline("Food + amount: "):
+            while True:
+                x = getline("Food + amount: ")
+                if not x:
+                    break
                 x = shlex.split(x)
                 if len(x) != 2:
                     raise Exception("Expected two values: food name and food amount")
@@ -95,6 +99,47 @@ class CommandLine(cmd.Cmd):
     def onecmd(self, line):
         with app.app_context() as ctx:
             return super().onecmd(line)
+
+
+class CommandLine(cmd.Cmd):
+    def do_plan(self, line):
+        args = shlex.split(line)
+
+    @transaction
+    def do_add(self, line):
+        args = shlex.split(line)
+        name = args[0]
+        tags = args[1:]
+        self.add_single(name, tags)
+
+    @staticmethod
+    def add_single(name, tags):
+        recipe_id = sql(f"insert into recipes(name) values('{name}') returning id")[0][0]
+        tag_query = f"""insert into recipe_tags(recipe_id, value) values {
+            ','.join(('(' + str(recipe_id) + ",'" + t + "')") for t in tags)
+        }"""
+        sql(tag_query)
+
+    @transaction
+    def do_add_many(self, line):
+        while True:
+            x = getline("Recipe [tags...]: ")
+            if not x:
+                break
+
+            x = x.split()
+            if len(x) < 1:
+                print("Error: must provide recipe name at least")
+
+            name = x[0]
+            tags = x[1:]
+            self.add_single(name, tags)
+
+    # overrides
+    def onecmd(self, line):
+        with app.app_context() as ctx:
+            return super().onecmd(line)
+
 
 if __name__ == "__main__":
     CommandLine().onecmd(" ".join(sys.argv[1:]))
