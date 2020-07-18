@@ -36,40 +36,42 @@ const collapsible = (heading, content, uiLoc, collapsed=true, classes=[]) => {
 };
 
 
-const getQtyInput = (val, id, ids, editable) => {
+const getQtyInput = (val, id, ids, editable, stateUI) => {
     if (!editable) {
-        return val
+        return val + ' '
     }
-    // return  `<span contenteditable="true" id="qty-${id}-${ids.join('-')}">${val}</span>`
-    return  `
-        <input name="qty-${id}-${ids.join('-')}" value="${val}" class="temp">
-    `
+    const _id = `qty-${id}-${ids.join('-')}`;
+    const _val = stateUI.focused === _id ? (stateUI.valInEdit || val) : val;
+    return `<span class="qtyInput" contenteditable="true" id="${_id}">${_val}</span>`
 };
 
 
-const caloriesCard = (id, d, i, editable) => {
+const caloriesCard = (id, d, i, editable, stateUI) => {
     const dayBody = () => {
         const mealMap = {breakfast: [], lunch: [], dinner: [], snacks: []};
         d.elements.map((el, ii) => mealMap[el.type.toLowerCase()].push({ ...el, ii: ii }));
         return `
         <div class="mealTypeContainer">
-          <div class="mealTypeHead">${sbFlex('TOTAL', `<span>${sum(d.elements.map(el => mealItemCals(el)))}</span>`)}</div>
+          <div class="mealTypeHead">${sbFlex('TOTAL', `<span>${Mr(sum(d.elements.map(el => mealItemCals(el))))}</span>`)}</div>
         </div>
         <div class="mealTypeContainer">
           <div class="mealTypeHead">${sbFlex('PLAN', `<span>${d.planType}</span>`)}</div>
         </div>
         ${strMap(mealTypes, mt => collapsible(
-             `<div class="mealTypeHead">${sbFlex(mt, `<span>${sum(mealMap[mt].map(mm => mealItemCals(mm)))}</span>`)}</div>`,
+             `<div class="mealTypeHead">${sbFlex(mt, `<span>${Mr(sum(mealMap[mt].map(mm => mealItemCals(mm))))}</span>`)}</div>`,
             strMap(mealMap[mt], mm => collapsible(
                 sbFlex(
-                    `<div>${mm.name}</div><div class="mealItemQty">${getQtyInput(mm.qty, id, [i,mm.ii], editable)} ${mm.unit || mm.name}</div>`,
-                    mealItemCals(mm)
+                    `<div>${mm.name}</div><div class="mealItemQty">${getQtyInput(mm.qty, id, [i,mm.ii], editable, stateUI)}${mm.unit || mm.name}</div>`,
+                    Mr(mealItemCals(mm))
                 ),
-                mm.ingredients && strMap(mm.ingredients, (ing) => {
+                mm.ingredients && strMap(mm.ingredients, (ing, iii) => {
                     return `
                         <div class="mealItemIng">${sbFlex(
-                            `<div>${ing.name}</div><div class="mealItemQty">${Mr(ing.qty * ing.basis.qty, 3)} ${ing.basis.unit || ing.name}</div>`,
-                            relIngCals(ing)
+                            `<div>${ing.name}</div>
+                                <div class="mealItemQty">
+                                    ${getQtyInput(Mr(ing.qty * ing.basis.qty, 3), id, [i, mm.ii, iii], editable, stateUI)}${ing.basis.unit || ing.name}
+                                </div>`,
+                            Mr(relIngCals(ing))
                         )}</div>
                     `
                 }),
@@ -80,13 +82,13 @@ const caloriesCard = (id, d, i, editable) => {
     `};
     const sumBody = () => `
         <div class="mealTypeContainer">
-          <div class="mealTypeHead">${sbFlex('AVERAGE', `<span>${d.avg}</span>`)}</span></div>
-          <div class="mealItem">${sbFlex('total', `<span>${d.tot}</span>`)}</span></div>
+          <div class="mealTypeHead">${sbFlex('AVERAGE', `<span>${Mr(d.avg)}</span>`)}</span></div>
+          <div class="mealItem">${sbFlex('total', `<span>${Mr(d.tot)}</span>`)}</span></div>
         </div>
         ${strMap(mealTypes, mt => `
             <div class="mealTypeContainer">
-              <div class="mealTypeHead">${sbFlex(mt, `<span>${d[mt].avg}</span>`)}</span></div>
-              <div class="mealItem">${sbFlex('total', `<span>${d[mt].tot}</span>`)}</span></div>
+              <div class="mealTypeHead">${sbFlex(mt, `<span>${Mr(d[mt].avg)}</span>`)}</span></div>
+              <div class="mealItem">${sbFlex('total', `<span>${Mr(d[mt].tot)}</span>`)}</span></div>
             </div>
         `)}
     `;
@@ -200,7 +202,7 @@ const _renderWeekPlan = (id, state, loc, editable) => {
             ${strMap(days, (d, i) => {
                 return `
                   <div class="cardContainer">
-                    ${caloriesCard(id, d, i, editable)}
+                    ${caloriesCard(id, d, i, editable, state.ui)}
                     
                     ${macrosCard(id, d, i)}
                   </div>
@@ -213,23 +215,83 @@ const _renderWeekPlan = (id, state, loc, editable) => {
 
 
 const addMealCardEvents = (id, state, loc) => {
-    const dupe = obj => $.isArray(obj) ? [ ...obj ] : { ...obj };
 
     const handleCollapse = (e, collapsed) => {
-            const uiLoc = $(e.target).data('uiloc').split('-');
-            let node = state;
-            for (let l of [ ...loc, ...uiLoc ]) node = node[l];
-            if (node.collapsed !== collapsed) node.collapsed = collapsed;
+        /** mutates the state! */
+        const uiLoc = $(e.target).data('uiloc').split('-');
+        let node = state;
+        for (let l of [ ...loc, ...uiLoc ]) node = node[l];
+        if (node.collapsed !== collapsed) node.collapsed = collapsed;
     };
 
     $('[data-uiloc]')
         .on('show.bs.collapse', e => handleCollapse(e, false))
         .on('hide.bs.collapse', e => handleCollapse(e, true ));
 
-    $(`${getContId(id)} input`).change(e => {  // TODO maybe make this oninput or something
-        const [ type, _id, ...ids ] = e.target.name.split('-');
+    addQtyInputEvents(id, state, loc);
+
+    computeMCCStyles();
+};
+
+const addQtyInputEvents = (id, state, loc) => {
+    const dupe = obj => $.isArray(obj) ? [ ...obj ] : { ...obj };
+
+    const numValidator = /^\d*\.?\d*$/;
+
+    $(`${getContId(id)} [contenteditable]`).click(function(e) {
+        e.stopPropagation();
+    }).focus(function() {
+        const $this = $(this);
+        $this.data('before', $this.text());
+    }).keydown(function(e) {
+        if (e.key === 'Enter') {
+            $(this).blur();
+        }
+    }).on('keyup paste', function() {
+        const $this = $(this);
+        const range = window.getSelection().getRangeAt(0);
+        const oldVal = $this.data('before');
+        const rawVal = $this.text();
+        const newVal = $this.text().trim();
+
+        if (rawVal !== newVal) {
+            const newOffset = range.startOffset - (rawVal.length - newVal.length);
+            $this.text(newVal);
+            range.setStart((newVal ? range.startContainer.childNodes[0] : range.startContainer), newOffset);
+        }
+
+        if (oldVal !== newVal && +oldVal !== +newVal) {
+            if (!numValidator.test(newVal)) {
+                const newOffset = range.startOffset - (newVal.length - oldVal.length);
+                $this.text(oldVal);
+                range.setStart(range.startContainer.childNodes[0], newOffset)
+            }
+            else if (+newVal) {
+                state.ui = {
+                    ...state.ui,
+                    caretPos: range.startOffset,
+                    focused: range.startContainer.parentNode.id,
+                    valInEdit: newVal,
+                };
+                $this.change();
+            }
+        }
+    }).blur(function() {
+        state.ui = {
+            ...state.ui,
+            caretPos: null,
+            focused: null,
+            valInEdit: null,
+        };
+        const $this = $(this);
+        const newVal = $this.text();
+        if (!numValidator.test(newVal) || !+newVal) {
+            $this.text($this.data('before'))
+        }
+        $this.change();
+    }).change(function(e) {
+        const [ type, _id, ...ids ] = e.target.id.split('-');
         const newState = { ...state };
-        console.log('onchange:', e.target.name, e.target.value, loc);
 
         // convoluted duplication of relevant nodes of the state tree
         let node = newState;
@@ -245,7 +307,7 @@ const addMealCardEvents = (id, state, loc) => {
             }
         });
         const oldVal = node[type];
-        const newVal = +e.target.value;  // TODO validate the input
+        const newVal = +e.target.innerText / (node.basis ? node.basis.qty : 1);
         const factor = newVal / oldVal;
         node[type] = newVal;
         if (node.ingredients) {
@@ -260,8 +322,6 @@ const addMealCardEvents = (id, state, loc) => {
         }
         updateMCCState(state, newState, id, loc, true)
     });
-
-    computeMCCStyles();
 };
 
 
@@ -274,7 +334,20 @@ const computeMCCStyles = () => {
 
 const updateMCCState = (state, newState, id, loc, editable) => {
     _assignState(newState);
-    _renderWeekPlan(id, state, loc, editable)
+    _renderWeekPlan(id, state, loc, editable);
+    _updateUI(state);
+};
+
+const _updateUI = state => {
+    if (state.ui.focused) {
+        const node = $(`#${state.ui.focused}`);
+        const range = document.createRange();
+        range.setStart(node.contents()[0], state.ui.caretPos);
+        node.focus();
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
 };
 
 export const addUIState = (plan) => {

@@ -200,8 +200,7 @@ input[type=date]::-webkit-inner-spin-button {
     cursor: pointer;
 }
 
-.temp {
-    width: 20px;
-    border: none;
-    padding: 0;
+.qtyInput {
+    padding: 1px 4px;
+    margin-left: -4px;
 }

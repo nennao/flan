@@ -8,6 +8,7 @@ const INITIAL_STATE = {
     view: null,
     plannerModal: { ...initialPlannerModalState },
     planner: {plans: null},
+    ui: {focused: null, caretPos: null, valInEdit: null}
 };
 
 const APP_LEVEL_STATE = ['view'];
