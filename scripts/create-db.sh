@@ -9,7 +9,7 @@ psql -p 5433 -d postgres -c "drop database $dbname"
 psql -p 5433 -d postgres -c "drop user $user"
 
 # create default user
-psql -p 5433 -c "create user $user with superuser; alter user $user with encrypted password $pw"
+psql -p 5433 -d postgres -c "create user $user with superuser; alter user $user with encrypted password $pw"
 
 # create flan DB
 psql -p 5433 -d postgres -f "$(dirname $0)/00.sql"

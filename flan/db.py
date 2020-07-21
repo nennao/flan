@@ -60,10 +60,10 @@ def transaction(fn=None):
             log.info("Committing transaction")
             _db().commit()
     
-    if fn is not None:
-        return decorator
-    else:
+    if fn is None:
         return context_manager()
+    else:
+        return decorator
 
 
 def sql(query, args=()):

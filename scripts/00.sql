@@ -14,12 +14,6 @@ create table recipe_tags (
     value     varchar(100)
 );
 
-create table ingredients (
-    recipe_id       integer references recipes(id) on delete cascade,
-    food_id         integer references foods(id) on delete cascade,
-    amount          float
-);
-
 create table foods (
     id              serial primary key,
     name            varchar(100) unique,
@@ -28,5 +22,11 @@ create table foods (
     fat             integer,
     carbs           integer,
     unit            varchar(10)
+);
+
+create table ingredients (
+    recipe_id       integer references recipes(id) on delete cascade,
+    food_id         integer references foods(id) on delete cascade,
+    amount          float
 );
 
