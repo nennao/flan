@@ -15,7 +15,7 @@ def format_food_name(name):
 
 def ingest_recipes():
     # read recipes
-    recipes = list(map(lambda s: s.strip().split(","), open("recipes.csv").readlines()[1:]))
+    recipes = list(map(lambda s: s.strip().split(","), open("data/recipes.csv").readlines()[1:]))
     for r in recipes:
         r[0] = format_recipe_name(r[0])
     
@@ -30,7 +30,7 @@ def ingest_recipes():
 
 def ingest_ingredients():
     # read ingredients
-    ingr = list(map(lambda s: s.strip().split(","), open("ingredients.csv").readlines()[1:]))
+    ingr = list(map(lambda s: s.strip().split(","), open("data/ingredients.csv").readlines()[1:]))
     for i in ingr:
         i[0] = format_recipe_name(i[0])
         i[1] = format_food_name(i[1])
