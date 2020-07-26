@@ -17,10 +17,10 @@ create table recipe_tags (
 create table foods (
     id              serial primary key,
     name            varchar(100) unique,
-    calories        integer,
     protein         integer,
     fat             integer,
     carbs           integer,
+    fibre           integer,
     unit            varchar(10)
 );
 
