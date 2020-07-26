@@ -28,7 +28,6 @@ def ingest_recipes():
     tags = ",".join(f"({ids[r[0]]},'{r[1]}')" for r in recipes)
     sql(f"insert into recipe_tags(recipe_id, value) values {tags}")
 
-
 def ingest_ingredients():
     # read ingredients
     ingr = list(map(lambda s: s.strip().split(","), open("ingredients.csv").readlines()[1:]))

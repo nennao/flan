@@ -1,1 +1,381 @@
-RECIPE,FOOD,AMOUNTramsled,egg,4ramsled,creme fraiche,50gramsled,butter,10gramsled,chives,5gramsled,bread,100gramsled,tomato,50gstir_fry,egg noodles,100gstir_fry,chicken thigh,300gstir_fry,red onion,1stir_fry,red pepper,1stir_fry,soy sauce,50mlstir_fry,oil,10mlpad_thai,prawns,150gpad_thai,beansprouts,200gpad_thai,noodles,200gpad_thai,egg,1pad_thai,spring onions,80gpad_thai,garlic,3pad_thai,lime,1pad_thai,soy sauce,50mlpad_thai,fish sauce,10mlpad_thai,peanuts,30gpad_thai,oil,10mloaternights,oats,50goaternights,seeds,10goaternights,buckwheat,10goaternights,dessicated coconut,10goaternights,coconut cream,40goaternights,milk,30mloaternights,honey,20gavocado_toast,avocado,100gavocado_toast,english muffin,1avocado_toast,hot sauce,10mleggs_woodhouse,eggs,4eggs_woodhouse,english muffin,2eggs_woodhouse,white wine vinegar,20mleggs_woodhouse,spinach,200geggs_woodhouse,butter,70geggs_woodhouse,milk,20mleggs_woodhouse,flour,5geggs_woodhouse,egg yolk,2eggs_woodhouse,lemon,0.5eggs_woodhouse,melon,0.25eggs_woodhouse,serrano ham,50geggs_benedict,eggs,4eggs_benedict,english muffin,2eggs_benedict,white wine vinegar,20mleggs_benedict,butter,60geggs_benedict,egg yolk,2eggs_benedict,lemon,0.5eggs_benedict,ham,50geggs_royale,english muffin,2eggs_royale,egg,4eggs_royale,creme fraiche,50geggs_royale,butter,10geggs_royale,chives,5geggs_royale,smoked salmon,100gsmooshocados,guacamole,100gsmooshocados,ryvita,100gsmooshocados,streaky bacon,80geggs_okoye,egg,4eggs_okoye,tomato,100geggs_okoye,onion,1eggs_okoye,oil,10mlmushrooms_okoye,mushrooms,300gmushrooms_okoye,bell pepper,2mushrooms_okoye,oil,10mljollof_rice,rice,200gjollof_rice,chicken,200gjollof_rice,prawns,75gjollof_rice,tomato puree,50gjollof_rice,onion,1jollof_rice,garlic,3jollof_rice,carrot,50gjollof_rice,oil,10mlpepper_soup,fish,240pepper_soup,oil,20gpepper_soup,silken tofu,50gpepper_soup,onion,1pepper_soup,garlic,3pepper_soup,ginger,10gpepper_soup,scotch bonnet,1pepper_soup,bay leaves,3pepper_soup,spring onion,80gpepper_soup,cornflour,5gpepper_soup,basil,5gpepper_soup,coriander,5gpepper_soup,bouillon,15gjambalaya,rice,400gjambalaya,tinned tomato,400gjambalaya,onion,1jambalaya,celery,2jambalaya,chorizo,200gjambalaya,chicken,500gjambalaya,prawns,150gjambalaya,cajun spice,10gjambalaya,red pepper,2jambalaya,garlic,4jambalaya,oil,10mljambalaya,mustard,10gjambalaya,chicken stock,1bacony_pasta,linguine,250gbacony_pasta,lardons,200gbacony_pasta,tinned tomato,400gbacony_pasta,onion,1bacony_pasta,garlic,2spag_bol,spaghetti,250gspag_bol,carrot,1spag_bol,celery,2spag_bol,onion,1spag_bol,tinned tomato,400gspag_bol,garlic,2spag_bol,beef mince,400glettuce_curry_boats,gem lettuce,1lettuce_curry_boats,chicken,300glettuce_curry_boats,curry sauce,250mllettuce_curry_boats,guac,200glettuce_curry_boats,red pepper,1ramen,ramen noodles,2ramen,minute steak,200gramen,spinach,100grice_bowls,brown rice,200grice_bowls,chicken,300grice_bowls,avocado,100grice_bowls,aioli,50grice_bowls,tomato,100gstuffed_jacket_potato,potato,4stuffed_jacket_potato,sour cream,100mlstuffed_jacket_potato,chives,stuffed_jacket_potato,cheddar,50gstuffed_jacket_potato,bacon,100gstuffed_jacket_potato,spring onions,50glemony_salmon,salmon,200glemony_salmon,lemon,1lemony_salmon,sweet potato,2lemony_salmon,baby bok choi,2lemony_salmon,soy sauce,50mllemony_salmon,honey,50mllemony_salmon,sesame seeds,10gpopcorn_chicken,rice,200gpopcorn_chicken,chicken,300gpopcorn_chicken,oil,1000mlpopcorn_chicken,egg,2popcorn_chicken,cornflour,100gpopcorn_chicken,spring onions,2popcorn_chicken,sesame seeds,50gpopcorn_chicken,ketchup,100mlpopcorn_chicken,sweet chilli sauce,100mlpopcorn_chicken,soy sauce,100mlsmoothie,melon,100gsmoothie,banana,200gsmoothie,coconut water,20mlsmoothie,spinach,25ggrilled_cheese,bread,4grilled_cheese,cheese,100ggrilled_cheese,salami,50ggrilled_cheese,pickle,50ggrilled_cheese,mustard,10ggrilled_cheese,butter,40ggrilled_cheese,hot sauce,10mlbagel,bagel,3bagel,ham,50gbagel,cheese,50gbagel,mustard,10mlbagel,mayonnaise,10mlbagel,pickle,20gfluffy_pancakes,flour,135mlfluffy_pancakes,milk,130mlfluffy_pancakes,baking powder,5gfluffy_pancakes,caster sugar,10gfluffy_pancakes,egg,1fluffy_pancakes,butter,20gfluffy_pancakes,maple syrup,200mlmega_sandwich,baton,2mega_sandwich,minute steak,200gmega_sandwich,mozzarella,50gmega_sandwich,cheese,50gmega_sandwich,spinach,50gmega_sandwich,mayonnaise,10gmega_sandwich,pesto,10gcrepes,flour,150gcrepes,milk,200mlcrepes,egg,2crepes,butter,25gnachos,tortilla chips,200gnachos,salsa,200gnachos,spring onion,4nachos,cheese,200gnachos,guac,100mlnachos,sour cream,100mlcalzodilla,tortilla,3calzodilla,ham,50gcalzodilla,cheese,50gcalzodilla,mushrooms,50gcalzodilla,hot sauce,10mlcalzodilla,tomato puree,10gcalzodilla,egg,2caesar_salad,chicken,300gcaesar_salad,romaine lettuce,200gcaesar_salad,anchovies,50gcaesar_salad,garlic,3caesar_salad,vinegar,10mlcaesar_salad,mayonnaise,10mlcaesar_salad,parmesan,50gburrito,rice,100gburrito,chicken,300gburrito,cheese,50gburrito,tortilla,2burrito,guac,50gburrito,cajun seasoning,10gsalad,minute steak,2salad,garlic,2salad,lime,1salad,brown sugar,5gsalad,chilli,1salad,garlic,herb salad,120gsalad,cucumber,100gsalad,radish,50gsalad,coriander,15gsalad,peanuts,50gscones,scones,2creamy_linguine,garlic,4creamy_linguine,green chilli,1creamy_linguine,chives,80gcreamy_linguine,serrano ham,50gcreamy_linguine,linguine,250gcreamy_linguine,vegetable stock,1creamy_linguine,prawns,150gcreamy_linguine,creme fraiche,150gcreamy_linguine,lemon,1mexican_grilled_chicken,chicken thigh,400gmexican_grilled_chicken,yoghurt,250gmexican_grilled_chicken,fajita seasoning,10gmexican_grilled_chicken,red pepper,1mexican_grilled_chicken,carrot,80gmexican_grilled_chicken,coriander,5gmexican_grilled_chicken,lime,1mexican_grilled_chicken,dessicated coconut,30gmexican_grilled_chicken,basmati rice,150gmexican_grilled_chicken,chicken stock,1mexican_grilled_chicken,tomato,100gmexican_grilled_chicken,oil,15gduck_confit,parsnip,200gduck_confit,duck leg,300gduck_confit,apple,100gduck_confit,garlic,2duck_confit,hazelnuts,25gduck_confit,parsley,15gduck_confit,vegetable stock,1duck_confit,apple sage jelly,50gthai_red_curry,vegetable stock,1thai_red_curry,star anise,1thai_red_curry,basmati rice,150gthai_red_curry,carrot,100gthai_red_curry,red pepper,100gthai_red_curry,garlic,2thai_red_curry,ginger,10gthai_red_curry,lemongrass,1thai_red_curry,coriander,10gthai_red_curry,red curry paste,50gthai_red_curry,coconut milk,200gthai_red_curry,chicken thigh,300gthai_red_curry,lime,1pork_apple_burger,rosemary,5gpork_apple_burger,potato,500gpork_apple_burger,apple,150gpork_apple_burger,pork mince,225gpork_apple_burger,breadcrumbs,10gpork_apple_burger,cheddar,30gpork_apple_burger,brioche bun,2pork_apple_burger,honey,10gpork_apple_burger,lemon,0.5pork_apple_burger,oil,15gpork_apple_burger,pea shoots,150gpork_apple_burger,apple sage jelly,50gsweet_chilli_beef,ginger,10gsweet_chilli_beef,garlic,1sweet_chilli_beef,sweet chilli sauce,40gsweet_chilli_beef,steak,280gsweet_chilli_beef,red pepper,1sweet_chilli_beef,carrot,100gsweet_chilli_beef,spring onion,80gsweet_chilli_beef,egg noodles,100gsweet_chilli_beef,ketjap manis,20gsweet_potato_dal,onion,1sweet_potato_dal,ginger,10gsweet_potato_dal,sweet potato,150gsweet_potato_dal,curry powder,5gsweet_potato_dal,tomato puree,30gsweet_potato_dal,coconut milk,200gsweet_potato_dal,vegetable stock,1sweet_potato_dal,red lentils,100gsweet_potato_dal,coriander,10gsweet_potato_dal,lime,1sweet_potato_dal,pumpkin seeds,15gsweet_potato_dal,oil,15gsweet_potato_dal,flatbread,100gsweet_potato_dal,spinach,100gmexican_beef,potato,250gmexican_beef,onion,1mexican_beef,red pepper,0.5mexican_beef,beef mince,250gmexican_beef,carrot,80gmexican_beef,fajita seasoning,10gmexican_beef,tinned tomato,200gmexican_beef,beef stock,1mexican_beef,coriander, 10gmexican_beef,avocado,100gmexican_beef,lime,0.5mexican_beef,cheddar,30gmexican_beef,sour cream,50gsteak,steak,200gsteak,sweet potato,150gsteak,garlic,4steak,rosemary,5gsteak,tomato,50gsteak,baby leaf salad,150gsea_bream,potato,250gsea_bream,tomato,100gsea_bream,parsley,10gsea_bream,lemon,0.5sea_bream,green beans,1sea_bream,chorizo,60gsea_bream,butter,30gsea_bream,saffron powder,5gsea_bream,sea bream,240ghoney_soy_duck,baby bok choy,100ghoney_soy_duck,garlic,1honey_soy_duck,coriander,5ghoney_soy_duck,red chilli,0.5honey_soy_duck,cucumber,0.5honey_soy_duck,peanuts,25ghoney_soy_duck,jasmine rice,150ghoney_soy_duck,duck breast,200ghoney_soy_duck,white wine vinegar,20mlhoney_soy_duck,sugar,8ghoney_soy_duck,oil,10ghoney_soy_duck,honey,15gpaella,chicken stock,1paella,shallot,1paella,garlic,1paella,chicken thigh,280gpaella,chorizo,200gpaella,red wine vinegar,15mlpaella,arborio rice,175gpaella,green beans,100gpaella,red pepper,1paella,parsley,5gtandoori_rice,chicken thigh,350gtandoori_rice,masala spice,10gtandoori_rice,onion,1tandoori_rice,ginger,20gtandoori_rice,garlic,1tandoori_rice,basmati rice,150gtandoori_rice,chicken stock,1tandoori_rice,broccoli,200gtandoori_rice,coriander,5gtandoori_rice,yoghurt,500gtandoori_rice,dessicated coconut,25ghoisin_pork,garlic,2hoisin_pork,ginger,15ghoisin_pork,red chilli,1hoisin_pork,hoisin sauce,10ghoisin_pork,spring onion,2hoisin_pork,soy sauce,16mlhoisin_pork,green beans,120ghoisin_pork,sugar snap peas,80ghoisin_pork,pork mince,250ghoisin_pork,sesame seeds,10ghoisin_pork,basmati rice,100gchicken_satay_skewers,chicken,200gchicken_satay_skewers,peanut butter,26gchicken_satay_skewers,vinegar,10gchicken_satay_skewers,soy sauce,8mlchicken_satay_skewers,spring onion,200gchicken_satay_skewers,coconut cream,50gchicken_satay_skewers,cucumber,100gchicken_satay_skewers,brown rice,130gchicken_satay_skewers,chilli flakes,3gchicken_satay_skewers,curry powder,5g
+RECIPE,FOOD,AMOUNT
+ramsled,egg,4
+ramsled,creme fraiche,50g
+ramsled,butter,10g
+ramsled,chives,5g
+ramsled,bread,100g
+ramsled,cherry tomato,50g
+stir_fry,egg noodles,100g
+stir_fry,chicken thigh,300g
+stir_fry,red onion,1
+stir_fry,red pepper,1
+stir_fry,soy sauce,50ml
+stir_fry,vegetable oil,10ml
+pad_thai,prawns,150g
+pad_thai,beansprouts,200g
+pad_thai,noodles,200g
+pad_thai,egg,1
+pad_thai,spring onions,80g
+pad_thai,garlic,3
+pad_thai,lime,1
+pad_thai,soy sauce,50ml
+pad_thai,fish sauce,10ml
+pad_thai,peanuts,30g
+pad_thai,vegetable oil,10ml
+oaternights,oats,50g
+oaternights,mixed seeds,10g
+oaternights,buckwheat,10g
+oaternights,coconut (desiccated),10g
+oaternights,coconut cream,40g
+oaternights,milk,30ml
+oaternights,honey,20g
+avocado_toast,avocado,100g
+avocado_toast,english muffin,1
+avocado_toast,hot sauce,10ml
+eggs_woodhouse,egg,4
+eggs_woodhouse,english muffin,2
+eggs_woodhouse,white wine vinegar,20ml
+eggs_woodhouse,spinach,200g
+eggs_woodhouse,butter,70g
+eggs_woodhouse,milk,20ml
+eggs_woodhouse,flour,5g
+eggs_woodhouse,egg yolk,2
+eggs_woodhouse,lemon,0.5
+eggs_woodhouse,melon,0.25
+eggs_woodhouse,serrano ham,50g
+eggs_benedict,egg,4
+eggs_benedict,english muffin,2
+eggs_benedict,white wine vinegar,20ml
+eggs_benedict,butter,60g
+eggs_benedict,egg yolk,2
+eggs_benedict,lemon,0.5
+eggs_benedict,ham,50g
+eggs_royale,english muffin,2
+eggs_royale,egg,4
+eggs_royale,creme fraiche,50g
+eggs_royale,butter,10g
+eggs_royale,chives,5g
+eggs_royale,smoked salmon,100g
+smooshocados,guacamole,100g
+smooshocados,ryvita,100g
+smooshocados,streaky bacon,80g
+eggs_okoye,egg,4
+eggs_okoye,beef tomato,100g
+eggs_okoye,onion,1
+eggs_okoye,vegetable oil,10ml
+mushrooms_okoye,mushrooms,300g
+mushrooms_okoye,bell pepper,2
+mushrooms_okoye,vegetable oil,10ml
+jollof_rice,long grain rice,200g
+jollof_rice,chicken drumstick,200g
+jollof_rice,prawns,75g
+jollof_rice,tomato puree,50g
+jollof_rice,onion,1
+jollof_rice,garlic,3
+jollof_rice,carrot,50g
+jollof_rice,vegetable oil,10ml
+pepper_soup,haddock,240
+pepper_soup,vegetable oil,20g
+pepper_soup,silken tofu,50g
+pepper_soup,onion,1
+pepper_soup,garlic,3
+pepper_soup,ginger,10g
+pepper_soup,scotch bonnet,1
+pepper_soup,bay leaves,3
+pepper_soup,spring onions,80g
+pepper_soup,cornflour,5g
+pepper_soup,basil,5g
+pepper_soup,coriander,5g
+pepper_soup,bouillon,15g
+jambalaya,basmati rice,400g
+jambalaya,tinned tomato,400g
+jambalaya,onion,1
+jambalaya,celery,2
+jambalaya,chorizo,200g
+jambalaya,chicken thigh,500g
+jambalaya,prawns,150g
+jambalaya,cajun seasoning,10g
+jambalaya,red pepper,2
+jambalaya,garlic,4
+jambalaya,vegetable oil,10ml
+jambalaya,mustard,10g
+jambalaya,chicken stock,1
+bacony_pasta,linguine,250g
+bacony_pasta,lardons,200g
+bacony_pasta,tinned tomato,400g
+bacony_pasta,onion,1
+bacony_pasta,garlic,2
+spag_bol,spaghetti,250g
+spag_bol,carrot,1
+spag_bol,celery,2
+spag_bol,onion,1
+spag_bol,tinned tomato,800g
+spag_bol,garlic,2
+spag_bol,beef mince,400g
+lettuce_curry_boats,gem lettuce,1
+lettuce_curry_boats,chicken thigh,300g
+lettuce_curry_boats,curry sauce,250ml
+lettuce_curry_boats,guacamole,200g
+lettuce_curry_boats,red pepper,1
+ramen,ramen noodles,2
+ramen,minute steak,200g
+ramen,spinach,100g
+rice_bowls,brown rice,200g
+rice_bowls,chicken thigh,300g
+rice_bowls,avocado,100g
+rice_bowls,aioli,50g
+rice_bowls,cherry tomato,100g
+stuffed_jacket_potato,potato,4
+stuffed_jacket_potato,sour cream,100ml
+stuffed_jacket_potato,chives,
+stuffed_jacket_potato,cheddar,50g
+stuffed_jacket_potato,bacon,100g
+stuffed_jacket_potato,spring onions,50g
+lemony_salmon,salmon,200g
+lemony_salmon,lemon,1
+lemony_salmon,sweet potato,2
+lemony_salmon,baby bok choy,2
+lemony_salmon,soy sauce,50ml
+lemony_salmon,honey,50ml
+lemony_salmon,sesame seeds,10g
+popcorn_chicken,basmati rice,200g
+popcorn_chicken,chicken thigh,300g
+popcorn_chicken,vegetable oil,1000ml
+popcorn_chicken,egg,2
+popcorn_chicken,cornflour,100g
+popcorn_chicken,spring onions,2
+popcorn_chicken,sesame seeds,50g
+popcorn_chicken,ketchup,100ml
+popcorn_chicken,sweet chilli sauce,100ml
+popcorn_chicken,soy sauce,100ml
+smoothie,melon,100g
+smoothie,banana,200g
+smoothie,coconut water,20ml
+smoothie,spinach,25g
+grilled_cheese,bread,4
+grilled_cheese,cheddar,100g
+grilled_cheese,salami,50g
+grilled_cheese,pickles,50g
+grilled_cheese,mustard,10g
+grilled_cheese,butter,40g
+grilled_cheese,hot sauce,10ml
+bagel,bagel,3
+bagel,ham,50g
+bagel,cheddar,50g
+bagel,mustard,10ml
+bagel,mayonnaise,10ml
+bagel,pickles,20g
+fluffy_pancakes,flour,135ml
+fluffy_pancakes,milk,130ml
+fluffy_pancakes,baking powder,5g
+fluffy_pancakes,caster sugar,10g
+fluffy_pancakes,egg,1
+fluffy_pancakes,butter,20g
+fluffy_pancakes,maple syrup,200ml
+mega_sandwich,baton,2
+mega_sandwich,minute steak,200g
+mega_sandwich,mozzarella,50g
+mega_sandwich,cheddar,50g
+mega_sandwich,spinach,50g
+mega_sandwich,mayonnaise,10g
+mega_sandwich,pesto,10g
+crepes,flour,150g
+crepes,milk,200ml
+crepes,egg,2
+crepes,butter,25g
+nachos,tortilla chips,200g
+nachos,salsa,200g
+nachos,spring onions,4
+nachos,cheddar,200g
+nachos,guacamole,100ml
+nachos,sour cream,100ml
+calzodilla,tortilla,3
+calzodilla,ham,50g
+calzodilla,cheddar,50g
+calzodilla,mushrooms,50g
+calzodilla,hot sauce,10ml
+calzodilla,tomato puree,10g
+calzodilla,egg,2
+caesar_salad,chicken thigh,300g
+caesar_salad,romaine lettuce,200g
+caesar_salad,anchovies,50g
+caesar_salad,garlic,3
+caesar_salad,white wine vinegar,10ml
+caesar_salad,mayonnaise,10ml
+caesar_salad,parmesan,50g
+burrito,basmati rice,100g
+burrito,chicken thigh,300g
+burrito,cheddar,50g
+burrito,tortilla,2
+burrito,guacamole,50g
+burrito,cajun seasoning,10g
+salad,minute steak,2
+salad,garlic,2
+salad,lime,1
+salad,brown sugar,5g
+salad,green chilli,1
+salad,garlic,herb salad,120g
+salad,cucumber,100g
+salad,radishes,50g
+salad,coriander,15g
+salad,peanuts,50g
+scones,scones,2
+creamy_linguine,garlic,4
+creamy_linguine,green chilli,1
+creamy_linguine,chives,80g
+creamy_linguine,serrano ham,50g
+creamy_linguine,linguine,250g
+creamy_linguine,vegetable stock,1
+creamy_linguine,prawns,150g
+creamy_linguine,creme fraiche,150g
+creamy_linguine,lemon,1
+mexican_grilled_chicken,chicken thigh,400g
+mexican_grilled_chicken,yoghurt,250g
+mexican_grilled_chicken,fajita seasoning,10g
+mexican_grilled_chicken,red pepper,1
+mexican_grilled_chicken,carrot,80g
+mexican_grilled_chicken,coriander,5g
+mexican_grilled_chicken,lime,1
+mexican_grilled_chicken,coconut (desiccated),30g
+mexican_grilled_chicken,basmati rice,150g
+mexican_grilled_chicken,chicken stock,1
+mexican_grilled_chicken,beef tomato,100g
+mexican_grilled_chicken,vegetable oil,15g
+duck_confit,parsnip,200g
+duck_confit,duck leg,300g
+duck_confit,apple,100g
+duck_confit,garlic,2
+duck_confit,hazelnuts,25g
+duck_confit,parsley,15g
+duck_confit,vegetable stock,1
+duck_confit,apple sage jelly,50g
+thai_red_curry,vegetable stock,1
+thai_red_curry,star anise,1
+thai_red_curry,basmati rice,150g
+thai_red_curry,carrot,100g
+thai_red_curry,red pepper,100g
+thai_red_curry,garlic,2
+thai_red_curry,ginger,10g
+thai_red_curry,lemongrass,1
+thai_red_curry,coriander,10g
+thai_red_curry,red curry paste,50g
+thai_red_curry,coconut milk,200g
+thai_red_curry,chicken thigh,300g
+thai_red_curry,lime,1
+pork_apple_burger,rosemary,5g
+pork_apple_burger,potato,500g
+pork_apple_burger,apple,150g
+pork_apple_burger,pork mince,225g
+pork_apple_burger,breadcrumbs,10g
+pork_apple_burger,cheddar,30g
+pork_apple_burger,brioche bun,2
+pork_apple_burger,honey,10g
+pork_apple_burger,lemon,0.5
+pork_apple_burger,vegetable oil,15g
+pork_apple_burger,pea shoots,150g
+pork_apple_burger,apple sage jelly,50g
+sweet_chilli_beef,ginger,10g
+sweet_chilli_beef,garlic,1
+sweet_chilli_beef,sweet chilli sauce,40g
+sweet_chilli_beef,sirloin steak,280g
+sweet_chilli_beef,red pepper,1
+sweet_chilli_beef,carrot,100g
+sweet_chilli_beef,spring onions,80g
+sweet_chilli_beef,egg noodles,100g
+sweet_chilli_beef,ketjap manis,20g
+sweet_potato_dal,onion,1
+sweet_potato_dal,ginger,10g
+sweet_potato_dal,sweet potato,150g
+sweet_potato_dal,curry powder,5g
+sweet_potato_dal,tomato puree,30g
+sweet_potato_dal,coconut milk,200g
+sweet_potato_dal,vegetable stock,1
+sweet_potato_dal,red lentils,100g
+sweet_potato_dal,coriander,10g
+sweet_potato_dal,lime,1
+sweet_potato_dal,pumpkin seeds,15g
+sweet_potato_dal,vegetable oil,15g
+sweet_potato_dal,flatbread,100g
+sweet_potato_dal,spinach,100g
+mexican_beef,potato,250g
+mexican_beef,onion,1
+mexican_beef,red pepper,0.5
+mexican_beef,beef mince,250g
+mexican_beef,carrot,80g
+mexican_beef,fajita seasoning,10g
+mexican_beef,tinned tomato,200g
+mexican_beef,beef stock,1
+mexican_beef,coriander, 10g
+mexican_beef,avocado,100g
+mexican_beef,lime,0.5
+mexican_beef,cheddar,30g
+mexican_beef,sour cream,50g
+sirloin steak,sirloin steak,200g
+sirloin steak,sweet potato,150g
+sirloin steak,garlic,4
+sirloin steak,rosemary,5g
+sirloin steak,cherry tomato,50g
+sirloin steak,baby leaf salad,150g
+sea_bream,potato,250g
+sea_bream,cherry tomato,100g
+sea_bream,parsley,10g
+sea_bream,lemon,0.5
+sea_bream,green beans,1
+sea_bream,chorizo,60g
+sea_bream,butter,30g
+sea_bream,saffron powder,5g
+sea_bream,sea bream,240g
+honey_soy_duck,baby bok choy,100g
+honey_soy_duck,garlic,1
+honey_soy_duck,coriander,5g
+honey_soy_duck,red chilli,0.5
+honey_soy_duck,cucumber,0.5
+honey_soy_duck,peanuts,25g
+honey_soy_duck,jasmine rice,150g
+honey_soy_duck,duck breast,200g
+honey_soy_duck,white wine vinegar,20ml
+honey_soy_duck,sugar,8g
+honey_soy_duck,vegetable oil,10g
+honey_soy_duck,honey,15g
+paella,chicken stock,1
+paella,shallot,1
+paella,garlic,1
+paella,chicken thigh,280g
+paella,chorizo,200g
+paella,red wine vinegar,15ml
+paella,arborio rice,175g
+paella,green beans,100g
+paella,red pepper,1
+paella,parsley,5g
+tandoori_rice,chicken thigh,350g
+tandoori_rice,masala spice,10g
+tandoori_rice,onion,1
+tandoori_rice,ginger,20g
+tandoori_rice,garlic,1
+tandoori_rice,basmati rice,150g
+tandoori_rice,chicken stock,1
+tandoori_rice,broccoli,200g
+tandoori_rice,coriander,5g
+tandoori_rice,yoghurt,500g
+tandoori_rice,coconut (desiccated),25g
+hoisin_pork,garlic,2
+hoisin_pork,ginger,15g
+hoisin_pork,red chilli,1
+hoisin_pork,hoisin sauce,10g
+hoisin_pork,spring onions,2
+hoisin_pork,soy sauce,16ml
+hoisin_pork,green beans,120g
+hoisin_pork,sugar snap peas,80g
+hoisin_pork,pork mince,250g
+hoisin_pork,sesame seeds,10g
+hoisin_pork,basmati rice,100g
+chicken_satay_skewers,chicken thigh,200g
+chicken_satay_skewers,peanut butter,26g
+chicken_satay_skewers,white wine vinegar,10g
+chicken_satay_skewers,soy sauce,8ml
+chicken_satay_skewers,spring onions,200g
+chicken_satay_skewers,coconut cream,50g
+chicken_satay_skewers,cucumber,100g
+chicken_satay_skewers,brown rice,130g
+chicken_satay_skewers,chilli flakes,3g
+chicken_satay_skewers,curry powder,5g
