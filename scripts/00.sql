@@ -21,12 +21,14 @@ create table foods (
     fat             integer,
     carbs           integer,
     fibre           integer,
-    unit            varchar(10)
 );
+
+create table measurements (
+    food_id,
+)
 
 create table ingredients (
     recipe_id       integer references recipes(id) on delete cascade,
     food_id         integer references foods(id) on delete cascade,
     amount          varchar(64)
 );
-

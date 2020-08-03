@@ -127,7 +127,7 @@ rice_bowls,aioli,50g
 rice_bowls,cherry tomato,100g
 stuffed_jacket_potato,potato,4
 stuffed_jacket_potato,sour cream,100ml
-stuffed_jacket_potato,chives,
+stuffed_jacket_potato,chives,5g
 stuffed_jacket_potato,cheddar,50g
 stuffed_jacket_potato,bacon,100g
 stuffed_jacket_potato,spring onions,50g
@@ -214,7 +214,7 @@ salad,garlic,2
 salad,lime,1
 salad,brown sugar,5g
 salad,green chilli,1
-salad,garlic,herb salad,120g
+salad,baby leaf salad,120g
 salad,cucumber,100g
 salad,radishes,50g
 salad,coriander,15g
@@ -305,7 +305,7 @@ mexican_beef,carrot,80g
 mexican_beef,fajita seasoning,10g
 mexican_beef,tinned tomato,200g
 mexican_beef,beef stock,1
-mexican_beef,coriander, 10g
+mexican_beef,coriander,10g
 mexican_beef,avocado,100g
 mexican_beef,lime,0.5
 mexican_beef,cheddar,30g
