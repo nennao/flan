@@ -1,11 +1,15 @@
 #!/usr/bin/env python
+import os
+import json
+
 from services import log, app
 from db import sql, transaction
 
 def main():
-    with app.app_context(), transaction():
-        ingest_recipes()
-        ingest_ingredients()
+    # with app.app_context(), transaction():
+    #     ingest_recipes()
+    #     ingest_ingredients()
+    ingest_nutritionix()
 
 def format_recipe_name(name):
     return name.replace("_", " ").title()
@@ -44,6 +48,20 @@ def ingest_ingredients():
     food_ids = { i[1]: i[0] for i in sql("select id, name from foods") }
     ingredients = ",".join(f"({recipe_ids[i[0]]},{food_ids[i[1]]},'{i[2]}')" for i in ingr)
     sql(f"insert into ingredients(recipe_id, food_id, amount) values {ingredients}")
+
+
+def ingest_nutritionix():
+    for file in os.listdir("data/nutritionix"):
+        # check the name matches the food name
+        data = json.loads(open("data/nutritionix/"+file).read())
+        try:
+            food_name = data["foods"][0]["food_name"]
+            intended_name = " ".join(s.lower() for s in file.split(".")[0].split())
+            if food_name != intended_name:
+                print(intended_name, "-", food_name)
+        except:
+            pass
+
 
 if __name__ == "__main__":
     main()
