@@ -20,8 +20,7 @@ create table foods (
     protein         integer,
     fat             integer,
     carbs           integer,
-    fibre           integer,
-    unit            varchar(10)
+    fibre           integer
 );
 
 create table ingredients (
@@ -29,4 +28,3 @@ create table ingredients (
     food_id         integer references foods(id) on delete cascade,
     amount          varchar(64)
 );
-
