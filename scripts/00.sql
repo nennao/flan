@@ -23,6 +23,10 @@ create table foods (
     fibre           integer
 );
 
+create table measurements (
+    food_id,
+)
+
 create table ingredients (
     recipe_id       integer references recipes(id) on delete cascade,
     food_id         integer references foods(id) on delete cascade,
