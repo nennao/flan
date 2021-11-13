@@ -39,11 +39,8 @@ def ingest_recipes():
 
     # insert tags
     recipe_ids = { i[1]: i[0] for i in sql("select id, name from recipes") }
-    tags_insert = ",".join(
-        ",".join(
-            f"({recipe_ids[r[0]]},'{tag}')" for tag in r[2].split("|")
-        ) for r in recipes
-    )
+    tags_insert = ",".join(",".join(f"({recipe_ids[r[0]]},'{tag}')" for tag in r[2].split("|")) for r in recipes)
+
     sql(f"insert into recipe_tags(recipe_id, value) values {tags_insert}")
 
 
