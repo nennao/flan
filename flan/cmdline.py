@@ -40,7 +40,7 @@ class CommandLine(cmd.Cmd):
     def do_spag(self, line):
         print("FLAN SPAG")
         print("For testing the ingesting")
-        data = sql("""select r.name, t.value from recipes r
+        data = sql("""select r.name, r.batch, t.value from recipes r
             join recipe_tags t on r.id = t.recipe_id
             where r.name ilike 'Spag bol'""")
         for d in data:

@@ -4,7 +4,7 @@ begin transaction;
 create table recipes (
     id      serial primary key,
     name    varchar(100) unique,
-    serves  integer
+    batch   integer
 );
 
 create table recipe_tags (

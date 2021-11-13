@@ -8,11 +8,14 @@ from flask import g
 
 from services import app, log
 
+
 DB_USER = "svc-flan-api"
 DB_PASS = "a6d0ff99cfb8637f6a07a7d12e914b32"
 DB_NAME = "flan"
 DB_HOST = "localhost"
 DB_PORT = "5433"
+
+
 def _connect_db():
     return psycopg2.connect(
         host=DB_HOST,
