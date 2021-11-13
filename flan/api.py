@@ -74,7 +74,7 @@ def save_plan():
             recipe_id = sql("select id from recipes where name = %s", (recipe_name,))[0][0]
 
             # insert the new element
-            sql("insert into plan_elements(date, type, plan_type, plan_id, recipe_id) values(%s, %s, %s, %s, %s)", (
+            sql("insert into plan_elements(el_date, el_type, plan_type, plan_id, recipe_id) values(%s, %s, %s, %s, %s)", (
                 date, etype, plantype, plan_id, recipe_id))
 
     # TODO: return the newly created plan
@@ -95,10 +95,10 @@ def get_plans():
             p.id,
             p.begin_date,
             p.end_date,
-            e.date,
+            e.el_date,
             e.id,
             e.plan_type,
-            e.type,
+            e.el_type,
             r.name,
             f.calories,
             f.fat,
@@ -142,7 +142,7 @@ def get_plans():
 
         def new_plan(p):
             return {
-                "id": p[0],
+                "id": p[0],  # todo see if this can switch to more readable k:v pairs instead of indices
                 "startDate": p[1].strftime(DATE_FORMAT),
                 "endDate": p[2].strftime(DATE_FORMAT),
                 "days": []

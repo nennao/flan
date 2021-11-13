@@ -16,10 +16,10 @@ create table recipe_tags (
 create table foods (
     id              serial primary key,
     name            varchar(100) unique,
-    protein         integer, -- g per 100g
-    fat             integer, -- g per 100g
-    carbs           integer, -- g per 100g
-    fibre           integer  -- g per 100g
+    protein         real, -- g per 100g
+    fat             real, -- g per 100g
+    carbs           real, -- g per 100g
+    fibre           real  -- g per 100g
 );
 
 -- Units for recipe ingredients
@@ -41,6 +41,27 @@ create table ingredients (
     food_id         int references foods(id) on delete cascade,
     unit_id         int references units(id) on delete cascade,
     amount          real           -- 200
+);
+
+create table users (
+    id      serial primary key,
+    name    varchar(32)
+);
+
+create table plans (
+    id          serial primary key,
+    user_id     int references users(id) on delete cascade,
+    begin_date  date,
+    end_date    date
+);
+
+create table plan_elements (
+    id          serial primary key,
+    el_date     date,
+    el_type     varchar(32),
+    plan_type   varchar(32),
+    plan_id     int references plans(id) on delete cascade,
+    recipe_id   int references recipes(id) on delete cascade
 );
 
 
