@@ -46,7 +46,7 @@ class CommandLine(cmd.Cmd):
         for d in data:
             print(" >>> ", " is ".join(map(str, d)))
         print("Ingredients")
-        data = sql("""select f.name, u.unit, i.amount from recipes r 
+        data = sql("""select f.name, u.unit, i.amount, f.carbs from recipes r 
             join ingredients i  on r.id = i.recipe_id
             join foods f        on f.id = i.food_id
             join units u        on u.id = i.unit_id
