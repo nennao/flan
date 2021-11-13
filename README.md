@@ -1,10 +1,7 @@
 # flan
 
-## Local DB
+## Requirements
 
-- `./scripts/create-db.sh`
-- Might need to run as the postgres user eg `sudo -u postgres scripts/create-db.sh`
+`pip3 install -r requirements.txt`
 
-## TODO
-
-Rename tinned tomatoes -> chopped tomatoes
+virtual env optional but recommended
