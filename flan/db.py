@@ -8,14 +8,18 @@ from flask import g
 
 from services import app, log
 
-
+DB_USER = "svc-flan-api"
+DB_PASS = "a6d0ff99cfb8637f6a07a7d12e914b32"
+DB_NAME = "flan"
+DB_HOST = "localhost"
+DB_PORT = "5433"
 def _connect_db():
     return psycopg2.connect(
-        host="localhost",
-        port="5433",
-        dbname="flan",
-        user="svc-flan-api",
-        password="a6d0ff99cfb8637f6a07a7d12e914b32"
+        host=DB_HOST,
+        port=DB_PORT,
+        dbname=DB_NAME,
+        user=DB_USER,
+        password=DB_PASS,
     )
 
 def _db():
@@ -24,6 +28,19 @@ def _db():
         log.info(f"Opened new DB connection: {g.dbid}")
         g.db = _connect_db()
     return g.db
+
+def reset_db():
+    c = psycopg2.connect(
+        host=DB_HOST,
+        port=DB_PORT,
+        dbname="postgres",
+        user=DB_USER,
+        password=DB_PASS
+    )
+    c.autocommit = True
+    with c.cursor() as cursor:
+        cursor.execute("drop database if exists flan")
+        cursor.execute("create database flan")
 
 @app.teardown_appcontext
 def _close_db(exc):
@@ -65,8 +82,8 @@ def transaction(fn=None):
     else:
         return decorator
 
-
 def sql(query, args=()):
+    log.debug(query)
     with _db().cursor() as cursor:
         cursor.execute(query, args)
         if cursor.description is not None:

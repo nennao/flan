@@ -4,10 +4,10 @@ import cmd
 import shlex
 import random
 
-from model import Plan
 from services import log, app
-from db import sql, transaction
+from db import sql, reset_db, transaction
 
+from ingest import ingest_recipes, ingest_ingredients
 
 def getline(prompt):
     sys.stdout.write(prompt)
@@ -30,33 +30,44 @@ class CommandLine(cmd.Cmd):
             _format(random.choice(all_dinners))
         ] for _ in range(7) ]
 
-        with open("plan.csv", 'w') as file:
-            file.write("-,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY\n")
-            meal_types = ('BREAKFAST', 'LUNCH', 'DINNER')
-            for p in zip(meal_types, *plan):
-                file.write(','.join(p) + '\n')
+        # with open("plan.csv", 'w') as file:
+        file = sys.stderr
+        file.write("-,MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY\n")
+        meal_types = ('BREAKFAST', 'LUNCH', 'DINNER')
+        for p in zip(meal_types, *plan):
+            file.write(','.join(p) + '\n')
+
+    def do_spag(self, line):
+        print("FLAN SPAG")
+        print("For testing the ingesting")
+        data = sql("""select r.name, t.value from recipes r
+            join recipe_tags t on r.id = t.recipe_id
+            where r.name ilike 'Spag bol'""")
+        for d in data:
+            print(" >>> ", " is ".join(map(str, d)))
+        print("Ingredients")
+        data = sql("""select f.name, u.unit, i.amount from recipes r 
+            join ingredients i  on r.id = i.recipe_id
+            join foods f        on f.id = i.food_id
+            join units u        on u.id = i.unit_id
+            where r.name ilike 'Spag bol'""")
+        for d in data:
+            print(" > ", " ".join(map(str, d)))
 
     @transaction
-    def do_add(self, line):
-        args = shlex.split(line)
-        name = args[0]
-        tags = args[1:]
-        self._add_single(name, tags)
+    def do_ingest(self, line):
+        ingest_recipes()
+        ingest_ingredients()
+
+    def do_clear(self, line):
+        reset_db()
+        sql(open("scripts/00.sql").read())
 
     @transaction
-    def do_add_many(self, line):
-        while True:
-            x = getline("Recipe [tags...]: ")
-            if not x:
-                break
-
-            x = x.split()
-            if len(x) < 1:
-                print("Error: must provide recipe name at least")
-
-            name = x[0]
-            tags = x[1:]
-            self._add_single(name, tags)
+    def do_sql(self, line):
+        print(line)
+        for data in sql(line):
+            print(data)
 
     @staticmethod
     def _add_single(name, tags):
