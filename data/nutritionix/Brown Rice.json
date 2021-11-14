@@ -1,1 +1,341 @@
-{"foods":[{"food_name":"brown rice","brand_name":null,"serving_qty":0.5,"serving_unit":"cup","serving_weight_grams":97.5,"nf_calories":109.2,"nf_total_fat":0.81,"nf_saturated_fat":0.16,"nf_cholesterol":0,"nf_sodium":0.98,"nf_total_carbohydrate":22.92,"nf_dietary_fiber":1.76,"nf_sugars":null,"nf_protein":2.26,"nf_potassium":77.03,"nf_p":75.08,"full_nutrients":[{"attr_id":203,"value":2.262},{"attr_id":204,"value":0.8093},{"attr_id":205,"value":22.9223},{"attr_id":207,"value":0.3803},{"attr_id":208,"value":109.2},{"attr_id":255,"value":71.136},{"attr_id":268,"value":457.275},{"attr_id":291,"value":1.755},{"attr_id":301,"value":9.75},{"attr_id":303,"value":0.5168},{"attr_id":304,"value":42.9},{"attr_id":305,"value":75.075},{"attr_id":306,"value":77.025},{"attr_id":307,"value":0.975},{"attr_id":309,"value":0.6045},{"attr_id":312,"value":0.079},{"attr_id":315,"value":1.0696},{"attr_id":318,"value":0},{"attr_id":319,"value":0},{"attr_id":320,"value":0},{"attr_id":324,"value":0},{"attr_id":328,"value":0},{"attr_id":401,"value":0},{"attr_id":404,"value":0.0995},{"attr_id":405,"value":0.0117},{"attr_id":406,"value":1.2968},{"attr_id":410,"value":0.3822},{"attr_id":415,"value":0.1453},{"attr_id":417,"value":3.9},{"attr_id":418,"value":0},{"attr_id":431,"value":0},{"attr_id":432,"value":3.9},{"attr_id":435,"value":3.9},{"attr_id":501,"value":0.0293},{"attr_id":502,"value":0.0829},{"attr_id":503,"value":0.0956},{"attr_id":504,"value":0.1862},{"attr_id":505,"value":0.0858},{"attr_id":506,"value":0.0507},{"attr_id":507,"value":0.0273},{"attr_id":508,"value":0.116},{"attr_id":509,"value":0.0848},{"attr_id":510,"value":0.1326},{"attr_id":511,"value":0.1706},{"attr_id":512,"value":0.0575},{"attr_id":513,"value":0.1316},{"attr_id":514,"value":0.2116},{"attr_id":515,"value":0.4602},{"attr_id":516,"value":0.1112},{"attr_id":517,"value":0.1063},{"attr_id":518,"value":0.117},{"attr_id":601,"value":0},{"attr_id":606,"value":0.1609},{"attr_id":611,"value":0.001},{"attr_id":612,"value":0.0029},{"attr_id":613,"value":0.1375},{"attr_id":614,"value":0.0146},{"attr_id":617,"value":0.2896},{"attr_id":618,"value":0.2759},{"attr_id":619,"value":0.0127},{"attr_id":626,"value":0.0029},{"attr_id":645,"value":0.2925},{"attr_id":646,"value":0.2886}],"nix_brand_name":null,"nix_brand_id":null,"nix_item_name":null,"nix_item_id":null,"upc":null,"consumed_at":"2020-07-26T21:31:20+00:00","metadata":{"is_raw_food":false},"source":1,"ndb_no":20041,"tags":{"item":"brown rice","measure":null,"quantity":"0.5","food_group":5,"tag_id":37},"alt_measures":[{"serving_weight":195,"measure":"cup","seq":1,"qty":1},{"serving_weight":97.5,"measure":"cup","seq":80,"qty":0.5},{"serving_weight":100,"measure":"g","seq":null,"qty":100},{"serving_weight":28.3495,"measure":"wt. oz","seq":null,"qty":1},{"serving_weight":4.06,"measure":"tsp","seq":101,"qty":1},{"serving_weight":12.19,"measure":"tbsp","seq":102,"qty":1}],"lat":null,"lng":null,"meal_type":5,"photo":{"thumb":"https://nix-tag-images.s3.amazonaws.com/37_thumb.jpg","highres":"https://nix-tag-images.s3.amazonaws.com/37_highres.jpg","is_user_uploaded":false},"sub_recipe":null}]}
+{
+  "foods": [
+    {
+      "food_name": "brown rice",
+      "brand_name": null,
+      "serving_qty": 0.5,
+      "serving_unit": "cup",
+      "serving_weight_grams": 97.5,
+      "nf_calories": 109.2,
+      "nf_total_fat": 0.81,
+      "nf_saturated_fat": 0.16,
+      "nf_cholesterol": 0,
+      "nf_sodium": 0.98,
+      "nf_total_carbohydrate": 22.92,
+      "nf_dietary_fiber": 1.76,
+      "nf_sugars": null,
+      "nf_protein": 2.26,
+      "nf_potassium": 77.03,
+      "nf_p": 75.08,
+      "full_nutrients": [
+        {
+          "attr_id": 203,
+          "value": 2.262
+        },
+        {
+          "attr_id": 204,
+          "value": 0.8093
+        },
+        {
+          "attr_id": 205,
+          "value": 22.9223
+        },
+        {
+          "attr_id": 207,
+          "value": 0.3803
+        },
+        {
+          "attr_id": 208,
+          "value": 109.2
+        },
+        {
+          "attr_id": 255,
+          "value": 71.136
+        },
+        {
+          "attr_id": 268,
+          "value": 457.275
+        },
+        {
+          "attr_id": 291,
+          "value": 1.755
+        },
+        {
+          "attr_id": 301,
+          "value": 9.75
+        },
+        {
+          "attr_id": 303,
+          "value": 0.5168
+        },
+        {
+          "attr_id": 304,
+          "value": 42.9
+        },
+        {
+          "attr_id": 305,
+          "value": 75.075
+        },
+        {
+          "attr_id": 306,
+          "value": 77.025
+        },
+        {
+          "attr_id": 307,
+          "value": 0.975
+        },
+        {
+          "attr_id": 309,
+          "value": 0.6045
+        },
+        {
+          "attr_id": 312,
+          "value": 0.079
+        },
+        {
+          "attr_id": 315,
+          "value": 1.0696
+        },
+        {
+          "attr_id": 318,
+          "value": 0
+        },
+        {
+          "attr_id": 319,
+          "value": 0
+        },
+        {
+          "attr_id": 320,
+          "value": 0
+        },
+        {
+          "attr_id": 324,
+          "value": 0
+        },
+        {
+          "attr_id": 328,
+          "value": 0
+        },
+        {
+          "attr_id": 401,
+          "value": 0
+        },
+        {
+          "attr_id": 404,
+          "value": 0.0995
+        },
+        {
+          "attr_id": 405,
+          "value": 0.0117
+        },
+        {
+          "attr_id": 406,
+          "value": 1.2968
+        },
+        {
+          "attr_id": 410,
+          "value": 0.3822
+        },
+        {
+          "attr_id": 415,
+          "value": 0.1453
+        },
+        {
+          "attr_id": 417,
+          "value": 3.9
+        },
+        {
+          "attr_id": 418,
+          "value": 0
+        },
+        {
+          "attr_id": 431,
+          "value": 0
+        },
+        {
+          "attr_id": 432,
+          "value": 3.9
+        },
+        {
+          "attr_id": 435,
+          "value": 3.9
+        },
+        {
+          "attr_id": 501,
+          "value": 0.0293
+        },
+        {
+          "attr_id": 502,
+          "value": 0.0829
+        },
+        {
+          "attr_id": 503,
+          "value": 0.0956
+        },
+        {
+          "attr_id": 504,
+          "value": 0.1862
+        },
+        {
+          "attr_id": 505,
+          "value": 0.0858
+        },
+        {
+          "attr_id": 506,
+          "value": 0.0507
+        },
+        {
+          "attr_id": 507,
+          "value": 0.0273
+        },
+        {
+          "attr_id": 508,
+          "value": 0.116
+        },
+        {
+          "attr_id": 509,
+          "value": 0.0848
+        },
+        {
+          "attr_id": 510,
+          "value": 0.1326
+        },
+        {
+          "attr_id": 511,
+          "value": 0.1706
+        },
+        {
+          "attr_id": 512,
+          "value": 0.0575
+        },
+        {
+          "attr_id": 513,
+          "value": 0.1316
+        },
+        {
+          "attr_id": 514,
+          "value": 0.2116
+        },
+        {
+          "attr_id": 515,
+          "value": 0.4602
+        },
+        {
+          "attr_id": 516,
+          "value": 0.1112
+        },
+        {
+          "attr_id": 517,
+          "value": 0.1063
+        },
+        {
+          "attr_id": 518,
+          "value": 0.117
+        },
+        {
+          "attr_id": 601,
+          "value": 0
+        },
+        {
+          "attr_id": 606,
+          "value": 0.1609
+        },
+        {
+          "attr_id": 611,
+          "value": 0.001
+        },
+        {
+          "attr_id": 612,
+          "value": 0.0029
+        },
+        {
+          "attr_id": 613,
+          "value": 0.1375
+        },
+        {
+          "attr_id": 614,
+          "value": 0.0146
+        },
+        {
+          "attr_id": 617,
+          "value": 0.2896
+        },
+        {
+          "attr_id": 618,
+          "value": 0.2759
+        },
+        {
+          "attr_id": 619,
+          "value": 0.0127
+        },
+        {
+          "attr_id": 626,
+          "value": 0.0029
+        },
+        {
+          "attr_id": 645,
+          "value": 0.2925
+        },
+        {
+          "attr_id": 646,
+          "value": 0.2886
+        }
+      ],
+      "nix_brand_name": null,
+      "nix_brand_id": null,
+      "nix_item_name": null,
+      "nix_item_id": null,
+      "upc": null,
+      "consumed_at": "2020-07-26T21:31:20+00:00",
+      "metadata": {
+        "is_raw_food": false
+      },
+      "source": 1,
+      "ndb_no": 20041,
+      "tags": {
+        "item": "brown rice",
+        "measure": null,
+        "quantity": "0.5",
+        "food_group": 5,
+        "tag_id": 37
+      },
+      "alt_measures": [
+        {
+          "serving_weight": 195,
+          "measure": "cup",
+          "seq": 1,
+          "qty": 1
+        },
+        {
+          "serving_weight": 97.5,
+          "measure": "cup",
+          "seq": 80,
+          "qty": 0.5
+        },
+        {
+          "serving_weight": 100,
+          "measure": "g",
+          "seq": null,
+          "qty": 100
+        },
+        {
+          "serving_weight": 28.3495,
+          "measure": "wt. oz",
+          "seq": null,
+          "qty": 1
+        },
+        {
+          "serving_weight": 4.06,
+          "measure": "tsp",
+          "seq": 101,
+          "qty": 1
+        },
+        {
+          "serving_weight": 12.19,
+          "measure": "tbsp",
+          "seq": 102,
+          "qty": 1
+        }
+      ],
+      "lat": null,
+      "lng": null,
+      "meal_type": 5,
+      "photo": {
+        "thumb": "https://nix-tag-images.s3.amazonaws.com/37_thumb.jpg",
+        "highres": "https://nix-tag-images.s3.amazonaws.com/37_highres.jpg",
+        "is_user_uploaded": false
+      },
+      "sub_recipe": null
+    }
+  ]
+}
