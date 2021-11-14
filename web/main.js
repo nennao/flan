@@ -1,4 +1,4 @@
-import { renderPlanner, renderPlannerModal, addPlannerEvents } from "./planner.js";
+import { renderPlanner, renderPlannerPlans, renderPlannerModal, addPlannerEvents } from "./planner.js";
 import Api from './api.js'
 
 let STATE = {};
@@ -41,8 +41,14 @@ const _assignState = newState => {
 };
 
 const renderComponent = stateKey => {
-    // TODO this only works for plannerModal component right now
-    renderPlannerModal(STATE)
+    switch (stateKey) {
+        case 'plannerModal':
+            renderPlannerModal(STATE)
+            return
+        case 'planner':
+            renderPlannerPlans(STATE)
+            return
+    }
 };
 
 const locViewMap = {
@@ -96,7 +102,9 @@ const renderApp = () => {
 const addEventListeners = () => {
     // redirects
     $('[data-rd]').click(redirectTo);
-    addPlannerEvents(STATE);  // TODO maybe only call view specific events ?
+    if (STATE.view === 'planner') {
+        addPlannerEvents(STATE);
+    }
 
 };
 

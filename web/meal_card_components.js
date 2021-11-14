@@ -1,5 +1,5 @@
 import { MACROS } from "./mealplan_config.js";
-import { sum, avg } from "./utils.js"
+import { mR, sum, avg } from "./utils.js"
 
 export const PLAN_BUFFER = 40;  // px
 
@@ -12,27 +12,27 @@ const caloriesCard = (d, i, editable) => {
         for (let el of d.elements) mealMap[el.type.toLowerCase()].push(el);
         return `
         <div class="mealTypeContainer">
-          <div class="mealTypeHead">TOTAL <span>${sum(d.elements.map(el => el.calories))}</span></div>
+          <div class="mealTypeHead">TOTAL <span>${mR(sum(d.elements.map(el => el.calories)))}</span></div>
         </div>
         <div class="mealTypeContainer">
           <div class="mealTypeHead">PLAN <span>${d.planType}</span></div>
         </div>
         ${mealTypes.map(mt => `
           <div class="mealTypeContainer">
-            <div class="mealTypeHead">${mt} <span>${sum(mealMap[mt].map(mm => mm.calories))}</span></div>
-            ${mealMap[mt].map(mm => `<div class="mealItem">${mm.name} ... ${mm.calories}</div>`).join('')}
+            <div class="mealTypeHead">${mt} <span>${mR(sum(mealMap[mt].map(mm => mm.calories)))}</span></div>
+            ${mealMap[mt].map(mm => `<div class="mealItem">${mm.name} ... ${mR(mm.calories)}</div>`).join('')}
           </div>
         `).join('')}
     `};
     const sumBody = () => `
         <div class="mealTypeContainer">
           <div class="mealTypeHead">AVERAGE <span>${d.avg}</span></div>
-          <div class="mealItem">total <span>${d.tot}</span></div>
+          <div class="mealItem">total <span>${mR(d.tot)}</span></div>
         </div>
         ${mealTypes.map(mt => `
             <div class="mealTypeContainer">
               <div class="mealTypeHead">${mt} <span>${d[mt].avg}</span></div>
-              <div class="mealItem">total <span>${d[mt].tot}</span></div>
+              <div class="mealItem">total <span>${mR(d[mt].tot)}</span></div>
             </div>
         `).join('')}
     `;

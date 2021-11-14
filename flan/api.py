@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os
+import random
 from datetime import datetime, timedelta
 
 from flask import send_from_directory, redirect, request, jsonify
@@ -20,12 +21,12 @@ dummy_plan = {
             "planType": "low carb",
             "elements": [{
                 "type": "lunch",
-                "name": "ramsled eggs",
+                "name": "Ramsled",
                 "calories": 300,
                 "macros": {"carbs": 5, "fat": 35, "protein": 60}
             }, {
                 "type": "dinner",
-                "name": "guacamole",
+                "name": "Spag Bol",
                 "calories": 150,
                 "macros": {"carbs": 5, "fat": 15, "protein": 80}
             }]
@@ -33,6 +34,38 @@ dummy_plan = {
     ]
 }
 
+
+def get_dummy_plan(data):
+    meal_map = {
+        'breakfast': ['Ramsled', 'Oaternights', 'Avocado Toast', 'Eggs Woodhouse', 'Eggs Benedict', 'Eggs Royale',
+                      'Smoothie', 'Fluffy Pancakes', 'Crepes', 'Scones'],
+        'lunch': ['Jollof Rice', 'Stuffed Jacket Potato', 'Lemony Salmon', 'Grilled Cheese', 'Bagel', 'Mega Sandwich',
+                  'Crepes', 'Calzodilla', 'Caesar Salad', 'Burrito', 'Salad'],
+        'dinner': ['Stir Fry', 'Pad Thai', 'Eggs Okoye', 'Jollof Rice', 'Pepper Soup', 'Jambalaya', 'Bacony Pasta',
+                   'Spag Bol', 'Lettuce Curry Boats', 'Ramen', 'Rice Bowls', 'Stuffed Jacket Potato', 'Lemony Salmon',
+                   'Popcorn Chicken', 'Nachos', 'Creamy Linguine', 'Mexican Grilled Chicken', 'Caesar Salad',
+                   'Duck Confit', 'Burrito', 'Thai Red Curry', 'Pork Apple Burger', 'Sweet Chilli Beef',
+                   'Sweet Potato Dal', 'Mexican Beef', 'Sirloin Steak', 'Sea Bream', 'Honey Soy Duck', 'Paella',
+                   'Tandoori Rice', 'Hoisin Pork', 'Chicken Satay Skewers', 'Salad'],
+    }
+    return {
+        "startDate": data["startDate"],
+        "endDate": data["endDate"],
+        "days": [
+            {
+                "date": d["date"],
+                "planType": d["planType"],
+                "elements": [
+                    {
+                        "type": m,
+                        "name": random.choice(meal_map[m]),
+                        "calories": 100,
+                        "macros": {"carbs": 35, "fat": 35, "protein": 30}
+                    } for m in ['breakfast', 'lunch', 'dinner']
+                ],
+            } for d in data["days"]
+        ]
+    }
 
 
 # frontend
@@ -77,8 +110,8 @@ def save_plan():
             sql("insert into plan_elements(el_date, el_type, plan_type, plan_id, recipe_id) values(%s, %s, %s, %s, %s)", (
                 date, etype, plantype, plan_id, recipe_id))
 
-    # TODO: return the newly created plan
-    return "", 204
+    new_plan = _get_plans(user_id, (plan_id,))[0]
+    return jsonify(new_plan)
 
 
 # @app.route("/api/deletePlan/<int:id>", methods=["POST"])
@@ -87,44 +120,75 @@ def save_plan():
 #     pass
 
 
-@app.route("/api/getPlans/", methods=["GET"])
-@transaction
-def get_plans():
-    user_id = 1
-    plan_data = sql("""select
-            p.id,
-            p.begin_date,
-            p.end_date,
-            e.el_date,
-            e.id,
-            e.plan_type,
-            e.el_type,
-            r.name,
-            f.calories,
-            f.fat,
-            f.protein,
-            f.carbs
-
-        from
-            plans p
+def _get_plans(user_id, plan_ids=None):
+    rho = sql("select id from units where unit = 'rho'")[0][0]
+    plan_id_cond = f"""and p.id in ({', '.join(map(str, plan_ids))})""" if plan_ids else ""
+    fields = (
+        'p.id',
+        'p.begin_date',
+        'p.end_date',
+        'e.el_date',
+        'e.id',
+        'e.plan_type',
+        'e.el_type',
+        'r.name',
+        'r.batch',
+        'f.name',
+        'i.amount',
+        'u.unit',
+        'u.measure',
+        'm.grams',
+        'f.fat',
+        'f.protein',
+        'f.carbs'
+    )
+    plan_data = sql(f"""
+        select {', '.join(fields)} from plans p
             join plan_elements e on p.id = e.plan_id
             join recipes r on r.id = e.recipe_id
             join ingredients i on r.id = i.recipe_id
             join foods f on f.id = i.food_id
+            join units u on u.id = i.unit_id
+            full join measurements m on ((m.food_id = f.id) and 
+                                        ((m.unit_id = u.id) or ((u.measure = 'volume') and (m.unit_id = {rho}))))
 
         where
-            p.user_id = %s
+            p.user_id = {user_id} 
+            {plan_id_cond}
 
-        order by p.id, e.date, e.id
-    """, (user_id,))
+        order by p.id, e.el_date, e.id
+    """)
+
+    # print()
+    # print('plan_data')
+    # print_data = [fields] + [tuple(str(s) for s in d) for d in plan_data]
+    # print(tabulate(print_data))
+    # print()
 
     plans = []
     if len(plan_data):
+
+        def _adjust_macros(p):
+            vol_ml_map = {'ml': 1, 'tbsp': 15, 'tsp': 5, 'cup': 240}  # todo need 'official' conversion tables?
+
+            if p['u.unit'] == 'g':
+                grams = p['i.amount']
+            elif p['u.measure'] == 'volume':
+                grams = vol_ml_map[p['u.unit']] * p['i.amount'] * p['m.grams']
+            elif p['u.measure'] == 'unit':
+                grams = p['i.amount'] * p['m.grams']
+            else:
+                raise Exception('cant handle unit')
+
+            grams /= p['r.batch']
+
+            return tuple(m*grams/100 for m in [p['f.fat'], p['f.protein'], p['f.carbs']])
+
         def new_element(p):
             return {
-                "id": p[4],
-                "type": p[6],
-                "name": p[7],
+                "id": p['e.id'],
+                "type": p['e.el_type'],
+                "name": p['r.name'],
                 "calories": 0.0,
                 "macros": {
                     "fat": 0.0,
@@ -132,38 +196,30 @@ def get_plans():
                     "carbs": 0.0
                 }
             }
-        
+
         def new_day(p):
             return {
-                "date": p[3].strftime(DATE_FORMAT),
-                "planType": p[5],
+                "date": p['e.el_date'].strftime(DATE_FORMAT),
+                "planType": p['e.plan_type'],
                 "elements": []
             }
 
         def new_plan(p):
             return {
-                "id": p[0],  # todo see if this can switch to more readable k:v pairs instead of indices
-                "startDate": p[1].strftime(DATE_FORMAT),
-                "endDate": p[2].strftime(DATE_FORMAT),
+                "id": p['p.id'],
+                "startDate": p['p.begin_date'].strftime(DATE_FORMAT),
+                "endDate": p['p.end_date'].strftime(DATE_FORMAT),
                 "days": []
             }
-        
-        current_plan = new_plan(plan_data[0])
-        current_day = new_day(plan_data[0])
-        current_element = new_element(plan_data[0])
+
+        p = dict(zip(fields, plan_data[0]))
+        current_plan = new_plan(p)
+        current_day = new_day(p)
+        current_element = new_element(p)
 
         for p in plan_data:
-            if p[4] != current_element["id"]: # new element
-                current_day["elements"].append(current_element)
-                current_element = new_element(p)
-            
-            elif p[3].strftime(DATE_FORMAT) != current_day["date"]: # new date + new element
-                current_day["elements"].append(current_element)
-                current_plan["days"].append(current_day)
-                current_element = new_element(p)
-                current_day = new_day(p)
-            
-            elif p[0] != current_plan["id"]: # new plan + new date + new element
+            p = dict(zip(fields, p))
+            if p['p.id'] != current_plan["id"]:  # new plan + new date + new element
                 current_day["elements"].append(current_element)
                 current_plan["days"].append(current_day)
                 plans.append(current_plan)
@@ -171,15 +227,33 @@ def get_plans():
                 current_day = new_day(p)
                 current_plan = new_plan(p)
 
-            current_element["calories"] += p[8]
-            current_element["macros"]["fat"] += p[9]
-            current_element["macros"]["protein"] += p[10]
-            current_element["macros"]["carbs"] += p[11]
+            elif p['e.el_date'].strftime(DATE_FORMAT) != current_day["date"]:  # new date + new element
+                current_day["elements"].append(current_element)
+                current_plan["days"].append(current_day)
+                current_element = new_element(p)
+                current_day = new_day(p)
+
+            elif p['e.id'] != current_element["id"]:  # new element
+                current_day["elements"].append(current_element)
+                current_element = new_element(p)
+
+            fat, protein, carbs = _adjust_macros(p)
+            current_element["calories"] += 9*fat + 4*protein + 4*carbs
+            current_element["macros"]["fat"] += fat  # todo are these macros in g or %?
+            current_element["macros"]["protein"] += protein
+            current_element["macros"]["carbs"] += carbs
 
         current_day["elements"].append(current_element)
         current_plan["days"].append(current_day)
         plans.append(current_plan)
 
+    return plans
+
+@app.route("/api/getPlans/", methods=["GET"])
+@transaction
+def get_plans():
+    user_id = 1
+    plans = _get_plans(user_id)
     return jsonify({
         "userId": user_id,
         "plans": plans
@@ -189,16 +263,17 @@ def get_plans():
 @app.route("/api/generatePlan/", methods=["POST"])
 @transaction
 def generate_plan():
-    # create a new plan
-    # user_id = 1 ## james
-    # begin_date = datetime.now()
-    # end_date = begin_date + timedelta(days=3)
-    # id = sql("insert into plans(draft, begin_date, end_date, user_id) values(%s, %s, %s, %s) returning id", (True, begin_date, end_date, user_id))
-    # ## TODO: insert plan elements
-    # log.info(f"New plan: id {id[0][0]}")
-    # return jsonify({"id": id})
+    data = request.json
+    return jsonify(get_dummy_plan(data))
 
-    return jsonify(dummy_plan)
+
+def tabulate(table):
+    zipped = list(zip(*table))
+    lens = [1 + max(*(len(d) for d in z)) for z in zipped]
+    header = '|'.join(t.rjust(lens[i]) for i, t in enumerate(table[0]))
+    divider = '|'.join(''.rjust(lens[i], '-') for i, t in enumerate(table[0]))
+    body = ['|'.join(t.rjust(lens[i]) for i, t in enumerate(row)) for row in table[1:]]
+    return '\n'.join([header, divider] + body)
 
 
 if __name__ == '__main__':

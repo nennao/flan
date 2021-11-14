@@ -91,15 +91,16 @@ export const addPlannerEvents = state => {
     $('#plannerModal').on('show.bs.modal', () => {
         const minDate = moment().format('YYYY-MM-DD');  // TODO figure out the proper min/max dates
         const maxDate = moment(minDate, 'YYYY-MM-DD').add(69, 'days').format('YYYY-MM-DD');
-        // const startDate = minDate;
-        // const endDate = moment(startDate, 'YYYY-MM-DD').add(6, 'days').format('YYYY-MM-DD');
-        const startDate = moment('2020-06-08', 'YYYY-MM-DD').format('YYYY-MM-DD');
-        const endDate = moment('2020-06-14', 'YYYY-MM-DD').format('YYYY-MM-DD');
+        const startDate = minDate;
+        const endDate = moment(startDate, 'YYYY-MM-DD').add(6, 'days').format('YYYY-MM-DD');
+        // const startDate = moment('2020-06-08', 'YYYY-MM-DD').format('YYYY-MM-DD');
+        // const endDate = moment('2020-06-14', 'YYYY-MM-DD').format('YYYY-MM-DD');
         const plannerModalState = { startDate, endDate, minDate, maxDate };
         const data = updatePlannerModalData(plannerModalState);
         state._update({plannerModal: { ...plannerModalState, data }})
     });
 
+    renderPlannerPlans(state)
     computeStyles();
 };
 
@@ -119,16 +120,28 @@ const addPlannerModalEvents = state => {
     $("#generatePlan").click(() => {
         const plannerModalState = state.plannerModal;
         // TODO await actual response here
-        Api.generatePlan(state.plannerModal.data).then(response => {
+        const params = {
+            "startDate": state.plannerModal.startDate,
+            "endDate": state.plannerModal.endDate,
+            "days": state.plannerModal.data,
+        }
+        Api.generatePlan(params).then(response => {
           state._update({plannerModal: { ...plannerModalState, draft: response }});
         }, console.error)
 
     });
 
-    $("#acceptButton").click(() => {
-        Api.savePlan(state.plannerModal.draft).then(() => {
-          alert("Plan saved successfully!")
+    $("#acceptPlanButton").click(() => {
+        Api.savePlan(state.plannerModal.draft).then(response => {
+            const plans = [ ...state.planner.plans, response ]
+            state._update({planner: { ...state.planner, plans: plans }})
+            $('#plannerModal').modal('hide')
+            state._update({plannerModal: { ...state.plannerModal, startDate: '', endDate: '', minDate: '', maxDate: '', data: null, draft: null }})
         }, console.error)
+    });
+
+    $("#cancelPlanButton").click(() => {
+        state._update({plannerModal: { ...state.plannerModal, draft: null }})
     });
 
     computeStyles();
@@ -166,8 +179,8 @@ const planDraftHtml = state => {
         ${editableWeekPlan(days)}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="acceptButton">Accept</button>
-        <button type="button" class="btn btn-secondary">Cancel</button>
+        <button type="button" class="btn btn-primary" id="acceptPlanButton">Accept</button>
+        <button type="button" class="btn btn-secondary" id="cancelPlanButton">Cancel</button>
       </div>
     `
 };
@@ -183,8 +196,8 @@ const computeStyles = () => {
 
 
 export const renderPlannerModal = state => {
-    const { draft } = state.plannerModal;
-    $('#plannerModalBody').html(draft ? planDraftHtml(state) : planCreatorHtml(state));
+    const { draft, data } = state.plannerModal;
+    $('#plannerModalBody').html(draft ? planDraftHtml(state) : data ? planCreatorHtml(state) : '');
     $('#plannerModal .modal-title').html(`${draft ? 'Edit' : 'Create'} Meal Plan`);
     addPlannerModalEvents(state);
 };
@@ -205,13 +218,10 @@ const modalHtml = () => `
 </div>
 `;
 
-const plansHtml = state => {
+export const renderPlannerPlans = state => {
     const { plans } = state.planner;
     console.log(plans);
-    if (!plans || !plans.length) {
-        return ''
-    }
-    return `
+    $('#plannerPlans').html((!plans || !plans.length) ? '' : `
 <div class="accordion" id="plansAccordion">
   ${plans.map((plan, i) => {
       return `
@@ -219,6 +229,7 @@ const plansHtml = state => {
         <div class="card-header" id="planHead${i}">
           <h2 class="mb-0">
             <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#planBody${i}">
+              (${plan.id})
               ${moment(plan.startDate, 'YYYY-MM-DD').format('ddd Do MMM YYYY')} - ${moment(plan.endDate, 'YYYY-MM-DD').format('ddd Do MMM YYYY')}
             </button>
           </h2>
@@ -235,12 +246,15 @@ const plansHtml = state => {
   `}).join('')}
   
 </div>`
+    )
 };
 
 
-export const renderPlanner = state => {  // TODO this naming might be confusing (returning html isnt actually rendering)
+export const renderPlanner = () => {  // TODO this naming might be confusing (returning html isnt actually rendering)
     return `
         <div class="container-fluid">
+            <button class="btn btn-outline-secondary btn-lg" data-rd="home">home</button>
+            <br><br>
             <!-- Button for planner modal -->
             <button type="button" class="btn btn-outline-primary btn-lg" data-toggle="modal" data-target="#plannerModal">
               + Add a plan
@@ -248,7 +262,7 @@ export const renderPlanner = state => {  // TODO this naming might be confusing 
             
             ${modalHtml()}
             
-            ${plansHtml(state)}
+            <div id="plannerPlans"></div>
         </div>
     `
 };

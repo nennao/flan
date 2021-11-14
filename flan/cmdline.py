@@ -7,7 +7,7 @@ import random
 from services import log, app
 from db import sql, reset_db, transaction
 
-from ingest import ingest_recipes, ingest_ingredients
+from ingest import ingest_recipes, ingest_ingredients, ingest_users
 
 def getline(prompt):
     sys.stdout.write(prompt)
@@ -58,6 +58,7 @@ class CommandLine(cmd.Cmd):
     def do_ingest(self, line):
         ingest_recipes()
         ingest_ingredients()
+        ingest_users()
 
     def do_clear(self, line):
         reset_db()
