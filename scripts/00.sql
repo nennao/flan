@@ -25,7 +25,8 @@ create table foods (
 -- Units for recipe ingredients
 create table units (
     id              serial primary key,
-    unit            varchar(16) -- eg 'gram', '#', 'tsp'
+    unit            varchar(16), -- eg 'gram', '#', 'tsp'
+    measure         varchar(16)  -- eg 'volume', 'mass'
 );
 
 -- Converts between "units" eg 'ml', 'tsp' to grams
@@ -33,7 +34,7 @@ create table units (
 create table measurements (
     food_id         int references foods(id) on delete cascade,
     unit_id         int references units(id) on delete cascade,
-    grams           int
+    grams           real
 );
 
 create table ingredients (
