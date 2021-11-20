@@ -239,7 +239,7 @@ def _get_plans(user_id, plan_ids=None):
 
             fat, protein, carbs = _adjust_macros(p)
             current_element["calories"] += 9*fat + 4*protein + 4*carbs
-            current_element["macros"]["fat"] += fat  # todo are these macros in g or %?
+            current_element["macros"]["fat"] += fat  # these macros are in g
             current_element["macros"]["protein"] += protein
             current_element["macros"]["carbs"] += carbs
 
@@ -268,6 +268,7 @@ def generate_plan():
 
 
 def tabulate(table):
+    # table = [(t[0],) + t[3:] for t in table]
     zipped = list(zip(*table))
     lens = [1 + max(*(len(d) for d in z)) for z in zipped]
     header = '|'.join(t.rjust(lens[i]) for i, t in enumerate(table[0]))

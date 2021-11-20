@@ -1,4 +1,4 @@
-import { MACROS } from "./mealplan_config.js";
+import { MACROS, MACRO_CAL_MAP } from "./mealplan_config.js";
 import { mR, sum, avg } from "./utils.js"
 
 export const PLAN_BUFFER = 40;  // px
@@ -58,6 +58,9 @@ const caloriesCard = (d, i, editable) => {
 
 
 const macrosCard = (d, i) => {
+    const macroG = d.isSum ? d.macros : Object.fromEntries(MACROS.map(macro => [macro, sum(d.elements.map(el => el.macros[macro]))]))
+    const macroCals = Object.fromEntries(MACROS.map(macro => [macro, MACRO_CAL_MAP[macro] * macroG[macro]]))
+    const totalCals = sum(Object.values(macroCals))
     return `
         <div class="card">
           <div class="card-header" id="mealCardMacrosHead${i}">
@@ -71,7 +74,7 @@ const macrosCard = (d, i) => {
           <div id="mealCardMacrosBody${i}" class="collapse show">
             <div class="card-body">
               ${MACROS.map(macro => `
-                <div>${macro}: ${d.isSum ? d.macros[macro] : Math.round(avg(d.elements.map(el => el.macros[macro])))}%</div>
+                <div>${macro}: ${mR(100*macroCals[macro]/totalCals)}% - ${mR(macroG[macro])}g</div>
               `).join('')}
             </div>
           </div>
@@ -83,19 +86,18 @@ const getSum = days => {
     const len = days.length;
     let calsTot = 0;
     const mealMap = {breakfast: 0, lunch: 0, dinner: 0, snacks: 0};
-    const macroMap = {carbs: 0, fat: 0, protein: 0};
+    const macroMap = {carbs: 0, fat: 0, protein: 0};  // these are in grams
     for (let d of days) {
         for (let el of d.elements) {
             calsTot += el.calories;
             mealMap[el.type] += el.calories;
             for (let m of MACROS) {
-                macroMap[m] += (el.macros[m] / 100) * el.calories
+                macroMap[m] += el.macros[m]
             }
         }
     }
     const calsAvg = Math.round(calsTot / len);
     for (let mt of mealTypes) mealMap[mt] = {avg: Math.round(mealMap[mt] / len), tot: mealMap[mt]};
-    for (let m of MACROS) macroMap[m] = Math.round((macroMap[m] * 100) / calsTot);
     return {
         isSum: true,
         avg: calsAvg,
