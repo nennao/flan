@@ -1,11 +1,11 @@
-body {
-    margin-top: 50px;
-    margin-bottom: 50px;
-}
-
 input[type=date]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     display: none;
+}
+
+#app {
+    margin-top: 35px;
+    margin-bottom: 35px;
 }
 
 #plannerModal .modal-dialog {
@@ -98,8 +98,9 @@ input[type=date]::-webkit-inner-spin-button {
 
 .mealDaysContainer {
     display: flex;
-    font-family: 'Open Sans Condensed', 'Roboto Condensed', 'Arial Narrow', sans-serif;
+    font-family: 'Open Sans Condensed', 'Arial Narrow', sans-serif;
     overflow: auto;
+    line-height: 1;
 }
 
 .mealDaysContainer > div {
@@ -126,6 +127,7 @@ input[type=date]::-webkit-inner-spin-button {
 
 .mealDaysContainer .card-header button {
     padding: 0;
+    /*font-weight: bold;*/
 }
 
 .mealDaysContainer .card-body {
@@ -141,23 +143,45 @@ input[type=date]::-webkit-inner-spin-button {
 
 .mealDaysContainer .mealTypeHead {
     border-bottom: 1px solid #dee2e6;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    line-height: 1;
     font-size: 0.95rem;
-}
-
-.mealDaysContainer .mealTypeHead span {
-    text-transform: initial;
-    letter-spacing: initial;
+    /*font-weight: bold;*/
 }
 
 .mealDaysContainer .mealItem {
     padding-left: 15px;
+    padding-bottom: 7px;
+    color: #1e2848;
+}
+
+.mealDaysContainer .mealItemIng {
+    padding-left: 15px;
+    padding-bottom: 2px;
+    color: #374884;
+    font-size: 0.9rem;
+}
+
+.mealDaysContainer .mealItem:last-child, .mealDaysContainer .mealItemIng:last-child {
+    padding-bottom: 0;
+}
+
+.mealDaysContainer .mealItem .mealItemQty {
+    transform: scale(1, 0.85);
+    opacity: 0.75;
+}
+
+.sbFlexMCC {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mealDaysContainer .mealTypeHead .sbFlexMCC > div:first-child {
+    letter-spacing: 2px;
+    text-transform: uppercase;
 }
 
 
-#plansAccordion {
+#plannerPlansList {
     margin-top: 30px;
 }
 
@@ -170,4 +194,13 @@ input[type=date]::-webkit-inner-spin-button {
 .planContainer {
     width: fit-content;
     margin: auto;
+}
+
+.collapsibleHead {
+    cursor: pointer;
+}
+
+.qtyInput {
+    padding: 1px 4px;
+    margin-left: -4px;
 }

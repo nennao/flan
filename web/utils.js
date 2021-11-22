@@ -1,3 +1,6 @@
+let _NEXTID = 100;
+
+export const nextId = (prefix='id') => `${prefix}${_NEXTID++}`;
 
 export const mR = (x, dp) => {
     if (!dp) return Math.round(x)

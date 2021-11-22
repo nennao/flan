@@ -1,12 +1,14 @@
-import { renderPlanner, renderPlannerPlans, renderPlannerModal, addPlannerEvents } from "./planner.js";
+import { initialPlannerModalState, renderPlanner, renderPlannerPlans, renderPlannerModal, addPlannerEvents } from "./planner.js";
+import { addUIState } from "./meal_card_components.js";
 import Api from './api.js'
 
 let STATE = {};
 
 const INITIAL_STATE = {
     view: null,
-    plannerModal: {startDate: '', endDate: '', minDate: '', maxDate: '', data: null, draft: null, fetching: false},
+    plannerModal: { ...initialPlannerModalState },
     planner: {plans: null},
+    ui: {focused: null, caretPos: null, valInEdit: null}
 };
 
 const APP_LEVEL_STATE = ['view'];
@@ -42,11 +44,11 @@ const _assignState = newState => {
 
 const renderComponent = stateKey => {
     switch (stateKey) {
-        case 'plannerModal':
-            renderPlannerModal(STATE)
-            return
         case 'planner':
             renderPlannerPlans(STATE)
+            return
+        case 'plannerModal':
+            renderPlannerModal(STATE)
             return
     }
 };
@@ -62,8 +64,8 @@ const titleMap = {
 };
 
 
-const renderHome = () => {
-    return `
+const renderHome = (viewId) => {
+    $(`#${viewId}`).html( `
         <div class="container">
             <div class="jumbotron"><h1 class="display-4">Welcome to Flan!</h1></div>
             <hr class="my-4">
@@ -73,26 +75,29 @@ const renderHome = () => {
     
             <button class="btn btn-outline-primary btn-lg btn-block foobarbaz">get me a recipe dawg</button>
         </div>
-    `
+    `)
 };
 
 
-const renderCurrentView = () => {
+const renderCurrentView = (viewId) => {
     switch (STATE.view) {
         case HOME:
-            return renderHome();
+            return renderHome(viewId);
         case PLANNER:
-            return renderPlanner(STATE);
+            return renderPlanner(viewId, STATE);
     }
 };
 
+const renderNav = () => `<a class="navbar-brand btn" data-rd="${HOME}">F L A N</a>`;
+
 
 const renderApp = () => {
+    $('body nav').addClass('navbar navbar-expand-lg navbar-dark bg-dark').html(renderNav());
+    const currentView = 'currentView';
     $('#app').html(`
-        <div id="currentView">
-            ${renderCurrentView()}
-        <div>
+        <div id="${currentView}"><div>
     `);
+    renderCurrentView(currentView);
     document.title = `Flan: ${titleMap[STATE.view]}`;
     addEventListeners();
 };
@@ -102,7 +107,7 @@ const renderApp = () => {
 const addEventListeners = () => {
     // redirects
     $('[data-rd]').click(redirectTo);
-    if (STATE.view === 'planner') {
+    if (STATE.view === PLANNER) {
         addPlannerEvents(STATE);
     }
 
@@ -134,12 +139,15 @@ const setInitialState = () => {
     const stateHistory = {view: view};
     history.replaceState(stateHistory, view);
     
-    //const plans = Api.getPlans().plans  // TODO do this here? or only when planner page is opened?
     Api.getPlans().then(response => {
+        const plans = [];
+        for (let plan of response.plans) {
+            plans.push(addUIState(plan))
+        }
         const initialState = {
             ...INITIAL_STATE,
             ...stateHistory,
-            planner: { ...INITIAL_STATE.planner, plans: response.plans }
+            planner: { ...INITIAL_STATE.planner, plans: plans }
         };
         setState(initialState);
     }, console.log)

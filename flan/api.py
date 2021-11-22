@@ -56,12 +56,19 @@ def get_dummy_plan(data):
                 "date": d["date"],
                 "planType": d["planType"],
                 "elements": [
-                    {
+                    dict({
                         "type": m,
                         "name": random.choice(meal_map[m]),
                         "calories": 100,
-                        "macros": {"carbs": 35, "fat": 35, "protein": 30}
-                    } for m in ['breakfast', 'lunch', 'dinner']
+                        "qty": 1,
+                        "unit": 'serving',
+                    }, **(random.choice([
+                        {"macros": {"carbs": 8, "fat": 4, "protein": 8}},
+                        {"ingredients": [
+                            {"name": 'ingredient 1', "qty": 1, "basis": {"qty": 100, "unit": 'g', "calories": 80, "macros": {"fat": 4, "protein": 5, "carbs": 6}}},
+                            {"name": 'ingredient 2', "qty": 1, "basis": {"qty": 100, "unit": 'ml', "calories": 160, "macros": {"fat": 8, "protein": 10, "carbs": 12}}},
+                        ]}
+                    ]))) for m in ['breakfast', 'lunch', 'dinner']
                 ],
             } for d in data["days"]
         ]
@@ -184,17 +191,32 @@ def _get_plans(user_id, plan_ids=None):
 
             return tuple(m*grams/100 for m in [p['f.fat'], p['f.protein'], p['f.carbs']])
 
+        def new_ingredient(p):
+            fat, protein, carbs = _adjust_macros(p)
+            return {
+                "name": p['f.name'],
+                "qty": 1,
+                "basis": {
+                    "qty": p['i.amount']/p['r.batch'],
+                    "unit": p['u.unit'],
+                    "calories": 9*fat + 4*protein + 4*carbs,  # TODO is calories necessary? can be calc'd from macros
+                    "macros": {"fat": fat, "protein": protein, "carbs": carbs}
+                },
+            }
+            # return {  # TODO return this instead. "basis" information should be kept in another table
+            #     "name": p['f.name'],
+            #     "qty": p['i.amount']/p['r.batch'],
+            #     "unit": ['u.unit'],
+            # }
+
         def new_element(p):
             return {
                 "id": p['e.id'],
                 "type": p['e.el_type'],
                 "name": p['r.name'],
-                "calories": 0.0,
-                "macros": {
-                    "fat": 0.0,
-                    "protein": 0.0,
-                    "carbs": 0.0
-                }
+                "qty": 1,  # p['r.el_qty']  # TODO get from db
+                "unit": 'serving',  # p['r.el_unit']  # TODO get from db
+                "ingredients": []
             }
 
         def new_day(p):
@@ -237,11 +259,7 @@ def _get_plans(user_id, plan_ids=None):
                 current_day["elements"].append(current_element)
                 current_element = new_element(p)
 
-            fat, protein, carbs = _adjust_macros(p)
-            current_element["calories"] += 9*fat + 4*protein + 4*carbs
-            current_element["macros"]["fat"] += fat  # these macros are in g
-            current_element["macros"]["protein"] += protein
-            current_element["macros"]["carbs"] += carbs
+            current_element["ingredients"].append(new_ingredient(p))
 
         current_day["elements"].append(current_element)
         current_plan["days"].append(current_day)
