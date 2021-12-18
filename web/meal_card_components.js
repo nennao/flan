@@ -1,5 +1,6 @@
 import { MACROS, MACRO_CAL_MAP } from "./mealplan_config.js";
 import { nextId, sum, avg, percent, strMap, mR } from "./utils.js"
+import { _assignState } from "./main.js";
 
 export const PLAN_BUFFER = 40;  // px
 
@@ -225,7 +226,100 @@ const addMealCardEvents = (id, state, loc) => {
         .on('show.bs.collapse', e => handleCollapse(e, false))
         .on('hide.bs.collapse', e => handleCollapse(e, true ))
 
+    addQtyInputEvents(id, state, loc);
+
     computeMCCStyles();
+};
+
+const addQtyInputEvents = (id, state, loc) => {  // TODO... this is all very convoluted?
+    const dupe = obj => $.isArray(obj) ? [ ...obj ] : { ...obj };
+
+    const numValidator = /^\d*\.?\d*$/;
+
+    $(`${getContId(id)} [contenteditable]`).click(function(e) {
+        e.stopPropagation();
+    }).focus(function() {
+        const $this = $(this);
+        $this.data('before', $this.text());
+    }).keydown(function(e) {
+        if (e.key === 'Enter') {
+            $(this).blur();
+        }
+    }).on('keyup paste', function() {
+        const $this = $(this);
+        const range = window.getSelection().getRangeAt(0);
+        const oldVal = $this.data('before');
+        const rawVal = $this.text();
+        const newVal = $this.text().trim();
+
+        if (rawVal !== newVal) {
+            const newOffset = range.startOffset - (rawVal.length - newVal.length);
+            $this.text(newVal);
+            range.setStart((newVal ? range.startContainer.childNodes[0] : range.startContainer), newOffset);
+        }
+
+        if (oldVal !== newVal && +oldVal !== +newVal) {
+            if (!numValidator.test(newVal)) {
+                const newOffset = range.startOffset - (newVal.length - oldVal.length);
+                $this.text(oldVal);
+                range.setStart(range.startContainer.childNodes[0], newOffset)
+            }
+            else if (+newVal) {
+                state.ui = {
+                    ...state.ui,
+                    caretPos: range.startOffset,
+                    focused: range.startContainer.parentNode.id,
+                    valInEdit: newVal,
+                };
+                $this.change();
+            }
+        }
+    }).blur(function() {
+        state.ui = {
+            ...state.ui,
+            caretPos: null,
+            focused: null,
+            valInEdit: null,
+        };
+        const $this = $(this);
+        const newVal = $this.text();
+        if (!numValidator.test(newVal) || !+newVal) {
+            $this.text($this.data('before'))
+        }
+        $this.change();
+    }).change(function(e) {
+        const [ type, _id, ...ids ] = e.target.id.split('-');
+        const newState = { ...state };
+
+        // convoluted duplication of relevant nodes of the state tree
+        let node = newState;
+        for (let l of loc) {
+            node[l] = dupe(node[l]);
+            node = node[l]
+        }
+        ids.forEach((i, k) => {
+            const key = k === 0 ? 'days' : k === 1 ? 'elements' : 'ingredients';
+            for (let idx of [key, i]) {
+                node[idx] = dupe(node[idx]);
+                node = node[idx];
+            }
+        });
+        const oldVal = node[type];
+        const newVal = +e.target.innerText / (node.basis ? node.basis.qty : 1);
+        const factor = newVal / oldVal;
+        node[type] = newVal;
+        if (node.ingredients) {
+            node.ingredients = dupe(node.ingredients);
+            node.ingredients.forEach((ing, i) => {
+                node.ingredients[i] = dupe(node.ingredients[i]);
+                node.ingredients[i][type] = factor * node.ingredients[i][type]
+            })
+        }
+        if (node.calories) {
+            node.calories = node.calories * factor
+        }
+        updateMCCState(state, newState, id, loc, true)
+    });
 };
 
 
@@ -234,6 +328,24 @@ const computeMCCStyles = () => {
     const cardMargins = 6 * 7;  // 6px * 7 spaces
     const cardWidth = (totWidth - (PLAN_BUFFER * 2) - cardMargins - 2 - 8) / 8;
     $('.mealDaysContainer .cardContainer').css({'min-width': `${cardWidth}px`, 'max-width': `${cardWidth}px`});
+};
+
+const updateMCCState = (state, newState, id, loc, editable) => {
+    _assignState(newState);
+    _renderWeekPlan(id, state, loc, editable);
+    _updateUI(state);
+};
+
+const _updateUI = state => {
+    if (state.ui.focused) {
+        const node = $(`#${state.ui.focused}`);
+        const range = document.createRange();
+        range.setStart(node.contents()[0], state.ui.caretPos);
+        node.focus();
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+    }
 };
 
 export const addUIState = (plan) => {

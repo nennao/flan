@@ -38,7 +38,7 @@ const setState = newState => {
     }
 };
 
-const _assignState = newState => {
+export const _assignState = newState => {
     Object.assign(STATE, newState)
 };
 
