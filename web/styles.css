@@ -175,6 +175,10 @@ input[type=date]::-webkit-inner-spin-button {
     align-items: center;
 }
 
+.hidden {
+    display: none!important;
+}
+
 .mealDaysContainer .mealTypeHead .sbFlexMCC > div:first-child {
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -204,3 +208,34 @@ input[type=date]::-webkit-inner-spin-button {
     padding: 1px 4px;
     margin-left: -4px;
 }
+
+
+/* ======== MACRO BAR ======== */
+.macroBar {
+    display: flex;
+    border: 1px solid rgba(0, 0, 0, .25);
+}
+.macroBarLevel1 {
+    height: 8px;
+}
+.macroBarLevel2 {
+    height: 7px;
+}
+.macroBarLevel3 {
+    height: 6px;
+}
+
+.macroBarPart {
+    height: 100%;
+}
+.macroBarC {
+    background-color: #6bc7d6;
+}
+.macroBarF {
+    background-color: #eeb866;
+}
+.macroBarP {
+    background-color: #c680bc;
+}
+
+/* =========================== */

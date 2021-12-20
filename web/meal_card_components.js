@@ -11,8 +11,35 @@ const sbFlex = (a, b) => {
     return `<div class="sbFlexMCC"><div>${a}</div><div>${b}</div></div>`
 };
 
+const macroBreakdown = m => {  /** m is either Array of meal items, or Object of macro grams */
+    const macroG = Array.isArray(m) ? Object.fromEntries(MACROS.map(macro => [macro, sum(m.map(el => mealItemMacroG(el, macro)))])) : m
+    const macroCals = Object.fromEntries(MACROS.map(macro => [macro, MACRO_CAL_MAP[macro] * macroG[macro]]))
+    const totalCals = sum(Object.values(macroCals))
+    if (!totalCals) {
+        return {}
+    }
+    const percents = Object.fromEntries(MACROS.map(macro => [macro, percent(macroCals[macro], totalCals)]))
+    return {percents, macroG, macroCals, totalCals}
+}
+
+const macroBar = (mealItems, level) => {
+    const { percents } = macroBreakdown(mealItems)
+    if (!percents) {
+        return ''
+    }
+    const adjust = (100 - sum(Object.values(percents))) / 3
+    return `
+<div class="macroBar macroBarLevel${level}">
+    <div style="width: ${adjust + percents.carbs}%;" class="macroBarPart macroBarC"></div>
+    <div style="width: ${adjust + percents.fat}%;" class="macroBarPart macroBarF"></div>
+    <div style="width: ${adjust + percents.protein}%;" class="macroBarPart macroBarP"></div>
+</div>
+`
+}
+
+
 // TODO these assume one level of nested ingredients. may have to eventually change to recursive querying
-const relIngCals = ing => Math.round(ing.qty * ing.basis.calories);
+const relIngCals = ing => mR(ing.qty * ing.basis.calories);
 
 const mealItemCals = mi => mi.ingredients ? sum(mi.ingredients.map(ing => relIngCals(ing))) : mi.calories;
 
@@ -57,12 +84,15 @@ const caloriesCard = (id, d, i, editable, stateUI) => {
           <div class="mealTypeHead">${sbFlex('PLAN', `<span>${d.planType}</span>`)}</div>
         </div>
         ${strMap(mealTypes, mt => collapsible(
-             `<div class="mealTypeHead">${sbFlex(mt, `<span>${mR(sum(mealMap[mt].map(mm => mealItemCals(mm))))}</span>`)}</div>`,
+             `<div class="mealTypeHead">
+                          ${sbFlex(mt, `<span>${mR(sum(mealMap[mt].map(mm => mealItemCals(mm))))}</span>`)}
+                          ${macroBar(mealMap[mt], 1)}
+                      </div>`,
             strMap(mealMap[mt], mm => collapsible(
                 sbFlex(
                     `<div>${mm.name}</div><div class="mealItemQty">${getQtyInput(mm.qty, id, [i,mm.ii], editable, stateUI)}${mm.unit || mm.name}</div>`,
                     mR(mealItemCals(mm))
-                ),
+                ) + macroBar([mm], 2),
                 mm.ingredients && strMap(mm.ingredients, (ing, iii) => {
                     return `
                         <div class="mealItemIng">${sbFlex(
@@ -71,7 +101,9 @@ const caloriesCard = (id, d, i, editable, stateUI) => {
                                     ${getQtyInput(mR(ing.qty * ing.basis.qty, 3), id, [i, mm.ii, iii], editable, stateUI)}${ing.basis.unit || ing.name}
                                 </div>`,
                             mR(relIngCals(ing))
-                        )}</div>
+                        )}
+                        ${macroBar(ing.basis.macros, 3)/* TODO remember to update this to show correct ing grams */}
+                        </div>
                     `
                 }),
                 ['days', i, 'elements', mm.ii, 'ui'], mm.ui.collapsed, ['mealItem']
@@ -81,13 +113,16 @@ const caloriesCard = (id, d, i, editable, stateUI) => {
     `};
     const sumBody = () => `
         <div class="mealTypeContainer">
-          <div class="mealTypeHead">${sbFlex('AVERAGE', `<span>${mR(d.avg)}</span>`)}</span></div>
-          <div class="mealItem">${sbFlex('total', `<span>${mR(d.tot)}</span>`)}</span></div>
+          <div class="mealTypeHead">${sbFlex('AVERAGE', `<span>${mR(d.avg)}</span>`)}</div>
+          <div class="mealItem">${sbFlex('total', `<span>${mR(d.tot)}</span>`)}</div>
         </div>
         ${strMap(mealTypes, mt => `
             <div class="mealTypeContainer">
-              <div class="mealTypeHead">${sbFlex(mt, `<span>${mR(d[mt].avg)}</span>`)}</span></div>
-              <div class="mealItem">${sbFlex('total', `<span>${mR(d[mt].tot)}</span>`)}</span></div>
+              <div class="mealTypeHead">
+                  ${sbFlex(mt, `<span>${mR(d[mt].avg)}</span>`)}
+                  ${macroBar(d.mealMacros[mt], 1)}
+              </div>
+              <div class="mealItem">${sbFlex('total', `<span>${mR(d[mt].tot)}</span>`)}</div>
             </div>
         `)}
     `;
@@ -114,9 +149,7 @@ const caloriesCard = (id, d, i, editable, stateUI) => {
 
 
 const macrosCard = (id, d, i) => {
-    const macroG = d.isSum ? d.macros : Object.fromEntries(MACROS.map(macro => [macro, sum(d.elements.map(el => mealItemMacroG(el, macro)))]))
-    const macroCals = Object.fromEntries(MACROS.map(macro => [macro, MACRO_CAL_MAP[macro] * macroG[macro]]))
-    const totalCals = sum(Object.values(macroCals))
+    const { percents, macroG } = macroBreakdown(d.isSum ? d.macros : d.elements)
     const uiLoc = d.isSum ? ['ui', 'macrosSum'] : ['days', i, 'ui', 'macros'];
     return `
         <div class="card">
@@ -130,7 +163,7 @@ const macrosCard = (id, d, i) => {
       
           <div id="${id}_mealCardMacrosBody${i}" class="collapse${d.ui.macros.collapsed ? '' : ' show'}" data-uiloc="${uiLoc.join('-')}">
             <div class="card-body">
-              ${strMap(MACROS, macro => sbFlex(macro, `${percent(macroCals[macro], totalCals)}% - ${mR(macroG[macro])}g`))}
+              ${strMap(MACROS, macro => sbFlex(macro, `${percents[macro]}% - ${mR(macroG[macro])}g`))}
             </div>
           </div>
         </div>
@@ -142,17 +175,20 @@ const getSum = (days, plan) => {
     let calsTot = 0;
     const mealMap = {breakfast: 0, lunch: 0, dinner: 0, snacks: 0};
     const macroMap = {carbs: 0, fat: 0, protein: 0};  // these are in grams
+    const mealMacroMap = Object.fromEntries(Object.keys(mealMap).map(k => [k, { ...macroMap }]))
     for (let d of days) {
         for (let el of d.elements) {
             const cals = mealItemCals(el);
             calsTot += cals;
             mealMap[el.type] += cals;
             for (let m of MACROS) {
-                macroMap[m] += mealItemMacroG(el, m)
+                const macroG = mealItemMacroG(el, m)
+                macroMap[m] += macroG
+                mealMacroMap[el.type][m] += macroG
             }
         }
     }
-    const calsAvg = Math.round(calsTot / len);
+    const calsAvg = mR(calsTot / len);
     for (let mt of mealTypes) mealMap[mt] = {avg: mR(mealMap[mt] / len), tot: mealMap[mt]};
     return {
         isSum: true,
@@ -160,6 +196,7 @@ const getSum = (days, plan) => {
         tot: calsTot,
         ...mealMap,
         macros: macroMap,
+        mealMacros: mealMacroMap,
         ui: {
             calories: plan.ui.caloriesSum,
             macros: plan.ui.macrosSum,
@@ -195,6 +232,10 @@ const _renderWeekPlan = (id, state, loc, editable) => {
     }
 
     container.html(`
+        <div>
+            <input type="checkbox" id="mdc-${id}-ViewMacros">
+            <label for="mdc-${id}-ViewMacros">view macros</label>
+        </div>
         <div id="mdc-${id}" class="mealDaysContainer${editable ? ' editable': ''}">
             ${strMap(days, (d, i) => {
                 return `
@@ -213,18 +254,35 @@ const _renderWeekPlan = (id, state, loc, editable) => {
 
 const addMealCardEvents = (id, state, loc) => {
 
+    const uiState = (uiLoc, key, val) => {
+        /** mutates the state! */
+        // TODO - consider making this func a global util. the state mutate should be handled better (but no need to trigger a rerender?)
+        let node = state;
+        for (let l of uiLoc) node = node[l];
+        if (val !== undefined) {
+            if (node[key] !== val) node[key] = val;
+            return
+        }
+        return node[key]
+    }
+
     const handleCollapse = (e, collapsed) => {
         e.stopPropagation()
-        /** mutates the state! */
         const uiLoc = $(e.target).data('uiloc').split('-');
-        let node = state;
-        for (let l of [ ...loc, ...uiLoc ]) node = node[l];
-        if (node.collapsed !== collapsed) node.collapsed = collapsed;
+        uiState([ ...loc, ...uiLoc ], 'collapsed', collapsed)
     };
 
     $(`#mdc-${id} [data-uiloc]`)
         .on('show.bs.collapse', e => handleCollapse(e, false))
         .on('hide.bs.collapse', e => handleCollapse(e, true ))
+
+    const toggleViewMacroBars = cond => { $(`#mdc-${id} .macroBar`)[`${cond ? 'remove' : 'add'}Class`]('hidden') }
+    const viewMacros = uiState([ ...loc, 'ui' ], 'viewMacros')
+    toggleViewMacroBars(viewMacros)
+    $(`#mdc-${id}-ViewMacros`).change(e => {
+        uiState([ ...loc, 'ui' ], 'viewMacros', e.target.checked)
+        toggleViewMacroBars(e.target.checked)
+    }).prop('checked', viewMacros)
 
     addQtyInputEvents(id, state, loc);
 
@@ -352,6 +410,7 @@ export const addUIState = (plan) => {
     plan['ui'] = {
         'caloriesSum': {collapsed: false},
         'macrosSum':   {collapsed: false},
+        'viewMacros': false,
     };
     for (let day of plan.days) {
         day['ui'] = {};

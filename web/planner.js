@@ -19,7 +19,7 @@ const _createPlanCreatorGrid = state => {
     const getMacroAvg = macro => {
         if (data.length < 2) return '';
         const avgGrams = avg(macroGrams[macro]);
-        return `<td><div><div>${Math.round((avgGrams * MACRO_CAL_MAP[macro] * 100) / avgCals)}%</div><div>${Math.round(avgGrams)}g</div></div></td>`;
+        return `<td><div><div>${mR((avgGrams * MACRO_CAL_MAP[macro] * 100) / avgCals)}%</div><div>${mR(avgGrams)}g</div></div></td>`;
     };
 
     const getAvg = key => {
