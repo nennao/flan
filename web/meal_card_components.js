@@ -23,16 +23,24 @@ const macroBreakdown = m => {  /** m is either Array of meal items, or Object of
 }
 
 const macroBar = (mealItems, level) => {
-    const { percents } = macroBreakdown(mealItems)
+    const { percents, macroG } = macroBreakdown(mealItems)
     if (!percents) {
         return ''
     }
     const adjust = (100 - sum(Object.values(percents))) / 3
     return `
-<div class="macroBar macroBarLevel${level}">
-    <div style="width: ${adjust + percents.carbs}%;" class="macroBarPart macroBarC"></div>
-    <div style="width: ${adjust + percents.fat}%;" class="macroBarPart macroBarF"></div>
-    <div style="width: ${adjust + percents.protein}%;" class="macroBarPart macroBarP"></div>
+<div class="macroBarCont macroBarLevel${level}">
+    <div class="macroBar">
+        <div style="width: ${adjust + percents.carbs}%;" class="macroBarPart macroBarC"></div>
+        <div style="width: ${adjust + percents.fat}%;" class="macroBarPart macroBarF"></div>
+        <div style="width: ${adjust + percents.protein}%;" class="macroBarPart macroBarP"></div>
+    </div>
+    <div class="macroBarDetailed">
+        ${strMap(MACROS, macro => `<div>
+            <span class="macroBarLeg macroBarLeg${macro[0].toUpperCase()}">${macro[0].toUpperCase()}</span>
+            <span>${percents[macro]}% ${mR(macroG[macro])}g</span>
+        </div>`)}
+    </div>
 </div>
 `
 }
@@ -235,6 +243,8 @@ const _renderWeekPlan = (id, state, loc, editable) => {
         <div>
             <input type="checkbox" id="mdc-${id}-ViewMacros">
             <label for="mdc-${id}-ViewMacros">view macros</label>
+            <input type="checkbox" id="mdc-${id}-ViewMacrosDetailed">
+            <label for="mdc-${id}-ViewMacrosDetailed">detailed</label>
         </div>
         <div id="mdc-${id}" class="mealDaysContainer${editable ? ' editable': ''}">
             ${strMap(days, (d, i) => {
@@ -276,13 +286,21 @@ const addMealCardEvents = (id, state, loc) => {
         .on('show.bs.collapse', e => handleCollapse(e, false))
         .on('hide.bs.collapse', e => handleCollapse(e, true ))
 
-    const toggleViewMacroBars = cond => { $(`#mdc-${id} .macroBar`)[`${cond ? 'remove' : 'add'}Class`]('hidden') }
+    const toggleViewMacroBars = (name, cond) => { $(`#mdc-${id} .macroBar${name}`)[`${cond ? 'remove' : 'add'}Class`]('hidden') }
+
     const viewMacros = uiState([ ...loc, 'ui' ], 'viewMacros')
-    toggleViewMacroBars(viewMacros)
+    toggleViewMacroBars('Cont', viewMacros)
     $(`#mdc-${id}-ViewMacros`).change(e => {
         uiState([ ...loc, 'ui' ], 'viewMacros', e.target.checked)
-        toggleViewMacroBars(e.target.checked)
+        toggleViewMacroBars('Cont', e.target.checked)
     }).prop('checked', viewMacros)
+
+    const viewMacrosDetailed = uiState([ ...loc, 'ui' ], 'viewMacrosDetailed')
+    toggleViewMacroBars('Detailed', viewMacrosDetailed)
+    $(`#mdc-${id}-ViewMacrosDetailed`).change(e => {
+        uiState([ ...loc, 'ui' ], 'viewMacrosDetailed', e.target.checked)
+        toggleViewMacroBars('Detailed', e.target.checked)
+    }).prop('checked', viewMacrosDetailed)
 
     addQtyInputEvents(id, state, loc);
 
@@ -411,6 +429,7 @@ export const addUIState = (plan) => {
         'caloriesSum': {collapsed: false},
         'macrosSum':   {collapsed: false},
         'viewMacros': false,
+        'viewMacrosDetailed': false,
     };
     for (let day of plan.days) {
         day['ui'] = {};

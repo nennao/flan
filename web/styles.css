@@ -215,27 +215,58 @@ input[type=date]::-webkit-inner-spin-button {
     display: flex;
     border: 1px solid rgba(0, 0, 0, .25);
 }
-.macroBarLevel1 {
+.macroBarLevel1 .macroBar{
     height: 8px;
 }
-.macroBarLevel2 {
+.macroBarLevel2 .macroBar {
     height: 7px;
 }
-.macroBarLevel3 {
+.macroBarLevel3 .macroBar {
     height: 6px;
 }
 
 .macroBarPart {
     height: 100%;
 }
-.macroBarC {
+.macroBarC, .macroBarLegC {
     background-color: #6bc7d6;
 }
-.macroBarF {
+.macroBarF, .macroBarLegF {
     background-color: #eeb866;
 }
-.macroBarP {
+.macroBarP, .macroBarLegP {
     background-color: #c680bc;
+}
+
+.macroBarDetailed {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Ubuntu Condensed', 'Arial Narrow', sans-serif;
+    color: #666666;
+}
+.macroBarLevel1 .macroBarDetailed{
+    font-size: 0.8rem;
+}
+.macroBarLevel2 .macroBarDetailed {
+    font-size: 0.7rem;
+}
+.macroBarLevel3 .macroBarDetailed {
+    font-size: 0.65rem;
+}
+.macroBarDetailed > * {
+    display: flex;
+    align-items: center;
+}
+.macroBarLeg {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    text-align: center;
+    font-size: 0.55rem;
+    margin-right: 2px;
+    color: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.4) inset;
+    padding-top: 1px;
 }
 
 /* =========================== */
