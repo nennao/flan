@@ -184,6 +184,9 @@ input[type=date]::-webkit-inner-spin-button {
     text-transform: uppercase;
 }
 
+.mealDaysContainer .goalText {
+    color: #2e3dad;
+}
 
 #plannerPlansList {
     margin-top: 30px;
@@ -269,9 +272,29 @@ input[type=date]::-webkit-inner-spin-button {
     padding-top: 1px;
 }
 
+.macroDonutCont {
+    padding: 5px 15px;
+}
+
 .macroCardDetails {
-    width: 30%;
-    min-width: 60px;
+    width: 100%;
+}
+.macroCardDetails > * {
+    width: 36%;
+    padding: 0 9px;
+}
+
+.macroCardDetails.heading {
+    padding: 5px 0;
+    text-align: center;
+}
+
+.macroCardDetails > :first-child {
+    width: 28%;
+    padding: 0;
+}
+.macroCardDetails > :last-child{
+    padding: 0 0 0 18px;
 }
 
 /* =========================== */

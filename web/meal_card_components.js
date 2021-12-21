@@ -87,6 +87,9 @@ const caloriesCard = (id, d, i, editable, stateUI) => {
         <div class="mealTypeContainer">
           <div class="mealTypeHead">${sbFlex('TOTAL', `<span>${mR(sum(d.elements.map(el => mealItemCals(el))))}</span>`)}</div>
         </div>
+        <div class="mealTypeContainer goalText">
+          <div class="mealTypeHead">${sbFlex('GOAL', `<span>${mR(d.goal.calories)}</span>`)}</div>
+        </div>
         <div class="mealTypeContainer">
           <div class="mealTypeHead">${sbFlex('PLAN', `<span>${d.planType}</span>`)}</div>
         </div>
@@ -123,6 +126,10 @@ const caloriesCard = (id, d, i, editable, stateUI) => {
           <div class="mealTypeHead">${sbFlex('AVERAGE', `<span>${mR(d.avg)}</span>`)}</div>
           <div class="mealItem">${sbFlex('total', `<span>${mR(d.tot)}</span>`)}</div>
         </div>
+        <div class="mealTypeContainer">
+          <div class="mealTypeHead goalText">${sbFlex('GOAL', `<span>${mR(d.goal.avg)}</span>`)}</div>
+          <div class="mealItem goalText">${sbFlex('total', `<span>${mR(d.goal.tot)}</span>`)}</div>
+        </div>
         ${strMap(mealTypes, mt => `
             <div class="mealTypeContainer">
               <div class="mealTypeHead">
@@ -157,6 +164,8 @@ const caloriesCard = (id, d, i, editable, stateUI) => {
 
 const macrosCard = (id, d, i) => {
     const { percents, displayPercents, macroG } = macroBreakdown(d.isSum ? d.macros : d.elements)
+    const goal = macroBreakdown(d.goal.macros)
+    const [ goalDisplayPercents, goalMacroG ] = [ goal.displayPercents, goal.macroG ]
     const uiLoc = d.isSum ? ['ui', 'macrosSum'] : ['days', i, 'ui', 'macros'];
     return `
         <div class="card">
@@ -170,11 +179,13 @@ const macrosCard = (id, d, i) => {
       
           <div id="${id}_mealCardMacrosBody${i}" class="collapse${d.ui.macros.collapsed ? '' : ' show'}" data-uiloc="${uiLoc.join('-')}">
             <div class="card-body">
-              <div>${createMacroDonut(percents)}</div>
+              <div class="macroDonutCont">${createMacroDonut(percents)}</div>
+              <div class="sbFlexMCC macroCardDetails heading"><div></div><div>total</div><div class="goalText">goal</div></div>
               ${strMap(MACROS, macro => `
-                  <div class="sbFlexMCC">
+                  <div class="sbFlexMCC macroCardDetails">
                       <div><span class="macroBarLeg macroBarLeg${macro[0].toUpperCase()}"></span><span>${macro}</span></div>
-                      ${sbFlex(displayPercents[macro]+'%', mR(macroG[macro])+'g', 'macroCardDetails')}
+                      ${sbFlex(displayPercents[macro]+'%', mR(macroG[macro])+'g')}
+                      ${sbFlex(goalDisplayPercents[macro]+'%', mR(goalMacroG[macro])+'g', 'goalText')}
                   </div>
               `)}
             </div>
@@ -189,7 +200,13 @@ const getSum = (days, plan) => {
     const mealMap = {breakfast: 0, lunch: 0, dinner: 0, snacks: 0};
     const macroMap = {carbs: 0, fat: 0, protein: 0};  // these are in grams
     const mealMacroMap = Object.fromEntries(Object.keys(mealMap).map(k => [k, { ...macroMap }]))
+    let goalCalsTot = 0
+    const goalMacroMap = { ...macroMap }
     for (let d of days) {
+        goalCalsTot += d.goal.calories
+        for (let m of MACROS) {
+            goalMacroMap[m] += d.goal.macros[m]
+        }
         for (let el of d.elements) {
             const cals = mealItemCals(el);
             calsTot += cals;
@@ -202,11 +219,17 @@ const getSum = (days, plan) => {
         }
     }
     const calsAvg = mR(calsTot / len);
+    const goalCalsAvg = mR(goalCalsTot / len);
     for (let mt of mealTypes) mealMap[mt] = {avg: mR(mealMap[mt] / len), tot: mealMap[mt]};
     return {
         isSum: true,
         avg: calsAvg,
         tot: calsTot,
+        goal: {
+            tot: goalCalsTot,
+            avg: goalCalsAvg,
+            macros: goalMacroMap,
+        },
         ...mealMap,
         macros: macroMap,
         mealMacros: mealMacroMap,

@@ -11,6 +11,7 @@ from db import sql, transaction
 
 DATE_FORMAT = "%Y-%m-%d"
 
+MACRO_CAL_MAP = {"carbs": 4, "fat": 9, "protein": 4}
 
 dummy_plan = {
     "startDate": "2020-06-08",
@@ -55,6 +56,10 @@ def get_dummy_plan(data):
             {
                 "date": d["date"],
                 "planType": d["planType"],
+                "goal": {
+                    "calories": d["calories"],  # TODO consider not saving this calories and calc from macros instead
+                    "macros": {k: d["calories"] * d["macros"][k] / 100 / v for k, v in MACRO_CAL_MAP.items()},  # convert % to grams
+                },
                 "elements": [
                     dict({
                         "type": m,
@@ -101,10 +106,15 @@ def save_plan():
     # insert the new plan
     plan_id = sql("insert into plans(begin_date, end_date, user_id) values(%s, %s, %s) returning id", (start_date, end_date, user_id))[0][0]
 
-    # insert plan elements
+    # insert plan days
     for day in plan["days"]:
         date = datetime.strptime(day["date"], DATE_FORMAT)
         plantype = day["planType"]
+        goal_carbs, goal_fat, goal_protein = [day['goal']['macros'][m] for m in ['carbs', 'fat', 'protein']]
+        plan_day_id = sql(f"""insert into plan_days(plan_date, plan_type, goal_carbs, goal_fat, goal_protein, plan_id) 
+            values(%s, %s, %s, %s, %s, %s) returning id""", (date, plantype, goal_carbs, goal_fat, goal_protein, plan_id))[0][0]
+
+        # insert plan elements
         for element in day["elements"]:
             # type, name, calories, macros { protein, fat, carbs }
             etype = element["type"]
@@ -114,8 +124,7 @@ def save_plan():
             recipe_id = sql("select id from recipes where name = %s", (recipe_name,))[0][0]
 
             # insert the new element
-            sql("insert into plan_elements(el_date, el_type, plan_type, plan_id, recipe_id) values(%s, %s, %s, %s, %s)", (
-                date, etype, plantype, plan_id, recipe_id))
+            sql("insert into plan_elements(el_type, plan_day_id, recipe_id) values(%s, %s, %s)", (etype, plan_day_id, recipe_id))
 
     new_plan = _get_plans(user_id, (plan_id,))[0]
     return jsonify(new_plan)
@@ -134,9 +143,13 @@ def _get_plans(user_id, plan_ids=None):
         'p.id',
         'p.begin_date',
         'p.end_date',
-        'e.el_date',
+        'd.id',
+        'd.plan_date',
+        'd.plan_type',
+        'd.goal_carbs',
+        'd.goal_fat',
+        'd.goal_protein',
         'e.id',
-        'e.plan_type',
         'e.el_type',
         'r.name',
         'r.batch',
@@ -151,7 +164,8 @@ def _get_plans(user_id, plan_ids=None):
     )
     plan_data = sql(f"""
         select {', '.join(fields)} from plans p
-            join plan_elements e on p.id = e.plan_id
+            join plan_days d on p.id = d.plan_id
+            join plan_elements e on d.id = e.plan_day_id
             join recipes r on r.id = e.recipe_id
             join ingredients i on r.id = i.recipe_id
             join foods f on f.id = i.food_id
@@ -163,17 +177,17 @@ def _get_plans(user_id, plan_ids=None):
             p.user_id = {user_id} 
             {plan_id_cond}
 
-        order by p.id, e.el_date, e.id
+        order by p.id, d.plan_date, e.id
     """)
-
-    # print()
-    # print('plan_data')
-    # print_data = [fields] + [tuple(str(s) for s in d) for d in plan_data]
-    # print(tabulate(print_data))
-    # print()
 
     plans = []
     if len(plan_data):
+
+        # print()
+        # print('plan_data')
+        # print_data = [fields] + [tuple(str(s) for s in d) for d in plan_data]
+        # print(tabulate(print_data))
+        # print()
 
         def _adjust_macros(p):
             vol_ml_map = {'ml': 1, 'tbsp': 15, 'tsp': 5, 'cup': 240}  # todo need 'official' conversion tables?
@@ -221,8 +235,12 @@ def _get_plans(user_id, plan_ids=None):
 
         def new_day(p):
             return {
-                "date": p['e.el_date'].strftime(DATE_FORMAT),
-                "planType": p['e.plan_type'],
+                "date": p['d.plan_date'].strftime(DATE_FORMAT),
+                "planType": p['d.plan_type'],
+                "goal": {
+                    "calories": 9*p["d.goal_fat"] + 4*p["d.goal_protein"] + 4*p["d.goal_carbs"],  # TODO unnecessary?
+                    "macros": {m: p[f"d.goal_{m}"] for m in ['carbs', 'fat', 'protein']},
+                },
                 "elements": []
             }
 
@@ -249,7 +267,7 @@ def _get_plans(user_id, plan_ids=None):
                 current_day = new_day(p)
                 current_plan = new_plan(p)
 
-            elif p['e.el_date'].strftime(DATE_FORMAT) != current_day["date"]:  # new date + new element
+            elif p['d.plan_date'].strftime(DATE_FORMAT) != current_day["date"]:  # new date + new element
                 current_day["elements"].append(current_element)
                 current_plan["days"].append(current_day)
                 current_element = new_element(p)
