@@ -28,7 +28,7 @@ const macroBar = (mealItems, level) => {
         return ''
     }
     return `
-<div class="macroBarCont macroBarLevel${level}">
+<div class="macroBarCont macroBarLevel${level} macroBar${level === 1 ? 'Upper' : 'Lower'}">
     <div class="macroBar">
         <div style="width: ${percents.carbs}%;" class="macroBarPart macroBarC"></div>
         <div style="width: ${percents.fat}%;" class="macroBarPart macroBarF"></div>
@@ -271,6 +271,8 @@ const _renderWeekPlan = (id, state, loc, editable) => {
         <div>
             <input type="checkbox" id="mdc-${id}-ViewMacros">
             <label for="mdc-${id}-ViewMacros">view macros</label>
+            <input type="checkbox" id="mdc-${id}-ViewMacrosMore">
+            <label for="mdc-${id}-ViewMacrosMore">more</label>
             <input type="checkbox" id="mdc-${id}-ViewMacrosDetailed">
             <label for="mdc-${id}-ViewMacrosDetailed">detailed</label>
         </div>
@@ -317,11 +319,19 @@ const addMealCardEvents = (id, state, loc) => {
     const toggleViewMacroBars = (name, cond) => { $(`#mdc-${id} .macroBar${name}`)[`${cond ? 'remove' : 'add'}Class`]('hidden') }
 
     const viewMacros = uiState([ ...loc, 'ui' ], 'viewMacros')
-    toggleViewMacroBars('Cont', viewMacros)
+    toggleViewMacroBars('Upper', viewMacros)
     $(`#mdc-${id}-ViewMacros`).change(e => {
         uiState([ ...loc, 'ui' ], 'viewMacros', e.target.checked)
-        toggleViewMacroBars('Cont', e.target.checked)
+        toggleViewMacroBars('Upper', e.target.checked)
+        toggleViewMacroBars('Lower', uiState([ ...loc, 'ui' ], 'viewMacrosMore') && e.target.checked)
     }).prop('checked', viewMacros)
+
+    const viewMacrosMore = uiState([ ...loc, 'ui' ], 'viewMacrosMore')
+    toggleViewMacroBars('Lower', viewMacros && viewMacrosMore)
+    $(`#mdc-${id}-ViewMacrosMore`).change(e => {
+        uiState([ ...loc, 'ui' ], 'viewMacrosMore', e.target.checked)
+        toggleViewMacroBars('Lower', uiState([ ...loc, 'ui' ], 'viewMacros') && e.target.checked)
+    }).prop('checked', viewMacrosMore)
 
     const viewMacrosDetailed = uiState([ ...loc, 'ui' ], 'viewMacrosDetailed')
     toggleViewMacroBars('Detailed', viewMacrosDetailed)
@@ -456,7 +466,8 @@ export const addUIState = (plan) => {
     plan['ui'] = {
         'caloriesSum': {collapsed: false},
         'macrosSum':   {collapsed: false},
-        'viewMacros': false,
+        'viewMacros': true,
+        'viewMacrosMore': false,
         'viewMacrosDetailed': false,
     };
     for (let day of plan.days) {

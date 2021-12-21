@@ -27,6 +27,8 @@ const createDonutChart = (data, innerR=0.5) => {
     const r = 100/(2*Math.PI)
     const boxR = Math.ceil(r) * 2 + strokeW
 
+    const lineW = 1/128
+
     // TODO add labels to graph
     return `
 <svg width="100%" height="100%" viewBox="0 0 ${boxR} ${boxR}">  
@@ -35,6 +37,9 @@ const createDonutChart = (data, innerR=0.5) => {
         rem -= size
         return `<circle cx="${boxR/2}" cy="${boxR/2}" r="${r}" fill="transparent" stroke="${col}" stroke-width="${strokeW}" stroke-dasharray="${size} ${100-size}" stroke-dashoffset="${25-rem}"></circle>`
     })}
+
+    <circle cx="${boxR/2}" cy="${boxR/2}" r="${r+(strokeW/2)-(boxR*lineW/2)}" fill="transparent" stroke-opacity="0.25" stroke="#222222" stroke-width="${boxR*lineW}"></circle>
+    <circle cx="${boxR/2}" cy="${boxR/2}" r="${innerR ? r-(strokeW/2)+(boxR*lineW/2) : 0}" fill="transparent" stroke-opacity="0.25" stroke="#222222" stroke-width="${boxR*lineW}"></circle>
 </svg>
     `
 }
