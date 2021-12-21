@@ -1,6 +1,6 @@
 import { MACROS, MACRO_CAL_MAP, MEAL_PLAN_BY_DAY, MEAL_PLAN_CALS, MEAL_PLAN_MACROS, macroPercentToGrams } from "./mealplan_config.js";
 import { editableWeekPlan, readonlyWeekPlan, addUIState, removeUIState, PLAN_BUFFER } from "./meal_card_components.js";
-import { mR, avg, percent, strMap } from "./utils.js"
+import { mR, avg, strMap } from "./utils.js"
 import Api from "./api.js";
 
 

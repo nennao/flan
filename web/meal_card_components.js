@@ -1,14 +1,13 @@
 import { MACROS, MACRO_CAL_MAP } from "./mealplan_config.js";
-import { nextId, sum, avg, percent, strMap, mR } from "./utils.js"
+import { nextId, sum, avg, percent, strMap, mR, createMacroDonut } from "./utils.js"
 import { _assignState } from "./main.js";
-
 export const PLAN_BUFFER = 40;  // px
 
 const mealTypes = ['breakfast', 'lunch', 'dinner', 'snacks'];
 
 
-const sbFlex = (a, b) => {
-    return `<div class="sbFlexMCC"><div>${a}</div><div>${b}</div></div>`
+const sbFlex = (a, b, classes='') => {
+    return `<div class="sbFlexMCC ${classes}"><div>${a}</div><div>${b}</div></div>`
 };
 
 const macroBreakdown = m => {  /** m is either Array of meal items, or Object of macro grams */
@@ -19,26 +18,26 @@ const macroBreakdown = m => {  /** m is either Array of meal items, or Object of
         return {}
     }
     const percents = Object.fromEntries(MACROS.map(macro => [macro, percent(macroCals[macro], totalCals)]))
-    return {percents, macroG, macroCals, totalCals}
+    const displayPercents = Object.fromEntries(MACROS.map(macro => [macro, mR(percents[macro])]))
+    return {percents, displayPercents, macroG, macroCals, totalCals}
 }
 
 const macroBar = (mealItems, level) => {
-    const { percents, macroG } = macroBreakdown(mealItems)
+    const { percents, displayPercents, macroG } = macroBreakdown(mealItems)
     if (!percents) {
         return ''
     }
-    const adjust = (100 - sum(Object.values(percents))) / 3
     return `
 <div class="macroBarCont macroBarLevel${level}">
     <div class="macroBar">
-        <div style="width: ${adjust + percents.carbs}%;" class="macroBarPart macroBarC"></div>
-        <div style="width: ${adjust + percents.fat}%;" class="macroBarPart macroBarF"></div>
-        <div style="width: ${adjust + percents.protein}%;" class="macroBarPart macroBarP"></div>
+        <div style="width: ${percents.carbs}%;" class="macroBarPart macroBarC"></div>
+        <div style="width: ${percents.fat}%;" class="macroBarPart macroBarF"></div>
+        <div style="width: ${percents.protein}%;" class="macroBarPart macroBarP"></div>
     </div>
     <div class="macroBarDetailed">
         ${strMap(MACROS, macro => `<div>
             <span class="macroBarLeg macroBarLeg${macro[0].toUpperCase()}">${macro[0].toUpperCase()}</span>
-            <span>${percents[macro]}% ${mR(macroG[macro])}g</span>
+            <span>${displayPercents[macro]}% ${mR(macroG[macro])}g</span>
         </div>`)}
     </div>
 </div>
@@ -157,7 +156,7 @@ const caloriesCard = (id, d, i, editable, stateUI) => {
 
 
 const macrosCard = (id, d, i) => {
-    const { percents, macroG } = macroBreakdown(d.isSum ? d.macros : d.elements)
+    const { percents, displayPercents, macroG } = macroBreakdown(d.isSum ? d.macros : d.elements)
     const uiLoc = d.isSum ? ['ui', 'macrosSum'] : ['days', i, 'ui', 'macros'];
     return `
         <div class="card">
@@ -171,7 +170,13 @@ const macrosCard = (id, d, i) => {
       
           <div id="${id}_mealCardMacrosBody${i}" class="collapse${d.ui.macros.collapsed ? '' : ' show'}" data-uiloc="${uiLoc.join('-')}">
             <div class="card-body">
-              ${strMap(MACROS, macro => sbFlex(macro, `${percents[macro]}% - ${mR(macroG[macro])}g`))}
+              <div>${createMacroDonut(percents)}</div>
+              ${strMap(MACROS, macro => `
+                  <div class="sbFlexMCC">
+                      <div><span class="macroBarLeg macroBarLeg${macro[0].toUpperCase()}"></span><span>${macro}</span></div>
+                      ${sbFlex(displayPercents[macro]+'%', mR(macroG[macro])+'g', 'macroCardDetails')}
+                  </div>
+              `)}
             </div>
           </div>
         </div>
