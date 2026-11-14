@@ -1,1 +1,253 @@
-{"foods":[{"food_name":"duck breast","brand_name":null,"serving_qty":0.5,"serving_unit":"breast, bone removed","serving_weight_grams":120,"nf_calories":242.4,"nf_total_fat":13.02,"nf_saturated_fat":3.51,"nf_cholesterol":163.2,"nf_sodium":100.8,"nf_total_carbohydrate":0,"nf_dietary_fiber":null,"nf_sugars":null,"nf_protein":29.4,"nf_potassium":null,"nf_p":null,"full_nutrients":[{"attr_id":203,"value":29.4},{"attr_id":204,"value":13.02},{"attr_id":205,"value":0},{"attr_id":207,"value":1.38},{"attr_id":208,"value":242.4},{"attr_id":255,"value":75.9},{"attr_id":268,"value":1014},{"attr_id":301,"value":9.6},{"attr_id":303,"value":3.912},{"attr_id":307,"value":100.8},{"attr_id":317,"value":31.68},{"attr_id":401,"value":3.36},{"attr_id":406,"value":9.426},{"attr_id":501,"value":0.4044},{"attr_id":502,"value":1.2468},{"attr_id":503,"value":1.4964},{"attr_id":504,"value":2.46},{"attr_id":505,"value":2.4936},{"attr_id":506,"value":0.786},{"attr_id":507,"value":0.4464},{"attr_id":508,"value":1.2228},{"attr_id":509,"value":1.11},{"attr_id":510,"value":1.524},{"attr_id":511,"value":1.8576},{"attr_id":512,"value":0.7716},{"attr_id":513,"value":1.8444},{"attr_id":514,"value":2.8548},{"attr_id":515,"value":4.5576},{"attr_id":516,"value":1.632},{"attr_id":517,"value":1.4304},{"attr_id":518,"value":1.2564},{"attr_id":601,"value":163.2},{"attr_id":606,"value":3.5064},{"attr_id":612,"value":0.072},{"attr_id":613,"value":2.7108},{"attr_id":614,"value":0.7236},{"attr_id":617,"value":5.9268},{"attr_id":618,"value":1.7952},{"attr_id":619,"value":0.084},{"attr_id":620,"value":0.0792},{"attr_id":626,"value":0.504},{"attr_id":628,"value":0.0708},{"attr_id":645,"value":6.5136},{"attr_id":646,"value":1.9584}],"nix_brand_name":null,"nix_brand_id":null,"nix_item_name":null,"nix_item_id":null,"upc":null,"consumed_at":"2020-07-26T21:31:13+00:00","metadata":{"is_raw_food":false},"source":1,"ndb_no":5315,"tags":{"item":"duck breast","measure":null,"quantity":"0.5","food_group":0,"tag_id":2129},"alt_measures":[{"serving_weight":120,"measure":"breast, bone removed","seq":3,"qty":0.5},{"serving_weight":85,"measure":"oz","seq":2,"qty":3},{"serving_weight":56,"measure":"unit (yield from 1 lb ready-to-cook duck)","seq":1,"qty":1},{"serving_weight":100,"measure":"g","seq":null,"qty":100}],"lat":null,"lng":null,"meal_type":5,"photo":{"thumb":"https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png","highres":null,"is_user_uploaded":false},"sub_recipe":null}]}
+{
+  "foods": [
+    {
+      "food_name": "duck breast",
+      "brand_name": null,
+      "serving_qty": 0.5,
+      "serving_unit": "breast, bone removed",
+      "serving_weight_grams": 120,
+      "nf_calories": 242.4,
+      "nf_total_fat": 13.02,
+      "nf_saturated_fat": 3.51,
+      "nf_cholesterol": 163.2,
+      "nf_sodium": 100.8,
+      "nf_total_carbohydrate": 0,
+      "nf_dietary_fiber": null,
+      "nf_sugars": null,
+      "nf_protein": 29.4,
+      "nf_potassium": null,
+      "nf_p": null,
+      "full_nutrients": [
+        {
+          "attr_id": 203,
+          "value": 29.4
+        },
+        {
+          "attr_id": 204,
+          "value": 13.02
+        },
+        {
+          "attr_id": 205,
+          "value": 0
+        },
+        {
+          "attr_id": 207,
+          "value": 1.38
+        },
+        {
+          "attr_id": 208,
+          "value": 242.4
+        },
+        {
+          "attr_id": 255,
+          "value": 75.9
+        },
+        {
+          "attr_id": 268,
+          "value": 1014
+        },
+        {
+          "attr_id": 301,
+          "value": 9.6
+        },
+        {
+          "attr_id": 303,
+          "value": 3.912
+        },
+        {
+          "attr_id": 307,
+          "value": 100.8
+        },
+        {
+          "attr_id": 317,
+          "value": 31.68
+        },
+        {
+          "attr_id": 401,
+          "value": 3.36
+        },
+        {
+          "attr_id": 406,
+          "value": 9.426
+        },
+        {
+          "attr_id": 501,
+          "value": 0.4044
+        },
+        {
+          "attr_id": 502,
+          "value": 1.2468
+        },
+        {
+          "attr_id": 503,
+          "value": 1.4964
+        },
+        {
+          "attr_id": 504,
+          "value": 2.46
+        },
+        {
+          "attr_id": 505,
+          "value": 2.4936
+        },
+        {
+          "attr_id": 506,
+          "value": 0.786
+        },
+        {
+          "attr_id": 507,
+          "value": 0.4464
+        },
+        {
+          "attr_id": 508,
+          "value": 1.2228
+        },
+        {
+          "attr_id": 509,
+          "value": 1.11
+        },
+        {
+          "attr_id": 510,
+          "value": 1.524
+        },
+        {
+          "attr_id": 511,
+          "value": 1.8576
+        },
+        {
+          "attr_id": 512,
+          "value": 0.7716
+        },
+        {
+          "attr_id": 513,
+          "value": 1.8444
+        },
+        {
+          "attr_id": 514,
+          "value": 2.8548
+        },
+        {
+          "attr_id": 515,
+          "value": 4.5576
+        },
+        {
+          "attr_id": 516,
+          "value": 1.632
+        },
+        {
+          "attr_id": 517,
+          "value": 1.4304
+        },
+        {
+          "attr_id": 518,
+          "value": 1.2564
+        },
+        {
+          "attr_id": 601,
+          "value": 163.2
+        },
+        {
+          "attr_id": 606,
+          "value": 3.5064
+        },
+        {
+          "attr_id": 612,
+          "value": 0.072
+        },
+        {
+          "attr_id": 613,
+          "value": 2.7108
+        },
+        {
+          "attr_id": 614,
+          "value": 0.7236
+        },
+        {
+          "attr_id": 617,
+          "value": 5.9268
+        },
+        {
+          "attr_id": 618,
+          "value": 1.7952
+        },
+        {
+          "attr_id": 619,
+          "value": 0.084
+        },
+        {
+          "attr_id": 620,
+          "value": 0.0792
+        },
+        {
+          "attr_id": 626,
+          "value": 0.504
+        },
+        {
+          "attr_id": 628,
+          "value": 0.0708
+        },
+        {
+          "attr_id": 645,
+          "value": 6.5136
+        },
+        {
+          "attr_id": 646,
+          "value": 1.9584
+        }
+      ],
+      "nix_brand_name": null,
+      "nix_brand_id": null,
+      "nix_item_name": null,
+      "nix_item_id": null,
+      "upc": null,
+      "consumed_at": "2020-07-26T21:31:13+00:00",
+      "metadata": {
+        "is_raw_food": false
+      },
+      "source": 1,
+      "ndb_no": 5315,
+      "tags": {
+        "item": "duck breast",
+        "measure": null,
+        "quantity": "0.5",
+        "food_group": 0,
+        "tag_id": 2129
+      },
+      "alt_measures": [
+        {
+          "serving_weight": 120,
+          "measure": "breast, bone removed",
+          "seq": 3,
+          "qty": 0.5
+        },
+        {
+          "serving_weight": 85,
+          "measure": "oz",
+          "seq": 2,
+          "qty": 3
+        },
+        {
+          "serving_weight": 56,
+          "measure": "unit (yield from 1 lb ready-to-cook duck)",
+          "seq": 1,
+          "qty": 1
+        },
+        {
+          "serving_weight": 100,
+          "measure": "g",
+          "seq": null,
+          "qty": 100
+        }
+      ],
+      "lat": null,
+      "lng": null,
+      "meal_type": 5,
+      "photo": {
+        "thumb": "https://d2eawub7utcl6.cloudfront.net/images/nix-apple-grey.png",
+        "highres": null,
+        "is_user_uploaded": false
+      },
+      "sub_recipe": null
+    }
+  ]
+}

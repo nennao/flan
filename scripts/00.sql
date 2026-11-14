@@ -25,7 +25,8 @@ create table foods (
 -- Units for recipe ingredients
 create table units (
     id              serial primary key,
-    unit            varchar(16) -- eg 'gram', '#', 'tsp'
+    unit            varchar(16), -- eg 'gram', '#', 'tsp'
+    measure         varchar(16)  -- eg 'volume', 'mass'
 );
 
 -- Converts between "units" eg 'ml', 'tsp' to grams
@@ -33,7 +34,7 @@ create table units (
 create table measurements (
     food_id         int references foods(id) on delete cascade,
     unit_id         int references units(id) on delete cascade,
-    grams           int
+    grams           real
 );
 
 create table ingredients (
@@ -55,12 +56,20 @@ create table plans (
     end_date    date
 );
 
+create table plan_days (
+    id           serial primary key,
+    plan_date    date,
+    plan_type    varchar(32),
+    goal_carbs   real, -- g
+    goal_fat     real, -- g
+    goal_protein real, -- g
+    plan_id      int references plans(id) on delete cascade
+);
+
 create table plan_elements (
     id          serial primary key,
-    el_date     date,
     el_type     varchar(32),
-    plan_type   varchar(32),
-    plan_id     int references plans(id) on delete cascade,
+    plan_day_id int references plan_days(id) on delete cascade,
     recipe_id   int references recipes(id) on delete cascade
 );
 

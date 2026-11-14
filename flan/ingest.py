@@ -53,50 +53,106 @@ def ingest_ingredients():
     
     # process some units
     all_units = set(i[2].strip() for i in ingr)
-    unique_unit = set(parse_quantity(u)[0] for u in all_units)
+    unique_units = set(parse_quantity(u)[0] for u in all_units)
     
     # insert into units table
-    unit_names = ",".join(f"('{u}')" for u in unique_unit)
-    sql(f"insert into units(unit) values {unit_names}")
+    ingest_units(unique_units)
     
-    # insert foods
-    ingest_foods({i[1] for i in ingr})
+    # insert foods, get measurements
+    measurements = ingest_foods({i[1] for i in ingr})
 
     # insert ingredients
     recipe_ids = { i[1]: i[0] for i in sql("select id, name from recipes") }
     food_ids = { i[1]: i[0] for i in sql("select id, name from foods") }
-    unit_ids = { i[1]: i[0] for i in sql("select id, unit from units") }
+    unit_ids = { i[1]: (i[0], i[2]) for i in sql("select id, unit, measure from units") }
     ingredients_string = []
-    for i in ingr:
-        recipe_id = recipe_ids[i[0]]
-        food_id = food_ids[i[1]]
-        unit, amount = parse_quantity(i[2])
-        unit_id = unit_ids[unit]
+    for recipe, food, amt in ingr:
+        recipe_id = recipe_ids[recipe]
+        food_id = food_ids[food]
+        unit, amount = parse_quantity(amt)
+        unit_id, unit_measure = unit_ids[unit]
         ingredients_string.append(f"({recipe_id}, {food_id}, {unit_id}, {amount})")
+
+        if unit_measure != 'mass' and not ((food, unit) in measurements or (unit_measure == 'volume' and (food, 'rho') in measurements)):
+            assert ((food, unit) in measurements or (unit_measure == 'volume' and (food, 'rho') in measurements)), f"missing - food:{food}, unit:{unit}"
+
     ingredients_string = ",".join(ingredients_string)
     sql(f"insert into ingredients(recipe_id, food_id, unit_id, amount) values {ingredients_string}")
+
+    # insert measurements
+    measures = [f"({food_ids[food]}, {unit_ids[unit][0]}, {grams})" for ((food, unit), grams) in measurements.items()]
+    measures_string = ','.join(measures)
+    sql(f"insert into measurements(food_id, unit_id, grams) values {measures_string}")
+
+
+def ingest_units(units):
+    masses = {'g'}
+    densities = {'rho'}
+    volumes = {'ml', 'tbsp', 'tsp', 'cup'}
+    items = {'#', 'medium', 'large'}
+    units = units | masses | densities | volumes | items
+    measure_map = dict(
+        **{m: 'mass' for m in masses},
+        **{d: 'density' for d in densities},
+        **{v: 'volume' for v in volumes},
+        **{i: 'unit' for i in items}
+    )
+
+    unit_names = ",".join(f"('{u}', '{measure_map.get(u, 'unit')}')" for u in units)
+    sql(f"insert into units(unit, measure) values {unit_names}")
 
 
 def ingest_foods(foods):
     foods = sorted(foods)
-    root = os.path.join(os.getcwd(), 'data')  # find data folder, assume running from project root  # todo use relative paths?
-    with open(os.path.join(root, 'ignore_calories.txt')) as f:
+
+    with open('data/ignore_calories.txt') as f:
         ignore = {l.strip().lower() for l in f.readlines()}
-    files = {f.replace('.json', '').lower(): f for f in os.listdir(os.path.join(root, 'nutritionix')) if f.endswith('.json')}
+
+    measures = {}
+    with open("data/measures.csv") as f:
+        for food, unit, api_unit in [l.strip().split(',') for l in f.readlines()[1:]]:
+            formatted = api_unit.replace('{comma}', ',').replace('{quote}', '"')
+            if food in measures:
+                measures[food].append((unit, formatted))
+            else:
+                measures[food] = [(unit, formatted)]
+
+    files = {f.replace('.json', '').lower(): f for f in os.listdir('data/nutritionix') if f.endswith('.json')}
+
     food_values = []
+    measurements = {}
+
     for food in foods:
         food_l = food.lower()
         protein, fat, carbs, fibre = 0, 0, 0, 0
-        if (food_l not in ignore) and (food_l in files):
-            data = json.loads(open(os.path.join(root, 'nutritionix', files[food_l])).read())
+        if food_l in files:
+            data = json.loads(open(f'data/nutritionix/{files[food_l]}').read())
             data = data["foods"][0]
-            weight_g = data["serving_weight_grams"]
-            protein, fat, carbs, fibre = [100 * (data.get(macro_key, 0) or 0) / weight_g for macro_key in
-                                          ["nf_protein", "nf_total_fat", "nf_total_carbohydrate", "nf_dietary_fiber"]]
+            if food_l in measures:
+                _add_food_to_measurements(food, measurements, measures[food_l], data['alt_measures'])
+            if food_l not in ignore:
+                weight_g = data["serving_weight_grams"]
+                protein, fat, carbs, fibre = [100 * (data.get(macro_key, 0) or 0) / weight_g for macro_key in
+                                              ["nf_protein", "nf_total_fat", "nf_total_carbohydrate", "nf_dietary_fiber"]]
 
         food_values.append(f"('{food}',{protein}, {fat}, {carbs}, {fibre})")
     food_values = ",".join(food_values)
     sql(f"insert into foods(name, protein, fat, carbs, fibre) values {food_values}")
+    return measurements
+
+
+def _add_food_to_measurements(food, measurements, measure, alt_measures):
+    vol_ml_map = {'ml': 1, 'tbsp': 15, 'tsp': 5, 'cup': 240}  # todo need 'official' conversion tables?
+
+    res = {}
+    for unit, api_unit in measure:
+        key = 'rho' if (unit == 'rho' and api_unit in vol_ml_map) else api_unit
+        if key not in res:
+            for alt in alt_measures:
+                if alt['measure'] == api_unit and alt['qty'] == 1:
+                    res[key] = alt['serving_weight'] / (vol_ml_map[api_unit] if key == 'rho' else 1)
+                    break
+        measurements[(food, unit)] = res[key]
 
 
 # def ingest_nutritionix():

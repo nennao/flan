@@ -1,1 +1,341 @@
-{"foods":[{"food_name":"pumpkin seeds","brand_name":null,"serving_qty":1,"serving_unit":"cup","serving_weight_grams":64,"nf_calories":285.44,"nf_total_fat":12.42,"nf_saturated_fat":2.35,"nf_cholesterol":0,"nf_sodium":11.52,"nf_total_carbohydrate":34.4,"nf_dietary_fiber":11.78,"nf_sugars":null,"nf_protein":11.87,"nf_potassium":588.16,"nf_p":58.88,"full_nutrients":[{"attr_id":203,"value":11.872},{"attr_id":204,"value":12.416},{"attr_id":205,"value":34.4},{"attr_id":207,"value":2.432},{"attr_id":208,"value":285.44},{"attr_id":255,"value":2.88},{"attr_id":268,"value":1194.24},{"attr_id":291,"value":11.776},{"attr_id":301,"value":35.2},{"attr_id":303,"value":2.1184},{"attr_id":304,"value":167.68},{"attr_id":305,"value":58.88},{"attr_id":306,"value":588.16},{"attr_id":307,"value":11.52},{"attr_id":309,"value":6.592},{"attr_id":312,"value":0.4416},{"attr_id":315,"value":0.3174},{"attr_id":318,"value":39.68},{"attr_id":319,"value":0},{"attr_id":320,"value":1.92},{"attr_id":324,"value":0},{"attr_id":328,"value":0},{"attr_id":401,"value":0.192},{"attr_id":404,"value":0.0218},{"attr_id":405,"value":0.0333},{"attr_id":406,"value":0.183},{"attr_id":410,"value":0.0358},{"attr_id":415,"value":0.0237},{"attr_id":417,"value":5.76},{"attr_id":418,"value":0},{"attr_id":431,"value":0},{"attr_id":432,"value":5.76},{"attr_id":435,"value":5.76},{"attr_id":501,"value":0.2086},{"attr_id":502,"value":0.4371},{"attr_id":503,"value":0.6118},{"attr_id":504,"value":1.0061},{"attr_id":505,"value":0.887},{"attr_id":506,"value":0.2669},{"attr_id":507,"value":0.1459},{"attr_id":508,"value":0.5914},{"attr_id":509,"value":0.4928},{"attr_id":510,"value":0.9542},{"attr_id":511,"value":1.9514},{"attr_id":512,"value":0.3296},{"attr_id":513,"value":0.56},{"attr_id":514,"value":1.1987},{"attr_id":515,"value":2.0877},{"attr_id":516,"value":0.8691},{"attr_id":517,"value":0.4838},{"attr_id":518,"value":0.5555},{"attr_id":601,"value":0},{"attr_id":606,"value":2.3488},{"attr_id":611,"value":0.0122},{"attr_id":612,"value":0.0141},{"attr_id":613,"value":1.5194},{"attr_id":614,"value":0.761},{"attr_id":617,"value":3.8304},{"attr_id":618,"value":5.6058},{"attr_id":619,"value":0.0493},{"attr_id":626,"value":0.0269},{"attr_id":645,"value":3.8605},{"attr_id":646,"value":5.6602}],"nix_brand_name":null,"nix_brand_id":null,"nix_item_name":null,"nix_item_id":null,"upc":null,"consumed_at":"2020-07-26T21:31:22+00:00","metadata":{"is_raw_food":false},"source":1,"ndb_no":12163,"tags":{"item":"pumpkin seeds","measure":null,"quantity":"1.0","food_group":7,"tag_id":1168},"alt_measures":[{"serving_weight":28.35,"measure":"oz (85 seeds)","seq":2,"qty":1},{"serving_weight":64,"measure":"cup","seq":1,"qty":1},{"serving_weight":100,"measure":"g","seq":null,"qty":100},{"serving_weight":28.3495,"measure":"wt. oz","seq":null,"qty":1},{"serving_weight":1.33,"measure":"tsp","seq":101,"qty":1},{"serving_weight":4,"measure":"tbsp","seq":102,"qty":1}],"lat":null,"lng":null,"meal_type":5,"photo":{"thumb":"https://nix-tag-images.s3.amazonaws.com/1168_thumb.jpg","highres":"https://nix-tag-images.s3.amazonaws.com/1168_highres.jpg","is_user_uploaded":false},"sub_recipe":null}]}
+{
+  "foods": [
+    {
+      "food_name": "pumpkin seeds",
+      "brand_name": null,
+      "serving_qty": 1,
+      "serving_unit": "cup",
+      "serving_weight_grams": 64,
+      "nf_calories": 285.44,
+      "nf_total_fat": 12.42,
+      "nf_saturated_fat": 2.35,
+      "nf_cholesterol": 0,
+      "nf_sodium": 11.52,
+      "nf_total_carbohydrate": 34.4,
+      "nf_dietary_fiber": 11.78,
+      "nf_sugars": null,
+      "nf_protein": 11.87,
+      "nf_potassium": 588.16,
+      "nf_p": 58.88,
+      "full_nutrients": [
+        {
+          "attr_id": 203,
+          "value": 11.872
+        },
+        {
+          "attr_id": 204,
+          "value": 12.416
+        },
+        {
+          "attr_id": 205,
+          "value": 34.4
+        },
+        {
+          "attr_id": 207,
+          "value": 2.432
+        },
+        {
+          "attr_id": 208,
+          "value": 285.44
+        },
+        {
+          "attr_id": 255,
+          "value": 2.88
+        },
+        {
+          "attr_id": 268,
+          "value": 1194.24
+        },
+        {
+          "attr_id": 291,
+          "value": 11.776
+        },
+        {
+          "attr_id": 301,
+          "value": 35.2
+        },
+        {
+          "attr_id": 303,
+          "value": 2.1184
+        },
+        {
+          "attr_id": 304,
+          "value": 167.68
+        },
+        {
+          "attr_id": 305,
+          "value": 58.88
+        },
+        {
+          "attr_id": 306,
+          "value": 588.16
+        },
+        {
+          "attr_id": 307,
+          "value": 11.52
+        },
+        {
+          "attr_id": 309,
+          "value": 6.592
+        },
+        {
+          "attr_id": 312,
+          "value": 0.4416
+        },
+        {
+          "attr_id": 315,
+          "value": 0.3174
+        },
+        {
+          "attr_id": 318,
+          "value": 39.68
+        },
+        {
+          "attr_id": 319,
+          "value": 0
+        },
+        {
+          "attr_id": 320,
+          "value": 1.92
+        },
+        {
+          "attr_id": 324,
+          "value": 0
+        },
+        {
+          "attr_id": 328,
+          "value": 0
+        },
+        {
+          "attr_id": 401,
+          "value": 0.192
+        },
+        {
+          "attr_id": 404,
+          "value": 0.0218
+        },
+        {
+          "attr_id": 405,
+          "value": 0.0333
+        },
+        {
+          "attr_id": 406,
+          "value": 0.183
+        },
+        {
+          "attr_id": 410,
+          "value": 0.0358
+        },
+        {
+          "attr_id": 415,
+          "value": 0.0237
+        },
+        {
+          "attr_id": 417,
+          "value": 5.76
+        },
+        {
+          "attr_id": 418,
+          "value": 0
+        },
+        {
+          "attr_id": 431,
+          "value": 0
+        },
+        {
+          "attr_id": 432,
+          "value": 5.76
+        },
+        {
+          "attr_id": 435,
+          "value": 5.76
+        },
+        {
+          "attr_id": 501,
+          "value": 0.2086
+        },
+        {
+          "attr_id": 502,
+          "value": 0.4371
+        },
+        {
+          "attr_id": 503,
+          "value": 0.6118
+        },
+        {
+          "attr_id": 504,
+          "value": 1.0061
+        },
+        {
+          "attr_id": 505,
+          "value": 0.887
+        },
+        {
+          "attr_id": 506,
+          "value": 0.2669
+        },
+        {
+          "attr_id": 507,
+          "value": 0.1459
+        },
+        {
+          "attr_id": 508,
+          "value": 0.5914
+        },
+        {
+          "attr_id": 509,
+          "value": 0.4928
+        },
+        {
+          "attr_id": 510,
+          "value": 0.9542
+        },
+        {
+          "attr_id": 511,
+          "value": 1.9514
+        },
+        {
+          "attr_id": 512,
+          "value": 0.3296
+        },
+        {
+          "attr_id": 513,
+          "value": 0.56
+        },
+        {
+          "attr_id": 514,
+          "value": 1.1987
+        },
+        {
+          "attr_id": 515,
+          "value": 2.0877
+        },
+        {
+          "attr_id": 516,
+          "value": 0.8691
+        },
+        {
+          "attr_id": 517,
+          "value": 0.4838
+        },
+        {
+          "attr_id": 518,
+          "value": 0.5555
+        },
+        {
+          "attr_id": 601,
+          "value": 0
+        },
+        {
+          "attr_id": 606,
+          "value": 2.3488
+        },
+        {
+          "attr_id": 611,
+          "value": 0.0122
+        },
+        {
+          "attr_id": 612,
+          "value": 0.0141
+        },
+        {
+          "attr_id": 613,
+          "value": 1.5194
+        },
+        {
+          "attr_id": 614,
+          "value": 0.761
+        },
+        {
+          "attr_id": 617,
+          "value": 3.8304
+        },
+        {
+          "attr_id": 618,
+          "value": 5.6058
+        },
+        {
+          "attr_id": 619,
+          "value": 0.0493
+        },
+        {
+          "attr_id": 626,
+          "value": 0.0269
+        },
+        {
+          "attr_id": 645,
+          "value": 3.8605
+        },
+        {
+          "attr_id": 646,
+          "value": 5.6602
+        }
+      ],
+      "nix_brand_name": null,
+      "nix_brand_id": null,
+      "nix_item_name": null,
+      "nix_item_id": null,
+      "upc": null,
+      "consumed_at": "2020-07-26T21:31:22+00:00",
+      "metadata": {
+        "is_raw_food": false
+      },
+      "source": 1,
+      "ndb_no": 12163,
+      "tags": {
+        "item": "pumpkin seeds",
+        "measure": null,
+        "quantity": "1.0",
+        "food_group": 7,
+        "tag_id": 1168
+      },
+      "alt_measures": [
+        {
+          "serving_weight": 28.35,
+          "measure": "oz (85 seeds)",
+          "seq": 2,
+          "qty": 1
+        },
+        {
+          "serving_weight": 64,
+          "measure": "cup",
+          "seq": 1,
+          "qty": 1
+        },
+        {
+          "serving_weight": 100,
+          "measure": "g",
+          "seq": null,
+          "qty": 100
+        },
+        {
+          "serving_weight": 28.3495,
+          "measure": "wt. oz",
+          "seq": null,
+          "qty": 1
+        },
+        {
+          "serving_weight": 1.33,
+          "measure": "tsp",
+          "seq": 101,
+          "qty": 1
+        },
+        {
+          "serving_weight": 4,
+          "measure": "tbsp",
+          "seq": 102,
+          "qty": 1
+        }
+      ],
+      "lat": null,
+      "lng": null,
+      "meal_type": 5,
+      "photo": {
+        "thumb": "https://nix-tag-images.s3.amazonaws.com/1168_thumb.jpg",
+        "highres": "https://nix-tag-images.s3.amazonaws.com/1168_highres.jpg",
+        "is_user_uploaded": false
+      },
+      "sub_recipe": null
+    }
+  ]
+}

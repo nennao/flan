@@ -23,7 +23,7 @@ pad_thai,fish sauce,10ml
 pad_thai,peanuts,30g
 pad_thai,vegetable oil,10ml
 oaternights,oats,50g
-oaternights,mixed seeds,10g
+oaternights,pumpkin seeds,10g
 oaternights,buckwheat,10g
 oaternights,coconut (desiccated),10g
 oaternights,coconut cream,40g
@@ -74,7 +74,7 @@ jollof_rice,onion,1
 jollof_rice,garlic,3
 jollof_rice,carrot,50g
 jollof_rice,vegetable oil,10ml
-pepper_soup,haddock,240
+pepper_soup,haddock,240g
 pepper_soup,vegetable oil,20g
 pepper_soup,silken tofu,50g
 pepper_soup,onion,1
@@ -88,7 +88,7 @@ pepper_soup,basil,5g
 pepper_soup,coriander,5g
 pepper_soup,bouillon,15g
 jambalaya,basmati rice,400g
-jambalaya,tinned tomato,400g
+jambalaya,tomato,400g
 jambalaya,onion,1
 jambalaya,celery,2
 jambalaya,chorizo,200g
@@ -101,15 +101,15 @@ jambalaya,vegetable oil,10ml
 jambalaya,mustard,10g
 jambalaya,chicken stock,1
 bacony_pasta,linguine,250g
-bacony_pasta,lardons,200g
-bacony_pasta,tinned tomato,400g
+bacony_pasta,bacon,200g
+bacony_pasta,tomato,400g
 bacony_pasta,onion,1
 bacony_pasta,garlic,2
 spag_bol,spaghetti,750g
 spag_bol,carrot,1
 spag_bol,celery,2
 spag_bol,onion,1
-spag_bol,tinned tomato,800g
+spag_bol,tomato,800g
 spag_bol,garlic,2
 spag_bol,beef mince,400g
 lettuce_curry_boats,gem lettuce,1
@@ -165,14 +165,14 @@ bagel,cheddar,50g
 bagel,mustard,10ml
 bagel,mayonnaise,10ml
 bagel,pickles,20g
-fluffy_pancakes,flour,135ml
+fluffy_pancakes,flour,135g
 fluffy_pancakes,milk,130ml
 fluffy_pancakes,baking powder,5g
 fluffy_pancakes,caster sugar,10g
 fluffy_pancakes,egg,1
 fluffy_pancakes,butter,20g
 fluffy_pancakes,maple syrup,200ml
-mega_sandwich,baton,2
+mega_sandwich,bagel,3
 mega_sandwich,minute steak,200g
 mega_sandwich,mozzarella,50g
 mega_sandwich,cheddar,50g
@@ -187,7 +187,7 @@ nachos,tortilla chips,200g
 nachos,salsa,200g
 nachos,spring onions,4
 nachos,cheddar,200g
-nachos,guacamole,100ml
+nachos,guacamole,100g
 nachos,sour cream,100ml
 calzodilla,tortilla,3
 calzodilla,ham,50g
@@ -303,7 +303,7 @@ mexican_beef,red pepper,0.5
 mexican_beef,beef mince,250g
 mexican_beef,carrot,80g
 mexican_beef,fajita seasoning,10g
-mexican_beef,tinned tomato,200g
+mexican_beef,tomato,200g
 mexican_beef,beef stock,1
 mexican_beef,coriander,10g
 mexican_beef,avocado,100g
@@ -320,7 +320,7 @@ sea_bream,potato,250g
 sea_bream,cherry tomato,100g
 sea_bream,parsley,10g
 sea_bream,lemon,0.5
-sea_bream,green beans,1
+sea_bream,green beans,100g
 sea_bream,chorizo,60g
 sea_bream,butter,30g
 sea_bream,saffron powder,5g

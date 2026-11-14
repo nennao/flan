@@ -1,11 +1,11 @@
-body {
-    margin-top: 50px;
-    margin-bottom: 50px;
-}
-
 input[type=date]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     display: none;
+}
+
+#app {
+    margin-top: 35px;
+    margin-bottom: 35px;
 }
 
 #plannerModal .modal-dialog {
@@ -98,8 +98,9 @@ input[type=date]::-webkit-inner-spin-button {
 
 .mealDaysContainer {
     display: flex;
-    font-family: 'Open Sans Condensed', 'Roboto Condensed', 'Arial Narrow', sans-serif;
+    font-family: 'Open Sans Condensed', 'Arial Narrow', sans-serif;
     overflow: auto;
+    line-height: 1;
 }
 
 .mealDaysContainer > div {
@@ -126,6 +127,7 @@ input[type=date]::-webkit-inner-spin-button {
 
 .mealDaysContainer .card-header button {
     padding: 0;
+    /*font-weight: bold;*/
 }
 
 .mealDaysContainer .card-body {
@@ -141,23 +143,52 @@ input[type=date]::-webkit-inner-spin-button {
 
 .mealDaysContainer .mealTypeHead {
     border-bottom: 1px solid #dee2e6;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    line-height: 1;
     font-size: 0.95rem;
-}
-
-.mealDaysContainer .mealTypeHead span {
-    text-transform: initial;
-    letter-spacing: initial;
+    /*font-weight: bold;*/
 }
 
 .mealDaysContainer .mealItem {
     padding-left: 15px;
+    padding-bottom: 7px;
+    color: #1e2848;
 }
 
+.mealDaysContainer .mealItemIng {
+    padding-left: 15px;
+    padding-bottom: 2px;
+    color: #374884;
+    font-size: 0.9rem;
+}
 
-#plansAccordion {
+.mealDaysContainer .mealItem:last-child, .mealDaysContainer .mealItemIng:last-child {
+    padding-bottom: 0;
+}
+
+.mealDaysContainer .mealItem .mealItemQty {
+    transform: scale(1, 0.85);
+    opacity: 0.75;
+}
+
+.sbFlexMCC {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.hidden {
+    display: none!important;
+}
+
+.mealDaysContainer .mealTypeHead .sbFlexMCC > div:first-child {
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.mealDaysContainer .goalText {
+    color: #2e3dad;
+}
+
+#plannerPlansList {
     margin-top: 30px;
 }
 
@@ -171,3 +202,99 @@ input[type=date]::-webkit-inner-spin-button {
     width: fit-content;
     margin: auto;
 }
+
+.collapsibleHead {
+    cursor: pointer;
+}
+
+.qtyInput {
+    padding: 1px 4px;
+    margin-left: -4px;
+}
+
+
+/* ======== MACRO BAR ======== */
+.macroBar {
+    display: flex;
+    border: 1px solid rgba(0, 0, 0, .25);
+}
+.macroBarLevel1 .macroBar{
+    height: 8px;
+}
+.macroBarLevel2 .macroBar {
+    height: 7px;
+}
+.macroBarLevel3 .macroBar {
+    height: 6px;
+}
+
+.macroBarPart {
+    height: 100%;
+}
+.macroBarC, .macroBarLegC {
+    background-color: #6bc7d6;
+}
+.macroBarF, .macroBarLegF {
+    background-color: #eeb866;
+}
+.macroBarP, .macroBarLegP {
+    background-color: #c680bc;
+}
+
+.macroBarDetailed {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Ubuntu Condensed', 'Arial Narrow', sans-serif;
+    color: #666666;
+}
+.macroBarLevel1 .macroBarDetailed{
+    font-size: 0.8rem;
+}
+.macroBarLevel2 .macroBarDetailed {
+    font-size: 0.7rem;
+}
+.macroBarLevel3 .macroBarDetailed {
+    font-size: 0.65rem;
+}
+.macroBarDetailed > * {
+    display: flex;
+    align-items: center;
+}
+.macroBarLeg {
+    display: inline-block;
+    width: 9px;
+    height: 9px;
+    text-align: center;
+    font-size: 0.55rem;
+    margin-right: 2px;
+    color: rgba(0, 0, 0, 0.4);
+    box-shadow: 0 0 1px 1px rgba(0, 0, 0, 0.4) inset;
+    padding-top: 1px;
+}
+
+.macroDonutCont {
+    padding: 5px 15px;
+}
+
+.macroCardDetails {
+    width: 100%;
+}
+.macroCardDetails > * {
+    width: 36%;
+    padding: 0 9px;
+}
+
+.macroCardDetails.heading {
+    padding: 5px 0;
+    text-align: center;
+}
+
+.macroCardDetails > :first-child {
+    width: 28%;
+    padding: 0;
+}
+.macroCardDetails > :last-child{
+    padding: 0 0 0 18px;
+}
+
+/* =========================== */

@@ -27,3 +27,5 @@ export const MEAL_PLAN_MACROS = {
     'med carb': {carbs: 30, fat: 45, protein: 25},
     'high carb': {carbs: 55, fat: 20, protein: 25},
 };
+
+export const macroPercentToGrams = (macro, pc, cals) => Math.round((pc / 100) * cals / MACRO_CAL_MAP[macro]);
