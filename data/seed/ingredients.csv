@@ -1,0 +1,381 @@
+recipe,food,unit,amount
+Avocado Toast,Avocado,g,100
+Avocado Toast,English Muffin,#,1
+Avocado Toast,Hot Sauce,ml,10
+Bacony Pasta,Bacon,g,200
+Bacony Pasta,Garlic,#,2
+Bacony Pasta,Linguine,g,250
+Bacony Pasta,Onion,#,1
+Bacony Pasta,Tomato,g,400
+Bagel,Bagel,#,3
+Bagel,Cheddar,g,50
+Bagel,Ham,g,50
+Bagel,Mayonnaise,ml,10
+Bagel,Mustard,ml,10
+Bagel,Pickles,g,20
+Burrito,Basmati Rice,g,100
+Burrito,Cajun Seasoning,g,10
+Burrito,Cheddar,g,50
+Burrito,Chicken Thigh,g,300
+Burrito,Guacamole,g,50
+Burrito,Tortilla,#,2
+Caesar Salad,Anchovies,g,50
+Caesar Salad,Chicken Thigh,g,300
+Caesar Salad,Garlic,#,3
+Caesar Salad,Mayonnaise,ml,10
+Caesar Salad,Parmesan,g,50
+Caesar Salad,Romaine Lettuce,g,200
+Caesar Salad,White Wine Vinegar,ml,10
+Calzodilla,Cheddar,g,50
+Calzodilla,Egg,#,2
+Calzodilla,Ham,g,50
+Calzodilla,Hot Sauce,ml,10
+Calzodilla,Mushrooms,g,50
+Calzodilla,Tomato Puree,g,10
+Calzodilla,Tortilla,#,3
+Chicken Satay Skewers,Brown Rice,g,130
+Chicken Satay Skewers,Chicken Thigh,g,200
+Chicken Satay Skewers,Chilli Flakes,g,3
+Chicken Satay Skewers,Coconut Cream,g,50
+Chicken Satay Skewers,Cucumber,g,100
+Chicken Satay Skewers,Curry Powder,g,5
+Chicken Satay Skewers,Peanut Butter,g,26
+Chicken Satay Skewers,Soy Sauce,ml,8
+Chicken Satay Skewers,Spring Onions,g,200
+Chicken Satay Skewers,White Wine Vinegar,g,10
+Creamy Linguine,Chives,g,80
+Creamy Linguine,Creme Fraiche,g,150
+Creamy Linguine,Garlic,#,4
+Creamy Linguine,Green Chilli,#,1
+Creamy Linguine,Lemon,#,1
+Creamy Linguine,Linguine,g,250
+Creamy Linguine,Prawns,g,150
+Creamy Linguine,Serrano Ham,g,50
+Creamy Linguine,Vegetable Stock,#,1
+Crepes,Butter,g,25
+Crepes,Egg,#,2
+Crepes,Flour,g,150
+Crepes,Milk,ml,200
+Duck Confit,Apple,g,100
+Duck Confit,Apple Sage Jelly,g,50
+Duck Confit,Duck Leg,g,300
+Duck Confit,Garlic,#,2
+Duck Confit,Hazelnuts,g,25
+Duck Confit,Parsley,g,15
+Duck Confit,Parsnip,g,200
+Duck Confit,Vegetable Stock,#,1
+Eggs Benedict,Butter,g,60
+Eggs Benedict,Egg,#,4
+Eggs Benedict,Egg Yolk,#,2
+Eggs Benedict,English Muffin,#,2
+Eggs Benedict,Ham,g,50
+Eggs Benedict,Lemon,#,0.5
+Eggs Benedict,White Wine Vinegar,ml,20
+Eggs Okoye,Beef Tomato,g,100
+Eggs Okoye,Egg,#,4
+Eggs Okoye,Onion,#,1
+Eggs Okoye,Vegetable Oil,ml,10
+Eggs Royale,Butter,g,10
+Eggs Royale,Chives,g,5
+Eggs Royale,Creme Fraiche,g,50
+Eggs Royale,Egg,#,4
+Eggs Royale,English Muffin,#,2
+Eggs Royale,Smoked Salmon,g,100
+Eggs Woodhouse,Butter,g,70
+Eggs Woodhouse,Egg,#,4
+Eggs Woodhouse,Egg Yolk,#,2
+Eggs Woodhouse,English Muffin,#,2
+Eggs Woodhouse,Flour,g,5
+Eggs Woodhouse,Lemon,#,0.5
+Eggs Woodhouse,Melon,#,0.25
+Eggs Woodhouse,Milk,ml,20
+Eggs Woodhouse,Serrano Ham,g,50
+Eggs Woodhouse,Spinach,g,200
+Eggs Woodhouse,White Wine Vinegar,ml,20
+Fluffy Pancakes,Baking Powder,g,5
+Fluffy Pancakes,Butter,g,20
+Fluffy Pancakes,Caster Sugar,g,10
+Fluffy Pancakes,Egg,#,1
+Fluffy Pancakes,Flour,g,135
+Fluffy Pancakes,Maple Syrup,ml,200
+Fluffy Pancakes,Milk,ml,130
+Grilled Cheese,Bread,#,4
+Grilled Cheese,Butter,g,40
+Grilled Cheese,Cheddar,g,100
+Grilled Cheese,Hot Sauce,ml,10
+Grilled Cheese,Mustard,g,10
+Grilled Cheese,Pickles,g,50
+Grilled Cheese,Salami,g,50
+Hoisin Pork,Basmati Rice,g,100
+Hoisin Pork,Garlic,#,2
+Hoisin Pork,Ginger,g,15
+Hoisin Pork,Green Beans,g,120
+Hoisin Pork,Hoisin Sauce,g,10
+Hoisin Pork,Pork Mince,g,250
+Hoisin Pork,Red Chilli,#,1
+Hoisin Pork,Sesame Seeds,g,10
+Hoisin Pork,Soy Sauce,ml,16
+Hoisin Pork,Spring Onions,#,2
+Hoisin Pork,Sugar Snap Peas,g,80
+Honey Soy Duck,Baby Bok Choy,g,100
+Honey Soy Duck,Coriander,g,5
+Honey Soy Duck,Cucumber,#,0.5
+Honey Soy Duck,Duck Breast,g,200
+Honey Soy Duck,Garlic,#,1
+Honey Soy Duck,Honey,g,15
+Honey Soy Duck,Jasmine Rice,g,150
+Honey Soy Duck,Peanuts,g,25
+Honey Soy Duck,Red Chilli,#,0.5
+Honey Soy Duck,Sugar,g,8
+Honey Soy Duck,Vegetable Oil,g,10
+Honey Soy Duck,White Wine Vinegar,ml,20
+Jambalaya,Basmati Rice,g,400
+Jambalaya,Cajun Seasoning,g,10
+Jambalaya,Celery,#,2
+Jambalaya,Chicken Stock,#,1
+Jambalaya,Chicken Thigh,g,500
+Jambalaya,Chorizo,g,200
+Jambalaya,Garlic,#,4
+Jambalaya,Mustard,g,10
+Jambalaya,Onion,#,1
+Jambalaya,Prawns,g,150
+Jambalaya,Red Pepper,#,2
+Jambalaya,Tomato,g,400
+Jambalaya,Vegetable Oil,ml,10
+Jollof Rice,Carrot,g,50
+Jollof Rice,Chicken Drumstick,g,200
+Jollof Rice,Garlic,#,3
+Jollof Rice,Long Grain Rice,g,200
+Jollof Rice,Onion,#,1
+Jollof Rice,Prawns,g,75
+Jollof Rice,Tomato Puree,g,50
+Jollof Rice,Vegetable Oil,ml,10
+Lemony Salmon,Baby Bok Choy,#,2
+Lemony Salmon,Honey,ml,50
+Lemony Salmon,Lemon,#,1
+Lemony Salmon,Salmon,g,200
+Lemony Salmon,Sesame Seeds,g,10
+Lemony Salmon,Soy Sauce,ml,50
+Lemony Salmon,Sweet Potato,#,2
+Lettuce Curry Boats,Chicken Thigh,g,300
+Lettuce Curry Boats,Curry Sauce,ml,250
+Lettuce Curry Boats,Gem Lettuce,#,1
+Lettuce Curry Boats,Guacamole,g,200
+Lettuce Curry Boats,Red Pepper,#,1
+Mega Sandwich,Bagel,#,3
+Mega Sandwich,Cheddar,g,50
+Mega Sandwich,Mayonnaise,g,10
+Mega Sandwich,Minute Steak,g,200
+Mega Sandwich,Mozzarella,g,50
+Mega Sandwich,Pesto,g,10
+Mega Sandwich,Spinach,g,50
+Mexican Beef,Avocado,g,100
+Mexican Beef,Beef Mince,g,250
+Mexican Beef,Beef Stock,#,1
+Mexican Beef,Carrot,g,80
+Mexican Beef,Cheddar,g,30
+Mexican Beef,Coriander,g,10
+Mexican Beef,Fajita Seasoning,g,10
+Mexican Beef,Lime,#,0.5
+Mexican Beef,Onion,#,1
+Mexican Beef,Potato,g,250
+Mexican Beef,Red Pepper,#,0.5
+Mexican Beef,Sour Cream,g,50
+Mexican Beef,Tomato,g,200
+Mexican Grilled Chicken,Basmati Rice,g,150
+Mexican Grilled Chicken,Beef Tomato,g,100
+Mexican Grilled Chicken,Carrot,g,80
+Mexican Grilled Chicken,Chicken Stock,#,1
+Mexican Grilled Chicken,Chicken Thigh,g,400
+Mexican Grilled Chicken,Coconut (Desiccated),g,30
+Mexican Grilled Chicken,Coriander,g,5
+Mexican Grilled Chicken,Fajita Seasoning,g,10
+Mexican Grilled Chicken,Lime,#,1
+Mexican Grilled Chicken,Red Pepper,#,1
+Mexican Grilled Chicken,Vegetable Oil,g,15
+Mexican Grilled Chicken,Yoghurt,g,250
+Mushrooms Okoye,Bell Pepper,#,2
+Mushrooms Okoye,Mushrooms,g,300
+Mushrooms Okoye,Vegetable Oil,ml,10
+Nachos,Cheddar,g,200
+Nachos,Guacamole,g,100
+Nachos,Salsa,g,200
+Nachos,Sour Cream,ml,100
+Nachos,Spring Onions,#,4
+Nachos,Tortilla Chips,g,200
+Oaternights,Buckwheat,g,10
+Oaternights,Coconut (Desiccated),g,10
+Oaternights,Coconut Cream,g,40
+Oaternights,Honey,g,20
+Oaternights,Milk,ml,30
+Oaternights,Oats,g,50
+Oaternights,Pumpkin Seeds,g,10
+Pad Thai,Beansprouts,g,200
+Pad Thai,Egg,#,1
+Pad Thai,Fish Sauce,ml,10
+Pad Thai,Garlic,#,3
+Pad Thai,Lime,#,1
+Pad Thai,Noodles,g,200
+Pad Thai,Peanuts,g,30
+Pad Thai,Prawns,g,150
+Pad Thai,Soy Sauce,ml,50
+Pad Thai,Spring Onions,g,80
+Pad Thai,Vegetable Oil,ml,10
+Paella,Arborio Rice,g,175
+Paella,Chicken Stock,#,1
+Paella,Chicken Thigh,g,280
+Paella,Chorizo,g,200
+Paella,Garlic,#,1
+Paella,Green Beans,g,100
+Paella,Parsley,g,5
+Paella,Red Pepper,#,1
+Paella,Red Wine Vinegar,ml,15
+Paella,Shallot,#,1
+Pepper Soup,Basil,g,5
+Pepper Soup,Bay Leaves,#,3
+Pepper Soup,Bouillon,g,15
+Pepper Soup,Coriander,g,5
+Pepper Soup,Cornflour,g,5
+Pepper Soup,Garlic,#,3
+Pepper Soup,Ginger,g,10
+Pepper Soup,Haddock,g,240
+Pepper Soup,Onion,#,1
+Pepper Soup,Scotch Bonnet,#,1
+Pepper Soup,Silken Tofu,g,50
+Pepper Soup,Spring Onions,g,80
+Pepper Soup,Vegetable Oil,g,20
+Popcorn Chicken,Basmati Rice,g,200
+Popcorn Chicken,Chicken Thigh,g,300
+Popcorn Chicken,Cornflour,g,100
+Popcorn Chicken,Egg,#,2
+Popcorn Chicken,Ketchup,ml,100
+Popcorn Chicken,Sesame Seeds,g,50
+Popcorn Chicken,Soy Sauce,ml,100
+Popcorn Chicken,Spring Onions,#,2
+Popcorn Chicken,Sweet Chilli Sauce,ml,100
+Popcorn Chicken,Vegetable Oil,ml,1000
+Pork Apple Burger,Apple,g,150
+Pork Apple Burger,Apple Sage Jelly,g,50
+Pork Apple Burger,Breadcrumbs,g,10
+Pork Apple Burger,Brioche Bun,#,2
+Pork Apple Burger,Cheddar,g,30
+Pork Apple Burger,Honey,g,10
+Pork Apple Burger,Lemon,#,0.5
+Pork Apple Burger,Pea Shoots,g,150
+Pork Apple Burger,Pork Mince,g,225
+Pork Apple Burger,Potato,g,500
+Pork Apple Burger,Rosemary,g,5
+Pork Apple Burger,Vegetable Oil,g,15
+Ramen,Minute Steak,g,200
+Ramen,Ramen Noodles,#,2
+Ramen,Spinach,g,100
+Ramsled,Bread,g,100
+Ramsled,Butter,g,10
+Ramsled,Cherry Tomato,g,50
+Ramsled,Chives,g,5
+Ramsled,Creme Fraiche,g,50
+Ramsled,Egg,#,4
+Rice Bowls,Aioli,g,50
+Rice Bowls,Avocado,g,100
+Rice Bowls,Brown Rice,g,200
+Rice Bowls,Cherry Tomato,g,100
+Rice Bowls,Chicken Thigh,g,300
+Salad,Baby Leaf Salad,g,120
+Salad,Brown Sugar,g,5
+Salad,Coriander,g,15
+Salad,Cucumber,g,100
+Salad,Garlic,#,2
+Salad,Green Chilli,#,1
+Salad,Lime,#,1
+Salad,Minute Steak,#,2
+Salad,Peanuts,g,50
+Salad,Radishes,g,50
+Scones,Scones,#,2
+Sea Bream,Butter,g,30
+Sea Bream,Cherry Tomato,g,100
+Sea Bream,Chorizo,g,60
+Sea Bream,Green Beans,g,100
+Sea Bream,Lemon,#,0.5
+Sea Bream,Parsley,g,10
+Sea Bream,Potato,g,250
+Sea Bream,Saffron Powder,g,5
+Sea Bream,Sea Bream,g,240
+Sirloin Steak,Baby Leaf Salad,g,150
+Sirloin Steak,Cherry Tomato,g,50
+Sirloin Steak,Garlic,#,4
+Sirloin Steak,Rosemary,g,5
+Sirloin Steak,Sirloin Steak,g,200
+Sirloin Steak,Sweet Potato,g,150
+Smooshocados,Guacamole,g,100
+Smooshocados,Ryvita,g,100
+Smooshocados,Streaky Bacon,g,80
+Smoothie,Banana,g,200
+Smoothie,Coconut Water,ml,20
+Smoothie,Melon,g,100
+Smoothie,Spinach,g,25
+Spag Bol,Beef Mince,g,400
+Spag Bol,Carrot,#,1
+Spag Bol,Celery,#,2
+Spag Bol,Garlic,#,2
+Spag Bol,Onion,#,1
+Spag Bol,Spaghetti,g,750
+Spag Bol,Tomato,g,800
+Stir Fry,Chicken Thigh,g,300
+Stir Fry,Egg Noodles,g,100
+Stir Fry,Red Onion,#,1
+Stir Fry,Red Pepper,#,1
+Stir Fry,Soy Sauce,tbsp,2
+Stir Fry,Vegetable Oil,ml,10
+Stuffed Jacket Potato,Bacon,g,100
+Stuffed Jacket Potato,Cheddar,g,50
+Stuffed Jacket Potato,Chives,g,5
+Stuffed Jacket Potato,Potato,#,4
+Stuffed Jacket Potato,Sour Cream,ml,100
+Stuffed Jacket Potato,Spring Onions,g,50
+Sweet Chilli Beef,Carrot,g,100
+Sweet Chilli Beef,Egg Noodles,g,100
+Sweet Chilli Beef,Garlic,#,1
+Sweet Chilli Beef,Ginger,g,10
+Sweet Chilli Beef,Ketjap Manis,g,20
+Sweet Chilli Beef,Red Pepper,#,1
+Sweet Chilli Beef,Sirloin Steak,g,280
+Sweet Chilli Beef,Spring Onions,g,80
+Sweet Chilli Beef,Sweet Chilli Sauce,g,40
+Sweet Potato Dal,Coconut Milk,g,200
+Sweet Potato Dal,Coriander,g,10
+Sweet Potato Dal,Curry Powder,g,5
+Sweet Potato Dal,Flatbread,g,100
+Sweet Potato Dal,Ginger,g,10
+Sweet Potato Dal,Lime,#,1
+Sweet Potato Dal,Onion,#,1
+Sweet Potato Dal,Pumpkin Seeds,g,15
+Sweet Potato Dal,Red Lentils,g,100
+Sweet Potato Dal,Spinach,g,100
+Sweet Potato Dal,Sweet Potato,g,150
+Sweet Potato Dal,Tomato Puree,g,30
+Sweet Potato Dal,Vegetable Oil,g,15
+Sweet Potato Dal,Vegetable Stock,#,1
+Tandoori Rice,Basmati Rice,g,150
+Tandoori Rice,Broccoli,g,200
+Tandoori Rice,Chicken Stock,#,1
+Tandoori Rice,Chicken Thigh,g,350
+Tandoori Rice,Coconut (Desiccated),g,25
+Tandoori Rice,Coriander,g,5
+Tandoori Rice,Garlic,#,1
+Tandoori Rice,Ginger,g,20
+Tandoori Rice,Masala Spice,g,10
+Tandoori Rice,Onion,#,1
+Tandoori Rice,Yoghurt,g,500
+Thai Red Curry,Basmati Rice,g,150
+Thai Red Curry,Carrot,g,100
+Thai Red Curry,Chicken Thigh,g,300
+Thai Red Curry,Coconut Milk,g,200
+Thai Red Curry,Coriander,g,10
+Thai Red Curry,Garlic,#,2
+Thai Red Curry,Ginger,g,10
+Thai Red Curry,Lemongrass,#,1
+Thai Red Curry,Lime,#,1
+Thai Red Curry,Red Curry Paste,g,50
+Thai Red Curry,Red Pepper,g,100
+Thai Red Curry,Star Anise,#,1
+Thai Red Curry,Vegetable Stock,#,1
