@@ -1,0 +1,6 @@
+# Dependency build-script approvals (pnpm runs none unless listed as true).
+# sharp and unrs-resolver ship prebuilt platform binaries via optional deps,
+# so their install scripts aren't needed.
+allowBuilds:
+  sharp: false
+  unrs-resolver: false
