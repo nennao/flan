@@ -128,11 +128,11 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
 - [x] Configure linting, formatting and testing (Vitest). Exclude the legacy `flan/` and `web/`.
 - [ ] Install and configure Tailwind CSS + shadcn/ui.
 - [ ] Implement an initial responsive application shell.
-- [ ] Establish environment-variable handling (`DATABASE_URL` in untracked `.env.local`).
+- [x] Establish environment-variable handling (`DATABASE_URL` in untracked `.env.local`).
 - [x] Choose a database access approach. _(Drizzle.)_
-- [ ] Baseline Drizzle schema and migration matching the legacy schema.
+- [x] Baseline Drizzle schema and migration matching the legacy schema.
 - [ ] TypeScript seed script loading `data/seed/*.csv`.
-- [ ] Establish local PostgreSQL connectivity (local PG 16 `main` cluster, port 5432).
+- [x] Establish local PostgreSQL connectivity (local PG 16 `main` cluster, port 5432).
 - [ ] Document local setup instructions (layered README, `compose.yaml`).
 
 **Exit criterion:** The Next.js application runs locally, passes its initial checks and can securely access a seeded development database.
@@ -228,6 +228,6 @@ Not required for the initial migration:
 
 ## Current next action
 
-**Phase 1 (M1):** the setup is approved (see Phase 1 → Agreed setup). Work is on branch `m1-foundation`. Commits 1 (scaffold) and 2 (tooling) are done. Next is commit 3: environment handling, DB client, Drizzle baseline schema and migration. Pause for review before each commit.
+**Phase 1 (M1):** the setup is approved (see Phase 1 → Agreed setup). Work is on branch `m1-foundation`. Commits 1–3 (scaffold, tooling, env + DB + baseline migration) are done. Next is commit 4: seed script and parity check. Pause for review before each commit.
 
-Environment state in the current agent container: PostgreSQL 16 is installed. The `legacy` cluster runs on 5433 and the `main` cluster on 5432 is stopped. The legacy app runs from a worktree at `../flan-legacy`, with its venv at `../.venv-legacy`, on port 8000 (see assessment §4.4). Legacy reference outputs are in `../legacy-fixtures/`, outside the repo.
+Environment state in the current agent container: PostgreSQL 16 is installed. The `legacy` cluster runs on 5433. The `main` cluster on 5432 holds `flan_dev`, owned by the non-superuser role `flan`, with credentials in `.env.local`. The legacy app runs from a worktree at `../flan-legacy`, with its venv at `../.venv-legacy`, on port 8000 (see assessment §4.4). Legacy reference outputs are in `../legacy-fixtures/`, outside the repo.

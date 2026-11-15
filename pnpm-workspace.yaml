@@ -1,6 +1,7 @@
 # Dependency build-script approvals (pnpm runs none unless listed as true).
-# sharp and unrs-resolver ship prebuilt platform binaries via optional deps,
-# so their install scripts aren't needed.
+# Each of these ships its native binary as a prebuilt optional platform package,
+# so its install script isn't needed.
 allowBuilds:
-  sharp: false
-  unrs-resolver: false
+  esbuild: false # via tsx and drizzle-kit
+  sharp: false # via next
+  unrs-resolver: false # via eslint-config-next

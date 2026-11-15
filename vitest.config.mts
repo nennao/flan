@@ -9,7 +9,5 @@ export default defineConfig({
     // when component tests are needed.
     environment: "node",
     include: ["src/**/*.test.ts"],
-    // No tests exist until the nutrition domain module (M2). Remove then.
-    passWithNoTests: true,
   },
 });
