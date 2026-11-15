@@ -97,7 +97,7 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
 - **App shell:**
   - a responsive header with Flan, Recipes and Plans (placeholders), and a mobile menu;
   - a home page with a server-rendered "DB status" card showing live counts, to be replaced at M2.
-- **Scripts:** `dev`, `build`, `start`, `lint`, `typecheck`, `format`, `format:check`, `test`, `db:generate`, `db:migrate`, `db:seed`, `db:reset`, `db:studio`.
+- **Scripts:** `dev`, `build`, `start`, `lint`, `typecheck`, `format`, `format:check`, `test`, `db:generate`, `db:migrate`, `db:seed`, `db:reset`, `db:checksum`, `db:studio`.
 - **README:** a layered rewrite.
   1. Tool-agnostic requirements: Node 24, pnpm via corepack (on Node 25+, `npm i -g corepack` first), and PostgreSQL 16+ reachable via `DATABASE_URL`.
   2. Ways to get Postgres: a `compose.yaml` with just Postgres (unverified until run on the host, since this container has no Docker), an existing install, or later a Neon dev branch.
@@ -131,7 +131,7 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
 - [x] Establish environment-variable handling (`DATABASE_URL` in untracked `.env.local`).
 - [x] Choose a database access approach. _(Drizzle.)_
 - [x] Baseline Drizzle schema and migration matching the legacy schema.
-- [ ] TypeScript seed script loading `data/seed/*.csv`.
+- [x] TypeScript seed script loading `data/seed/*.csv`.
 - [x] Establish local PostgreSQL connectivity (local PG 16 `main` cluster, port 5432).
 - [ ] Document local setup instructions (layered README, `compose.yaml`).
 
@@ -228,6 +228,6 @@ Not required for the initial migration:
 
 ## Current next action
 
-**Phase 1 (M1):** the setup is approved (see Phase 1 → Agreed setup). Work is on branch `m1-foundation`. Commits 1–3 (scaffold, tooling, env + DB + baseline migration) are done. Next is commit 4: seed script and parity check. Pause for review before each commit.
+**Phase 1 (M1):** the setup is approved (see Phase 1 → Agreed setup). Work is on branch `m1-foundation`. Commits 1–4 (scaffold, tooling, env + DB + baseline migration, seed + parity check) are done. Next is commit 5: shadcn and the responsive app shell with the DB status card. Pause for review before each commit.
 
 Environment state in the current agent container: PostgreSQL 16 is installed. The `legacy` cluster runs on 5433. The `main` cluster on 5432 holds `flan_dev`, owned by the non-superuser role `flan`, with credentials in `.env.local`. The legacy app runs from a worktree at `../flan-legacy`, with its venv at `../.venv-legacy`, on port 8000 (see assessment §4.4). Legacy reference outputs are in `../legacy-fixtures/`, outside the repo.

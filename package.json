@@ -13,10 +13,14 @@
     "test": "vitest run",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:seed": "tsx src/server/db/cli.ts seed",
+    "db:reset": "tsx src/server/db/cli.ts reset",
+    "db:checksum": "tsx src/server/db/cli.ts checksum",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@next/env": "16.4.6",
+    "csv-parse": "^7.0.3",
     "drizzle-orm": "~0.45.4",
     "next": "16.4.6",
     "pg": "^8.23.1",
