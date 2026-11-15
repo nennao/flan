@@ -62,6 +62,18 @@ After each implementation task:
 
 Never report a check as passed unless it was actually executed.
 
+### Checks
+
+```sh
+pnpm lint          # ESLint (legacy folders ignored)
+pnpm typecheck     # next typegen + tsc --noEmit
+pnpm test          # Vitest, single run
+pnpm build         # production build
+pnpm format:check  # Prettier (pnpm format to fix)
+```
+
+All must pass before a step is proposed for commit.
+
 ## Scope control
 
 - Follow the current roadmap phase.
@@ -73,9 +85,19 @@ Never report a check as passed unless it was actually executed.
 ## Workflow
 
 - Work on a short-lived branch per milestone (e.g. `m1-foundation`). Merge into `master` only when the milestone's exit check passes; `master` must always work.
-- Make one small, cohesive commit per planned step, then **pause** so the developer can review the diff before continuing.
+- Do one small, cohesive step at a time. Leave it **uncommitted** (staged), with a proposed commit message, and **pause** so the developer can review the diff. Commit only after approval.
 - Do not push, merge into `master` or delete branches without explicit approval.
 
 ## Current work
 
 See `ROADMAP.md` → "Current next action".
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

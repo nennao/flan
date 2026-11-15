@@ -46,15 +46,17 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
 
 ### Agreed setup (approved 2026-11-15)
 
-**Branch:** work on `m1-foundation`, branched from `master`. Merge into `master` when the exit check passes. Use one short-lived branch per milestone; `master` must always work. Make one small commit per step and **pause after each commit** so the developer can review the diff.
+**Branch:** work on `m1-foundation`, branched from `master`. Merge into `master` when the exit check passes. Use one short-lived branch per milestone; `master` must always work. Do one small step at a time and **pause before each commit** so the developer can review the uncommitted diff, then commit on approval.
 
 **Scaffold:**
+
 - `create-next-app@16.4.6`, generated in `/tmp` and moved into the repo root. It won't scaffold into a non-empty directory.
 - Flags: `--ts --app --eslint --tailwind --src-dir --import-alias "@/*" --use-pnpm --cache-components --no-react-compiler --no-agents-md --no-agent-feedback --disable-git --skip-install`.
 - Run `corepack enable pnpm` (corepack ships with Node 24) and pin `"packageManager": "pnpm@12.18.0"`.
 - pnpm needs explicit approval of dependency build scripts (e.g. esbuild, sharp). Commit the approval list.
 
 **Decisions:**
+
 - **A. Cache Components on:** `cacheComponents: true` and `partialPrefetching: true`, both set explicitly in `next.config.ts`. Every data access is deliberately either `'use cache'` (computed at build time) or inside `<Suspense>` (computed per request).
 - **B. Next's managed agent-rules block** in `AGENTS.md` is allowed (`next dev` inserts it when run by an agent). Commit it once.
 - **C. Drizzle 0.45 stable** (`drizzle-orm` 0.45.x, `drizzle-kit` 0.31.x), not the 1.0 release candidate.
@@ -66,13 +68,14 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
   - `zod`
   - `server-only`
   - `@next/env`, declared explicitly (pnpm doesn't allow phantom dependencies)
-  - `vitest` + `vite-tsconfig-paths`
+  - `vitest` + `vite` (a required peer of Vitest 5, declared explicitly) + `vite-tsconfig-paths`
   - `prettier` + `eslint-config-prettier` + `prettier-plugin-tailwindcss`
   - `tsx` (for the seed script)
   - `csv-parse`
   - the shadcn CLI, adding only the components the shell needs
 
   The Neon or Supabase driver waits until M2b. Use the bundled docs in `node_modules/next/dist/docs/` as the reference for Next.js APIs.
+
 - **`.gitignore`:** replace the 134-line Python template with a minimal file. Its `lib/` rule silently ignores `src/lib/`. Cover:
   - Node/Next: `node_modules/`, `.next/`, `out/`, `next-env.d.ts`, `*.tsbuildinfo`, `.vercel/`, `coverage/`
   - `.env*` except `.env.example`
@@ -102,7 +105,8 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
 
   Link to the assessment for how to run the legacy app.
 
-**Commit sequence** (pause after each):
+**Commit sequence** (pause for review before each):
+
 1. Scaffold, pnpm and the minimal `.gitignore`
 2. Tooling: Prettier, Vitest, scripts, ignoring legacy folders, plus the check commands added to `AGENTS.md`
 3. Environment handling, DB client, Drizzle baseline schema and migration
@@ -111,6 +115,7 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
 6. README rewrite, `compose.yaml`, setup docs and roadmap ticks
 
 **Exit check:**
+
 - `pnpm lint && pnpm typecheck && pnpm test && pnpm build` all pass;
 - the database is seeded and passes the parity checksum;
 - the home page shows live counts at desktop and mobile widths.
@@ -118,9 +123,9 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
 ### Checklist
 
 - [x] Decide whether to migrate in place or create a separate application alongside the legacy code. _(Alongside, at the repo root under `src/`.)_
-- [ ] Initialise Next.js with App Router and TypeScript.
+- [x] Initialise Next.js with App Router and TypeScript.
 - [ ] Establish project structure and coding conventions (`src/app`, `src/components`, `src/domain`, `src/server`).
-- [ ] Configure linting, formatting and testing (Vitest). Exclude the legacy `flan/` and `web/`.
+- [x] Configure linting, formatting and testing (Vitest). Exclude the legacy `flan/` and `web/`.
 - [ ] Install and configure Tailwind CSS + shadcn/ui.
 - [ ] Implement an initial responsive application shell.
 - [ ] Establish environment-variable handling (`DATABASE_URL` in untracked `.env.local`).
@@ -223,6 +228,6 @@ Not required for the initial migration:
 
 ## Current next action
 
-**Phase 1 (M1):** the setup is approved (see Phase 1 → Agreed setup). Create branch `m1-foundation` from `master` and start with commit 1 (scaffold, pnpm, minimal `.gitignore`). Pause for review after each commit.
+**Phase 1 (M1):** the setup is approved (see Phase 1 → Agreed setup). Work is on branch `m1-foundation`. Commits 1 (scaffold) and 2 (tooling) are done. Next is commit 3: environment handling, DB client, Drizzle baseline schema and migration. Pause for review before each commit.
 
 Environment state in the current agent container: PostgreSQL 16 is installed. The `legacy` cluster runs on 5433 and the `main` cluster on 5432 is stopped. The legacy app runs from a worktree at `../flan-legacy`, with its venv at `../.venv-legacy`, on port 8000 (see assessment §4.4). Legacy reference outputs are in `../legacy-fixtures/`, outside the repo.

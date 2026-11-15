@@ -20,12 +20,14 @@ _Assessed 2026-11-14 against `master` @ `625baea`, `feature/mvp` @ `81db491` and
   - view saved plans with real nutrition computed from ingredients.
 
   There is no UI for browsing recipes or foods, no recipe editing, no shopping list and no tracking. The Home screen buttons for "Daily Tracker", "Weekly Tracker" and "get me a recipe" do nothing.
+
 - **The most valuable assets are the data and the nutrition model:**
   - 49 recipes, 380 ingredient lines and 148 foods;
   - 142 cached Nutritionix JSON files;
   - a unit → gram conversion model (mass, per-item weights, density for volumes) that, on `feature/mvp`, is internally consistent.
 
   The Python/JS code itself is small (about 1,500 lines) and is better treated as a **reference specification** than as code to port line by line.
+
 - **Real secrets are committed:** a Nutritionix API key and a DB password (§8.1). The key should be rotated whatever else we decide.
 - **There are no tests on any branch.**
 - **There is no persistent data to migrate.** All reference data is rebuilt from CSV/JSON in the repo. The only database-only data is saved plans in someone's local DB, which is probably disposable _(assumption, see Q2)_.
@@ -34,13 +36,14 @@ _Assessed 2026-11-14 against `master` @ `625baea`, `feature/mvp` @ `81db491` and
 
 ## 2. Branches
 
-| Branch | Ahead/behind `master` | Dates | Content | Recommendation |
-|---|---|---|---|---|
-| `master` | — | to 2021-11-13 (+ docs 2026) | Ingestion of recipes, foods and macros. Planner API is broken. | Merge `feature/mvp` into it. |
-| `feature/mvp` | **+11 / −1** | 2021-11-14 → 2021-12-21 | Measurements and densities, `plan_days` with goals, working save/get plans, ingredient-level nutrition, macro bars and donuts, editable quantities, nav bar | **Merge.** It is a functional superset of `master` and has no conflicts. |
-| `nenna` | +38 / −9 (diverged at `ece535d`, 2020-06-06) | 2020-06-06 → 2020-07-18 | Dummy-data `flan/app.py`, vendored libs in `web/lib/`, early meal-card UI | **Do not merge.** Tag it (e.g. `archive/nenna`) and optionally delete the branch. |
+| Branch        | Ahead/behind `master`                        | Dates                       | Content                                                                                                                                                     | Recommendation                                                                    |
+| ------------- | -------------------------------------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `master`      | —                                            | to 2021-11-13 (+ docs 2026) | Ingestion of recipes, foods and macros. Planner API is broken.                                                                                              | Merge `feature/mvp` into it.                                                      |
+| `feature/mvp` | **+11 / −1**                                 | 2021-11-14 → 2021-12-21     | Measurements and densities, `plan_days` with goals, working save/get plans, ingredient-level nutrition, macro bars and donuts, editable quantities, nav bar | **Merge.** It is a functional superset of `master` and has no conflicts.          |
+| `nenna`       | +38 / −9 (diverged at `ece535d`, 2020-06-06) | 2020-06-06 → 2020-07-18     | Dummy-data `flan/app.py`, vendored libs in `web/lib/`, early meal-card UI                                                                                   | **Do not merge.** Tag it (e.g. `archive/nenna`) and optionally delete the branch. |
 
 Evidence:
+
 - `git diff nenna feature/mvp -- web/` shows that every function removed relative to `nenna` is an older version of a function that `feature/mvp` still has (`sbFlex`, `relIngCals`, `addQtyInputEvents` and so on).
 - `[nenna] flan/app.py:12-221` is a static `dummy_plan`. `[nenna] flan/app.py:243-258` returns that dummy plan from `savePlan` and `getPlans`.
 - The nutritionix JSON churn on `feature/mvp` (about 61k lines, commit `2810744`) is **pretty-printing only**. I compared all 142 files after parsing. Food name, serving weight, protein, fat, carbs and fibre are identical. Only `feature/mvp` adds `data/measures.csv`.
@@ -76,16 +79,17 @@ repo root (must be the CWD: code opens data/… and web/… relative paths)
 
 ### 4.1 Routes (`feature/mvp`)
 
-| Route | Behaviour | Evidence |
-|---|---|---|
-| `GET /` | Redirects to `/app/home`. | `[mvp] flan/api.py:84-86` |
-| `GET /app/<path>` | Serves static files from `web/`. `home` and `planner` map to `index.html`. | `[mvp] flan/api.py:88-92` |
+| Route                     | Behaviour                                                                                                                                                                                                                                                                                                                                                       | Evidence                           |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------- |
+| `GET /`                   | Redirects to `/app/home`.                                                                                                                                                                                                                                                                                                                                       | `[mvp] flan/api.py:84-86`          |
+| `GET /app/<path>`         | Serves static files from `web/`. `home` and `planner` map to `index.html`.                                                                                                                                                                                                                                                                                      | `[mvp] flan/api.py:88-92`          |
 | `POST /api/generatePlan/` | **Not real generation.** Returns a plan with one random breakfast, lunch and dinner per day, chosen from a hard-coded list of recipe names. Nutrition in the draft is **fake**: either fixed `{carbs:8, fat:4, protein:8}` or two placeholder ingredients ("ingredient 1/2"). Goals are copied from the request, with macro % converted to grams. No DB access. | `[mvp] flan/api.py:39-80, 299-303` |
-| `POST /api/savePlan/` | Inserts `plans`, then `plan_days` (with goal grams), then `plan_elements` (recipe looked up **by name**). Returns the saved plan via `_get_plans`. Hard-coded `user_id = 1`. **Edited quantities are ignored and not persisted.** No input validation. An unknown recipe name raises `IndexError`, giving a 500. | `[mvp] flan/api.py:96-130` |
-| `GET /api/getPlans/` | Returns all plans for user 1. One large join (plans → days → elements → recipes → ingredients → foods → units → measurements) is folded into nested JSON in Python. Per-ingredient macros are computed per serving (see §5.3). | `[mvp] flan/api.py:139-296` |
-| (delete plan) | Commented out. | `[mvp] flan/api.py:133-136` |
+| `POST /api/savePlan/`     | Inserts `plans`, then `plan_days` (with goal grams), then `plan_elements` (recipe looked up **by name**). Returns the saved plan via `_get_plans`. Hard-coded `user_id = 1`. **Edited quantities are ignored and not persisted.** No input validation. An unknown recipe name raises `IndexError`, giving a 500.                                                | `[mvp] flan/api.py:96-130`         |
+| `GET /api/getPlans/`      | Returns all plans for user 1. One large join (plans → days → elements → recipes → ingredients → foods → units → measurements) is folded into nested JSON in Python. Per-ingredient macros are computed per serving (see §5.3).                                                                                                                                  | `[mvp] flan/api.py:139-296`        |
+| (delete plan)             | Commented out.                                                                                                                                                                                                                                                                                                                                                  | `[mvp] flan/api.py:133-136`        |
 
 Observations on `_get_plans` (`[mvp] flan/api.py:139-286`):
+
 - SQL is built with f-strings (`user_id`, `plan_ids`, `rho`). The values are integers from server code, so it isn't currently exploitable, but it's a pattern to avoid.
 - A recipe with no ingredients would drop out of the result because of the `INNER JOIN ingredients`.
 - `full join measurements` behaves as a left join because of the `WHERE p.user_id = …` clause.
@@ -100,13 +104,13 @@ Observations on `_get_plans` (`[mvp] flan/api.py:139-286`):
 
 ### 4.3 CLI (`flan/cmdline.py`)
 
-| Command | Purpose | Status |
-|---|---|---|
-| `clear` | Drops and recreates the `flan` database and runs `scripts/00.sql`. **Destructive.** | Works in principle |
-| `ingest` | `ingest_recipes`, `ingest_ingredients`, plus `ingest_users` on `[mvp]`. Runs in one transaction. | Works in principle (§5.4) |
-| `sql <query>` | Ad-hoc SQL. | Dev tool |
-| `plan` | Prints a random 7-day CSV plan to stderr using recipe tags. | Superseded prototype |
-| `spag` | Prints Spag Bol's data, to sanity-check ingestion. | Dev tool |
+| Command       | Purpose                                                                                          | Status                    |
+| ------------- | ------------------------------------------------------------------------------------------------ | ------------------------- |
+| `clear`       | Drops and recreates the `flan` database and runs `scripts/00.sql`. **Destructive.**              | Works in principle        |
+| `ingest`      | `ingest_recipes`, `ingest_ingredients`, plus `ingest_users` on `[mvp]`. Runs in one transaction. | Works in principle (§5.4) |
+| `sql <query>` | Ad-hoc SQL.                                                                                      | Dev tool                  |
+| `plan`        | Prints a random 7-day CSV plan to stderr using recipe tags.                                      | Superseded prototype      |
+| `spag`        | Prints Spag Bol's data, to sanity-check ingestion.                                               | Dev tool                  |
 
 Run as `python flan/cmdline.py <cmd>` from the repo root. It needs `flan/` on `sys.path` for imports and the root as the working directory for `data/`. This was verified in §4.4.
 
@@ -135,6 +139,7 @@ VIRTUAL_ENV=../.venv-legacy uv pip install -r ../flan-legacy/requirements.txt
 ```
 
 Results:
+
 - `GET /` redirects to `/app/home`, and `/app/planner` returns 200.
 - `generatePlan`, `savePlan` and `getPlans` all work with the request shape the frontend sends.
 - Confirmed: draft nutrition is placeholder data (100 or 240 kcal per item). Saved plans show real per-serving values.
@@ -164,6 +169,7 @@ plan_elements(id, el_type, plan_day_id, recipe_id)                              
 The differences on `master` are that it has no `units.measure`, has `measurements.grams` as `int` instead of `real`, has no `plan_days`, and `plan_elements` carries `el_date`/`plan_type`/`plan_id` directly.
 
 Weaknesses worth fixing during migration (minimal, no redesign):
+
 - No primary key on `ingredients` or `measurements`, and no unique `(food_id, unit_id)` constraint.
 - Almost no `NOT NULL` constraints.
 - No indexes on foreign keys.
@@ -173,24 +179,26 @@ Weaknesses worth fixing during migration (minimal, no redesign):
 
 ### 5.2 Source data (`data/`)
 
-| File | Role | Notes |
-|---|---|---|
-| `recipes.csv` | `NAME,SERVES,TAGS` (pipe-separated tags) | 49 recipes. Names are snake_case, title-cased on ingest. |
-| `ingredients.csv` | `recipe,food,quantity` where quantity is e.g. `200g`, `10ml`, `2` (= items, unit `#`) | 380 rows. Units used: `g` 241, `#` 102, `ml` 36, `tbsp` 1. |
-| `measures.csv` [mvp] | `FOOD,UNIT,API_UNIT`: maps our unit to a Nutritionix `alt_measures` entry | 54 rows. `{comma}`/`{quote}` escaping. |
-| `nutritionix/*.json` | Cached Nutritionix `/v2/natural/nutrients` responses, one per food | 142 files. Fetched by `scripts/get-nutritionix.sh` (requires an API key). |
-| `nutritionix_broken/*.json` | 10 responses judged wrong | Not ingested, so those foods get **0 macros**. |
-| `ignore_calories.txt` | Foods deliberately set to 0 macros (spices, stocks, sauces) | 30 of the 148 foods. |
-| `recipe_tags.csv` | Tags in long format | **Unused.** Duplicates the `TAGS` column. |
-| `revisit.txt` | Note: guacamole, aioli, baby leaf salad | Data-quality to-do. |
+| File                        | Role                                                                                  | Notes                                                                     |
+| --------------------------- | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| `recipes.csv`               | `NAME,SERVES,TAGS` (pipe-separated tags)                                              | 49 recipes. Names are snake_case, title-cased on ingest.                  |
+| `ingredients.csv`           | `recipe,food,quantity` where quantity is e.g. `200g`, `10ml`, `2` (= items, unit `#`) | 380 rows. Units used: `g` 241, `#` 102, `ml` 36, `tbsp` 1.                |
+| `measures.csv` [mvp]        | `FOOD,UNIT,API_UNIT`: maps our unit to a Nutritionix `alt_measures` entry             | 54 rows. `{comma}`/`{quote}` escaping.                                    |
+| `nutritionix/*.json`        | Cached Nutritionix `/v2/natural/nutrients` responses, one per food                    | 142 files. Fetched by `scripts/get-nutritionix.sh` (requires an API key). |
+| `nutritionix_broken/*.json` | 10 responses judged wrong                                                             | Not ingested, so those foods get **0 macros**.                            |
+| `ignore_calories.txt`       | Foods deliberately set to 0 macros (spices, stocks, sauces)                           | 30 of the 148 foods.                                                      |
+| `recipe_tags.csv`           | Tags in long format                                                                   | **Unused.** Duplicates the `TAGS` column.                                 |
+| `revisit.txt`               | Note: guacamole, aioli, baby leaf salad                                               | Data-quality to-do.                                                       |
 
 ### 5.3 Nutrition model (the core domain logic)
 
 Ingestion (`[mvp] flan/ingest.py:105-157` (`_add_food_to_measurements` at `:144-157`)):
+
 - **Per-100 g macros:** `100 * nf_<macro> / serving_weight_grams` from the JSON. Foods with no JSON, or listed in `ignore_calories.txt`, get 0.
 - **Per-food unit weights:** for each `measures.csv` row, find the `alt_measures` entry with `measure == API_UNIT` and `qty == 1`, and store its `serving_weight` as grams per unit. If our unit is `rho` and the API unit is a volume, divide by ml-per-unit to get **density (g/ml)**.
 
 Calculation at request time (`[mvp] flan/api.py:192-206`), per ingredient and per serving:
+
 ```
 grams = amount                                   if unit == 'g'
       = ML_PER[unit] * amount * density          if unit is a volume (ml/tsp/tbsp/cup; cup = 240 ml)
@@ -224,18 +232,19 @@ These per-recipe figures (49 recipes, kcal/P/F/C per serving) can become **golde
 
 ## 6. Frontend: structure and behaviour (`feature/mvp`)
 
-| File | Responsibility |
-|---|---|
-| `web/index.html` | Shell. Bootstrap/jQuery/popper/moment from CDNs, Google Fonts. |
-| `web/main.js` | Global `STATE`, `setState` → re-render, view routing (home/planner), nav bar, initial `getPlans` fetch. |
-| `web/api.js` | `fetch` wrapper and the three API calls. Its doc comments describe schemas that are now out of date. |
-| `web/planner.js` | Planner page: saved-plans accordion, "Add a plan" modal (date range → targets grid → Generate → draft → Accept/Cancel). |
+| File                          | Responsibility                                                                                                                                                                                                                                                   |
+| ----------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `web/index.html`              | Shell. Bootstrap/jQuery/popper/moment from CDNs, Google Fonts.                                                                                                                                                                                                   |
+| `web/main.js`                 | Global `STATE`, `setState` → re-render, view routing (home/planner), nav bar, initial `getPlans` fetch.                                                                                                                                                          |
+| `web/api.js`                  | `fetch` wrapper and the three API calls. Its doc comments describe schemas that are now out of date.                                                                                                                                                             |
+| `web/planner.js`              | Planner page: saved-plans accordion, "Add a plan" modal (date range → targets grid → Generate → draft → Accept/Cancel).                                                                                                                                          |
 | `web/meal_card_components.js` | Day cards (total, goal, plan type, per-meal-type collapsible items → ingredients), macros card (SVG donut, totals vs goal), macro bars, "view macros/more/detailed" toggles, average/summary column, contenteditable quantity editing with proportional scaling. |
-| `web/mealplan_config.js` | **Carb-cycling targets:** Mon/Thu/Sun low carb (1,700 kcal; C10/F65/P25 %), Tue/Fri med (1,900; 30/45/25), Wed/Sat high (2,200; 55/20/25). `[mvp] web/mealplan_config.js:9-29` |
-| `web/utils.js` | `sum`/`avg`/`percent`/rounding, id generator, SVG donut chart. |
-| `web/styles.css` | Custom styles over Bootstrap. **No media queries.** |
+| `web/mealplan_config.js`      | **Carb-cycling targets:** Mon/Thu/Sun low carb (1,700 kcal; C10/F65/P25 %), Tue/Fri med (1,900; 30/45/25), Wed/Sat high (2,200; 55/20/25). `[mvp] web/mealplan_config.js:9-29`                                                                                   |
+| `web/utils.js`                | `sum`/`avg`/`percent`/rounding, id generator, SVG donut chart.                                                                                                                                                                                                   |
+| `web/styles.css`              | Custom styles over Bootstrap. **No media queries.**                                                                                                                                                                                                              |
 
 Behavioural observations:
+
 - **Not responsive.** Card widths are computed from `window.screen.width / 8` in JS (`[mvp] web/meal_card_components.js:440-445`), and the modal has `min-width: 500px`.
 - **Quantity edits are local only.** Draft edits are sent to `savePlan` but ignored by the backend. Saved plans are read-only.
 - **The draft preview shows fake nutrition** (see `generatePlan` in §4.1), while saved plans show real nutrition. Draft and saved figures for the same recipe will disagree.
@@ -248,31 +257,32 @@ Behavioural observations:
 
 ## 7. Feature inventory
 
-| Feature | Status | Evidence |
-|---|---|---|
-| Recipe / food / nutrition ingestion from CSV + cached JSON | **Implemented** (mvp: incl. unit conversions) | `[mvp] flan/ingest.py` |
-| Fetch nutrition from Nutritionix API | **Implemented** (shell script; needs a key; one-off) | `scripts/get-nutritionix.sh` |
-| Per-serving recipe nutrition (computed) | **Implemented** server-side, but only exposed inside plans | `[mvp] flan/api.py:192-219` |
-| Daily calorie/macro targets (carb cycling) | **Implemented**, hard-coded config, not user-editable | `[mvp] web/mealplan_config.js` |
-| Create plan for a date range | **Partial.** Date selection works; "generation" is random and ignores targets. | `[mvp] flan/api.py:39-80` |
-| Save plan | **Implemented**, recipes only (no quantities) | `[mvp] flan/api.py:96-130` |
-| View saved plans with nutrition vs goals, macro charts | **Implemented** | `[mvp] web/planner.js`, `meal_card_components.js` |
-| Edit quantities in a plan | **Partial.** UI only for drafts; not persisted. | `[mvp] web/meal_card_components.js:348-437` |
-| Edit/delete saved plans | **Planned** (commented stub) | `[mvp] flan/api.py:133-136` |
-| Daily / weekly tracker | **Planned** (button only) | `[mvp] web/main.js:73-74` |
-| "Get me a recipe" | **Planned** (button only) | `[mvp] web/main.js:76` |
-| Recipe browsing / search / CRUD | **Not present** | — |
-| Food search / browsing | **Not present** | — |
-| Shopping list | **Not present** | — |
-| Users / auth | **Not present.** Table exists; user id hard-coded to 1. | `[mvp] flan/api.py:101, 291` |
-| Recipe tags (meal type, diet) | **Implemented in data**, used only by the CLI `plan` command | `flan/cmdline.py:19-38` |
-| Tests | **None** on any branch | `git ls-tree` |
+| Feature                                                    | Status                                                                         | Evidence                                          |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------------- |
+| Recipe / food / nutrition ingestion from CSV + cached JSON | **Implemented** (mvp: incl. unit conversions)                                  | `[mvp] flan/ingest.py`                            |
+| Fetch nutrition from Nutritionix API                       | **Implemented** (shell script; needs a key; one-off)                           | `scripts/get-nutritionix.sh`                      |
+| Per-serving recipe nutrition (computed)                    | **Implemented** server-side, but only exposed inside plans                     | `[mvp] flan/api.py:192-219`                       |
+| Daily calorie/macro targets (carb cycling)                 | **Implemented**, hard-coded config, not user-editable                          | `[mvp] web/mealplan_config.js`                    |
+| Create plan for a date range                               | **Partial.** Date selection works; "generation" is random and ignores targets. | `[mvp] flan/api.py:39-80`                         |
+| Save plan                                                  | **Implemented**, recipes only (no quantities)                                  | `[mvp] flan/api.py:96-130`                        |
+| View saved plans with nutrition vs goals, macro charts     | **Implemented**                                                                | `[mvp] web/planner.js`, `meal_card_components.js` |
+| Edit quantities in a plan                                  | **Partial.** UI only for drafts; not persisted.                                | `[mvp] web/meal_card_components.js:348-437`       |
+| Edit/delete saved plans                                    | **Planned** (commented stub)                                                   | `[mvp] flan/api.py:133-136`                       |
+| Daily / weekly tracker                                     | **Planned** (button only)                                                      | `[mvp] web/main.js:73-74`                         |
+| "Get me a recipe"                                          | **Planned** (button only)                                                      | `[mvp] web/main.js:76`                            |
+| Recipe browsing / search / CRUD                            | **Not present**                                                                | —                                                 |
+| Food search / browsing                                     | **Not present**                                                                | —                                                 |
+| Shopping list                                              | **Not present**                                                                | —                                                 |
+| Users / auth                                               | **Not present.** Table exists; user id hard-coded to 1.                        | `[mvp] flan/api.py:101, 291`                      |
+| Recipe tags (meal type, diet)                              | **Implemented in data**, used only by the CLI `plan` command                   | `flan/cmdline.py:19-38`                           |
+| Tests                                                      | **None** on any branch                                                         | `git ls-tree`                                     |
 
 ---
 
 ## 8. Risks, unknowns and migration considerations
 
 ### 8.1 Security
+
 - **Committed secrets:**
   - a Nutritionix app ID and key (`scripts/get-nutritionix.sh:8-9`, present since commit `5747193`);
   - a DB password (`flan/db.py:13`, `scripts/create-db.sh:8`).
@@ -285,10 +295,12 @@ Behavioural observations:
   - The legacy DB no longer exists. The password is retired and must not be reused.
   - No git history rewrite is needed.
   - Going forward, credentials live only in untracked `.env*` files.
+
 - The DB role is created as `superuser` (`scripts/create-db.sh:16`). The new app should use a least-privilege role.
 - There is no auth. A deployed app will need at least deployment-level protection (e.g. Vercel password protection) until accounts exist (see Q8).
 
 ### 8.2 Technical risks
+
 - ~~**The legacy app can't easily be run as a reference.**~~ **Resolved:** it runs on Python 3.8 + Postgres 16 with unmodified code (§4.4). Golden fixtures were captured from the running app. This setup lives in the current container and is lost if the container is rebuilt; §4.4 records how to recreate it.
 - **Data correctness** issues (§5.4) are domain problems, not migration problems. Recommendation: **port with parity first** (golden tests), then fix data deliberately in separate, reviewable changes.
 - **Nutritionix licensing.** Storing and redistributing cached Nutritionix responses in a deployed app may conflict with their API terms _(unverified)_. Public alternatives exist (USDA FoodData Central, UK CoFID). This doesn't block the migration, but it affects Phase 4. **Decided:** move to a public dataset (Q4). Note that `measures.csv` gets per-item and density weights from Nutritionix `alt_measures`, so the new source will also need portion weights. USDA FDC provides these as `foodPortions`; CoFID mostly doesn't.
@@ -296,6 +308,7 @@ Behavioural observations:
 - **Serverless connection management.** Neon/Supabase from Vercel functions needs a pooled or serverless driver, not a long-lived `pg.Pool` per instance. This is a Phase 4 concern, but it informs the DB-client choice now.
 
 ### 8.3 Worth preserving
+
 - **Data:** `recipes.csv`, `ingredients.csv`, `measures.csv`, `nutritionix/*.json`, `ignore_calories.txt`.
 - **Schema concepts:** foods per 100 g; units with a measure type; per-food unit weights and densities; recipes with servings (`batch`); plan → day (with goals) → element. Calories derived, never stored.
 - **Nutrition calculation semantics** (§5.3).
@@ -303,6 +316,7 @@ Behavioural observations:
 - **UI concepts:** day columns grouped by meal type, totals vs goal, macro bar and donut, summary/average column, collapsible recipe → ingredient drill-down, proportional quantity scaling.
 
 ### 8.4 Worth retiring
+
 - jQuery, Bootstrap 4, moment.js, the hand-rolled state and router, the JS-computed layout, and the vendored libs on `nenna`.
 - `dummy_plan`, `tabulate`, the `plan` and `spag` CLI commands, and `recipe_tags.csv`.
 - `Procfile` and `runtime.txt`, and the Python web layer (`api.py`, `services.py`, `db.py`) once replaced.
@@ -355,6 +369,7 @@ Key decisions and the reasoning behind each:
    **Decided: (b)** (Q5). The rule that keeps Python cheap to bring back: **the TypeScript migrations own the schema, and the TS seed loads from plain files in `data/`.** Any future Python wrangling (e.g. cleaning a USDA download) writes cleaned CSV/JSON into `data/`. It never writes to the DB directly or defines tables.
 
    **Refined (2026-11-14):** the Nutritionix-specific ingestion is **not** ported. The legacy DB's reference tables were exported to normalised, name-keyed CSVs in `data/seed/` (see its README). A round-trip load into the legacy schema matched the legacy DB by content checksum. The TS seed only loads those files. `flan/ingest.py`, `data/nutritionix/` and `data/measures.csv` retire with the legacy app.
+
 7. **Local dev DB:** PostgreSQL configured by `DATABASE_URL` in an untracked `.env.local`. The dev environment is already a container without Docker-in-Docker, so we'll use the locally installed PostgreSQL 16 `main` cluster on 5432. It's separate from the `legacy` cluster on 5433 (§4.4).
 8. **Testing:** Vitest for domain and query code. One Playwright smoke test per completed vertical slice (each is a dependency to approve in Phase 1).
 9. **Styling: Tailwind CSS + shadcn/ui is appropriate.** The app needs accessible dialogs (plan creation), accordion/collapsible (meal cards), date-range input, combobox (recipe/food search), tables and tabs. These are exactly the Radix-backed primitives shadcn provides as copy-in source, with no runtime library lock-in.
@@ -367,27 +382,29 @@ Key decisions and the reasoning behind each:
 
 ## 10. Recommended migration sequence
 
-| # | Milestone | Roadmap phase | Outcome |
-|---|---|---|---|
-| M0 | **Housekeeping (you):** merge `feature/mvp` → `master`; tag and archive `nenna`; ~~rotate the Nutritionix key~~ (done); review this document | 0 | Clean baseline |
-| M1 | **Foundation:** Next.js + TS + lint/format + Vitest; Tailwind/shadcn (after approval); Docker Postgres; Drizzle baseline schema; seed script; responsive app shell | 1 | App runs locally against a seeded DB |
-| M2 | **First vertical slice — Recipe browser** (below) | 2 | First end-to-end feature with nutrition parity |
-| M2b | **Early deployment (Q9):** Vercel + managed Postgres (choose Neon or Supabase here), production migrations and seed, env vars, a deliberate rendering/caching choice per route | 2 → pulls forward part of 4 | Walking skeleton live; later milestones deploy continuously |
-| M3 | Food browser and search (reuses M2's patterns) | 3 | Searchable food database |
-| M4 | Saved plans, read-only: day cards, meal groups, totals vs goals, macro bar/donut, responsive layout | 3 | Parity with the legacy plan view |
-| M5 | Create plan: date range + flat daily target; choose recipes per meal slot, plus "fill randomly by tag" (honest port of the legacy generator); save via Server Action; persist servings | 3 | Parity with legacy planning, with quantities actually saved |
-| M6 | Edit and delete plans | 3 | Gaps in legacy closed |
-| M7 | Production hardening: backups, connection-management review, error logging, security review | 4 | Remainder of Phase 4 once the core workflows exist |
-| later | Configurable targets; shopping list (new); recipe CRUD (new); data-quality fixes (§5.4); PWA | 3/5/6 | — |
+| #     | Milestone                                                                                                                                                                              | Roadmap phase               | Outcome                                                     |
+| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------- | ----------------------------------------------------------- |
+| M0    | **Housekeeping (you):** merge `feature/mvp` → `master`; tag and archive `nenna`; ~~rotate the Nutritionix key~~ (done); review this document                                           | 0                           | Clean baseline                                              |
+| M1    | **Foundation:** Next.js + TS + lint/format + Vitest; Tailwind/shadcn (after approval); Docker Postgres; Drizzle baseline schema; seed script; responsive app shell                     | 1                           | App runs locally against a seeded DB                        |
+| M2    | **First vertical slice — Recipe browser** (below)                                                                                                                                      | 2                           | First end-to-end feature with nutrition parity              |
+| M2b   | **Early deployment (Q9):** Vercel + managed Postgres (choose Neon or Supabase here), production migrations and seed, env vars, a deliberate rendering/caching choice per route         | 2 → pulls forward part of 4 | Walking skeleton live; later milestones deploy continuously |
+| M3    | Food browser and search (reuses M2's patterns)                                                                                                                                         | 3                           | Searchable food database                                    |
+| M4    | Saved plans, read-only: day cards, meal groups, totals vs goals, macro bar/donut, responsive layout                                                                                    | 3                           | Parity with the legacy plan view                            |
+| M5    | Create plan: date range + flat daily target; choose recipes per meal slot, plus "fill randomly by tag" (honest port of the legacy generator); save via Server Action; persist servings | 3                           | Parity with legacy planning, with quantities actually saved |
+| M6    | Edit and delete plans                                                                                                                                                                  | 3                           | Gaps in legacy closed                                       |
+| M7    | Production hardening: backups, connection-management review, error logging, security review                                                                                            | 4                           | Remainder of Phase 4 once the core workflows exist          |
+| later | Configurable targets; shopping list (new); recipe CRUD (new); data-quality fixes (§5.4); PWA                                                                                           | 3/5/6                       | —                                                           |
 
 ### First vertical slice: Recipe browser (read-only)
 
 **Scope:**
+
 - `/recipes` lists the 49 recipes, with name search and tag filter (breakfast/lunch/dinner/low_carb…) via URL `searchParams`. Each item shows per-serving kcal and macros.
 - `/recipes/[id]` shows servings, tags, and an ingredient table with original quantity and unit, resolved grams, and per-ingredient macros. It also shows per-serving totals with a macro bar.
 - Mobile-first layout.
 
 **Why this slice first:**
+
 - It exercises every architectural layer: DB, seed, query layer, domain logic, Server Components, routing, `searchParams`, responsive UI and tests.
 - It has **no mutations**, so it avoids designing auth and validation too early.
 - It ports the **most valuable and riskiest logic**, the nutrition calculation, and can be verified objectively against the §5.4 golden numbers.

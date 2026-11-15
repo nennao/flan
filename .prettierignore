@@ -1,0 +1,9 @@
+# Legacy app and data: reference-only, never reformatted
+flan/
+web/
+scripts/
+data/
+
+# Generated
+pnpm-lock.yaml
+drizzle/
