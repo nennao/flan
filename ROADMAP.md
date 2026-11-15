@@ -44,6 +44,79 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
 
 ## Phase 1 — Establish the Next.js foundation (milestone M1)
 
+### Agreed setup (approved 2026-11-15)
+
+**Branch:** work on `m1-foundation`, branched from `master`. Merge into `master` when the exit check passes. Use one short-lived branch per milestone; `master` must always work. Make one small commit per step and **pause after each commit** so the developer can review the diff.
+
+**Scaffold:**
+- `create-next-app@16.4.6`, generated in `/tmp` and moved into the repo root. It won't scaffold into a non-empty directory.
+- Flags: `--ts --app --eslint --tailwind --src-dir --import-alias "@/*" --use-pnpm --cache-components --no-react-compiler --no-agents-md --no-agent-feedback --disable-git --skip-install`.
+- Run `corepack enable pnpm` (corepack ships with Node 24) and pin `"packageManager": "pnpm@12.18.0"`.
+- pnpm needs explicit approval of dependency build scripts (e.g. esbuild, sharp). Commit the approval list.
+
+**Decisions:**
+- **A. Cache Components on:** `cacheComponents: true` and `partialPrefetching: true`, both set explicitly in `next.config.ts`. Every data access is deliberately either `'use cache'` (computed at build time) or inside `<Suspense>` (computed per request).
+- **B. Next's managed agent-rules block** in `AGENTS.md` is allowed (`next dev` inserts it when run by an agent). Commit it once.
+- **C. Drizzle 0.45 stable** (`drizzle-orm` 0.45.x, `drizzle-kit` 0.31.x), not the 1.0 release candidate.
+- **D. ESLint + Prettier**, not Biome.
+- **React Compiler:** off for now. Try enabling it at M4/M5, when interactive Client Components appear.
+- **Versions:** follow the template's pins for `typescript` (^5, not 7) and `eslint` (^9). Use `@types/node` ^24.
+- **Other dependencies:**
+  - `pg` + `@types/pg`
+  - `zod`
+  - `server-only`
+  - `@next/env`, declared explicitly (pnpm doesn't allow phantom dependencies)
+  - `vitest` + `vite-tsconfig-paths`
+  - `prettier` + `eslint-config-prettier` + `prettier-plugin-tailwindcss`
+  - `tsx` (for the seed script)
+  - `csv-parse`
+  - the shadcn CLI, adding only the components the shell needs
+
+  The Neon or Supabase driver waits until M2b. Use the bundled docs in `node_modules/next/dist/docs/` as the reference for Next.js APIs.
+- **`.gitignore`:** replace the 134-line Python template with a minimal file. Its `lib/` rule silently ignores `src/lib/`. Cover:
+  - Node/Next: `node_modules/`, `.next/`, `out/`, `next-env.d.ts`, `*.tsbuildinfo`, `.vercel/`, `coverage/`
+  - `.env*` except `.env.example`
+  - legacy Python: `__pycache__/`, `*.py[cod]`, `venv/`, `.venv/`
+  - `data/raw/`
+  - `.DS_Store`, `.idea/`, `.vscode/`
+- **Layout:** `src/app`, `src/components` (`ui/` for shadcn), `src/domain`, `src/server/{env.ts, db/client.ts, db/schema.ts, db/seed.ts}`, `src/lib/utils.ts`, and `drizzle/` for committed SQL migrations. TypeScript and ESLint ignore the legacy `flan/`, `web/`, `scripts/` and `data/`.
+- **Environment:**
+  - `DATABASE_URL` lives in `.env.local`, with `.env.example` committed.
+  - `src/server/env.ts` validates it with zod and imports `server-only`.
+  - Scripts outside Next load env via `@next/env`.
+- **Database:**
+  - **Server:** start the local PG 16 `main` cluster on port 5432. The `legacy` cluster on 5433 stays as the reference app's database.
+  - **Role and database:** a non-superuser role `flan` owns `flan_dev`.
+  - **Baseline schema:** the `feature/mvp` schema reproduced exactly. Hardening comes later, as separate reviewed migrations.
+  - **Migrations:** `drizzle-kit generate` + `migrate`, never `push`.
+  - **Seed:** loads `data/seed/*.csv` in one transaction and refuses to run if the reference tables aren't empty. `db:reset` (drop → migrate → seed) is for local use only.
+  - **Parity check:** the content checksum must match the legacy DB.
+- **App shell:**
+  - a responsive header with Flan, Recipes and Plans (placeholders), and a mobile menu;
+  - a home page with a server-rendered "DB status" card showing live counts, to be replaced at M2.
+- **Scripts:** `dev`, `build`, `start`, `lint`, `typecheck`, `format`, `format:check`, `test`, `db:generate`, `db:migrate`, `db:seed`, `db:reset`, `db:studio`.
+- **README:** a layered rewrite.
+  1. Tool-agnostic requirements: Node 24, pnpm via corepack (on Node 25+, `npm i -g corepack` first), and PostgreSQL 16+ reachable via `DATABASE_URL`.
+  2. Ways to get Postgres: a `compose.yaml` with just Postgres (unverified until run on the host, since this container has no Docker), an existing install, or later a Neon dev branch.
+  3. A short note on running inside an isolated agent container (apt Postgres clusters, mapped ports 3000/8000/7777).
+
+  Link to the assessment for how to run the legacy app.
+
+**Commit sequence** (pause after each):
+1. Scaffold, pnpm and the minimal `.gitignore`
+2. Tooling: Prettier, Vitest, scripts, ignoring legacy folders, plus the check commands added to `AGENTS.md`
+3. Environment handling, DB client, Drizzle baseline schema and migration
+4. Seed script and parity check
+5. shadcn and the responsive app shell with the DB status card
+6. README rewrite, `compose.yaml`, setup docs and roadmap ticks
+
+**Exit check:**
+- `pnpm lint && pnpm typecheck && pnpm test && pnpm build` all pass;
+- the database is seeded and passes the parity checksum;
+- the home page shows live counts at desktop and mobile widths.
+
+### Checklist
+
 - [x] Decide whether to migrate in place or create a separate application alongside the legacy code. _(Alongside, at the repo root under `src/`.)_
 - [ ] Initialise Next.js with App Router and TypeScript.
 - [ ] Establish project structure and coding conventions (`src/app`, `src/components`, `src/domain`, `src/server`).
@@ -55,7 +128,7 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
 - [ ] Baseline Drizzle schema and migration matching the legacy schema.
 - [ ] TypeScript seed script loading `data/seed/*.csv`.
 - [ ] Establish local PostgreSQL connectivity (local PG 16 `main` cluster, port 5432).
-- [ ] Document local setup instructions.
+- [ ] Document local setup instructions (layered README, `compose.yaml`).
 
 **Exit criterion:** The Next.js application runs locally, passes its initial checks and can securely access a seeded development database.
 
@@ -86,7 +159,7 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
 ## Phase 3 — Migrate remaining core functionality (milestones M3–M6)
 
 - [ ] **M3:** food browsing and search.
-- [ ] **M4:** saved plans, read-only (day cards, meal groups, totals vs goals, macro bar and donut, responsive).
+- [ ] **M4:** saved plans, read-only (day cards, meal groups, totals vs goals, macro bar and donut, responsive). Try enabling the React Compiler here or at M5.
 - [ ] **M5:** create plan: date range, flat daily target, recipes per meal slot, "random by tag" fill with real nutrition, save via Server Action, persist servings. **The deployed app must be access-protected first.**
 - [ ] **M6:** edit and delete plans.
 - [ ] Retire the legacy Flask app, `web/`, the Nutritionix ingestion and associated data once replacements are verified.
@@ -150,4 +223,6 @@ Not required for the initial migration:
 
 ## Current next action
 
-**Phase 1 (M1):** propose the concrete foundation setup (exact packages and versions, config, directory layout, scripts) for review. Then initialise the Next.js application.
+**Phase 1 (M1):** the setup is approved (see Phase 1 → Agreed setup). Create branch `m1-foundation` from `master` and start with commit 1 (scaffold, pnpm, minimal `.gitignore`). Pause for review after each commit.
+
+Environment state in the current agent container: PostgreSQL 16 is installed. The `legacy` cluster runs on 5433 and the `main` cluster on 5432 is stopped. The legacy app runs from a worktree at `../flan-legacy`, with its venv at `../.venv-legacy`, on port 8000 (see assessment §4.4). Legacy reference outputs are in `../legacy-fixtures/`, outside the repo.

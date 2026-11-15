@@ -2,9 +2,14 @@
 
 ## Project context
 
-Read `GOALS.md` and `ROADMAP.md` before beginning substantial work.
+Read `GOALS.md` and `ROADMAP.md` before beginning substantial work. `docs/LEGACY_ASSESSMENT.md` describes the legacy app; its §9–11 are the **record of agreed architecture and decisions**. Don't contradict them without discussing it first.
 
 This repository contains a legacy meal-planning application being modernised into a Next.js/React/TypeScript application.
+
+- **Legacy code is reference-only.** Don't modify `flan/`, `web/`, `scripts/` or the legacy `data/` files. They are consulted for parity and retired once replaced.
+- **Reference data** changes only through the name-keyed CSVs in `data/seed/` (see its README). Never write reference data to the database directly.
+- **Schema changes** go only through `drizzle-kit generate` migrations, which are reviewed and committed. Never use `drizzle-kit push`.
+- **Package manager:** pnpm only. Don't use npm or yarn to install.
 
 The developer is an experienced software engineer learning Next.js and practising AI-assisted development. Prioritise correctness, maintainability, transparent reasoning and opportunities for meaningful technical review.
 
@@ -65,22 +70,12 @@ Never report a check as passed unless it was actually executed.
 - Prefer finishing and validating one feature over starting several.
 - Keep documentation useful and concise.
 
-## Initial assignment
+## Workflow
 
-Begin with Phase 0 of `ROADMAP.md`.
+- Work on a short-lived branch per milestone (e.g. `m1-foundation`). Merge into `master` only when the milestone's exit check passes; `master` must always work.
+- Make one small, cohesive commit per planned step, then **pause** so the developer can review the diff before continuing.
+- Do not push, merge into `master` or delete branches without explicit approval.
 
-Inspect the legacy repository and produce `docs/LEGACY_ASSESSMENT.md` with:
+## Current work
 
-- Existing architecture and dependencies.
-- Implemented and partially implemented features.
-- Flask routes and database interactions.
-- PostgreSQL schema and nutritional data ingestion.
-- Frontend structure and behaviour.
-- Tests and local run instructions, where discoverable.
-- Risks, unknowns and migration considerations.
-- A proposed Next.js target architecture.
-- Recommended migration sequence and first vertical slice.
-
-Support findings with references to relevant source files.
-
-**Do not begin the migration until the assessment has been reviewed and approved.**
+See `ROADMAP.md` → "Current next action".
