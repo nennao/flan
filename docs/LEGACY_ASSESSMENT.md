@@ -372,11 +372,12 @@ Key decisions and the reasoning behind each:
 
 7. **Local dev DB:** PostgreSQL configured by `DATABASE_URL` in an untracked `.env.local`. The dev environment is already a container without Docker-in-Docker, so we'll use the locally installed PostgreSQL 16 `main` cluster on 5432. It's separate from the `legacy` cluster on 5433 (§4.4).
 8. **Testing:** Vitest for domain and query code. One Playwright smoke test per completed vertical slice (each is a dependency to approve in Phase 1).
-9. **Styling: Tailwind CSS + shadcn/ui is appropriate.** The app needs accessible dialogs (plan creation), accordion/collapsible (meal cards), date-range input, combobox (recipe/food search), tables and tabs. These are exactly the Radix-backed primitives shadcn provides as copy-in source, with no runtime library lock-in.
+9. **Styling: Tailwind CSS + shadcn/ui is appropriate.** The app needs accessible dialogs (plan creation), accordion/collapsible (meal cards), date-range input, combobox (recipe/food search), tables and tabs. These are exactly the headless primitives shadcn provides as copy-in source, with no runtime library lock-in.
    - **Mantine** would also work: it has more built-ins (dates, charts) but is a larger dependency with its own styling system.
    - **CSS Modules alone** would mean hand-building accessible dialogs and comboboxes.
    - Charts: keep the simple SVG donut and bar approach as small React components, rather than adding a chart library for three circles.
    - **I found no compelling reason to deviate.** Add shadcn components only as they're needed.
+   - **Primitives (decided 2026-11-15): Base UI**, not Radix. The shadcn CLI (4.23) now asks which headless library its components are built on (Base UI, Radix or React Aria) and recommends Base UI. Base UI is actively developed and has a native Combobox (needed for recipe/food search); Radix has none. Style preset: Nova (Lucide icons, Geist font). Switching later means re-adding each component, so it's cheapest to decide now.
 
 ---
 

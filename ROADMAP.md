@@ -14,7 +14,7 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
 - **Layout:** Next.js App Router + TypeScript at the repo root under `src/`, alongside the legacy `flan/` and `web/` until they're retired.
 - **Data access:** Drizzle ORM. `drizzle-kit` is the sole owner of migrations. The baseline schema is the legacy `feature/mvp` schema plus small hardening migrations.
 - **Seed data:** normalised, name-keyed CSVs in `data/seed/`, exported from the legacy DB and verified identical. A TypeScript seed script loads them. Nutritionix ingestion is retired, not ported. Optional future Python may only write files into `data/`.
-- **Styling:** Tailwind CSS + shadcn/ui, with components added only when needed.
+- **Styling:** Tailwind CSS + shadcn/ui (Base UI primitives, Nova style), with components added only when needed.
 - **Users:** single user, no auth. Must be access-protected before any write feature is deployed.
 - **Targets and generator:** a flat daily target (carb cycling may return later). A "random by tag" placeholder generator whose drafts show real nutrition.
 - **Parity first:** the new app reproduces the legacy nutrition calculations, verified against the 49-recipe reference captured from the running legacy app.
@@ -82,7 +82,7 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
   - legacy Python: `__pycache__/`, `*.py[cod]`, `venv/`, `.venv/`
   - `data/raw/`
   - `.DS_Store`, `.idea/`, `.vscode/`
-- **Layout:** `src/app`, `src/components` (`ui/` for shadcn), `src/domain`, `src/server/{env.ts, db/client.ts, db/schema.ts, db/seed.ts}`, `src/lib/utils.ts`, and `drizzle/` for committed SQL migrations. TypeScript and ESLint ignore the legacy `flan/`, `web/`, `scripts/` and `data/`.
+- **Layout:** `src/app`, `src/components` (`ui/` for shadcn), `src/domain`, `src/server/{env.ts, db/client.ts, db/schema.ts, db/seed.ts}`, and `drizzle/` for committed SQL migrations. TypeScript and ESLint ignore the legacy `flan/`, `web/`, `scripts/` and `data/`.
 - **Environment:**
   - `DATABASE_URL` lives in `.env.local`, with `.env.example` committed.
   - `src/server/env.ts` validates it with zod and imports `server-only`.
@@ -124,10 +124,10 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
 
 - [x] Decide whether to migrate in place or create a separate application alongside the legacy code. _(Alongside, at the repo root under `src/`.)_
 - [x] Initialise Next.js with App Router and TypeScript.
-- [ ] Establish project structure and coding conventions (`src/app`, `src/components`, `src/domain`, `src/server`).
+- [x] Establish project structure and coding conventions (`src/app`, `src/components`, `src/domain`, `src/server`). _(`src/domain` is created with its first module at M2.)_
 - [x] Configure linting, formatting and testing (Vitest). Exclude the legacy `flan/` and `web/`.
-- [ ] Install and configure Tailwind CSS + shadcn/ui.
-- [ ] Implement an initial responsive application shell.
+- [x] Install and configure Tailwind CSS + shadcn/ui. _(Base UI primitives, Nova style; see assessment §9 item 9.)_
+- [x] Implement an initial responsive application shell.
 - [x] Establish environment-variable handling (`DATABASE_URL` in untracked `.env.local`).
 - [x] Choose a database access approach. _(Drizzle.)_
 - [x] Baseline Drizzle schema and migration matching the legacy schema.
@@ -228,6 +228,6 @@ Not required for the initial migration:
 
 ## Current next action
 
-**Phase 1 (M1):** the setup is approved (see Phase 1 → Agreed setup). Work is on branch `m1-foundation`. Commits 1–4 (scaffold, tooling, env + DB + baseline migration, seed + parity check) are done. Next is commit 5: shadcn and the responsive app shell with the DB status card. Pause for review before each commit.
+**Phase 1 (M1):** the setup is approved (see Phase 1 → Agreed setup). Work is on branch `m1-foundation`. Commits 1–5 (scaffold, tooling, env + DB + baseline migration, seed + parity check, shadcn + app shell) are done. Next is commit 6: README rewrite, `compose.yaml`, setup docs and roadmap ticks, then the M1 exit check. Pause for review before each commit.
 
 Environment state in the current agent container: PostgreSQL 16 is installed. The `legacy` cluster runs on 5433. The `main` cluster on 5432 holds `flan_dev`, owned by the non-superuser role `flan`, with credentials in `.env.local`. The legacy app runs from a worktree at `../flan-legacy`, with its venv at `../.venv-legacy`, on port 8000 (see assessment §4.4). Legacy reference outputs are in `../legacy-fixtures/`, outside the repo.
