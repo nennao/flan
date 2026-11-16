@@ -2,7 +2,7 @@
 
 ## Status
 
-**Current phase:** 1 — Establish the Next.js foundation
+**Current phase:** 1 — Establish the Next.js foundation. The exit check passed on 2026-11-16; merging `m1-foundation` into `master` awaits approval.
 
 **Overall objective:** Modernise the existing Flask/PostgreSQL/JavaScript meal planner into a responsive, full-stack Next.js/React/TypeScript application, then deploy it.
 
@@ -133,9 +133,23 @@ Phase 0 is complete. The findings, agreed architecture and decision log are in [
 - [x] Baseline Drizzle schema and migration matching the legacy schema.
 - [x] TypeScript seed script loading `data/seed/*.csv`.
 - [x] Establish local PostgreSQL connectivity (local PG 16 `main` cluster, port 5432).
-- [ ] Document local setup instructions (layered README, `compose.yaml`).
+- [x] Document local setup instructions (layered README, `compose.yaml`). _(`compose.yaml` is unverified: no Docker in the dev container.)_
 
 **Exit criterion:** The Next.js application runs locally, passes its initial checks and can securely access a seeded development database.
+
+**Exit check passed (2026-11-16):**
+
+- `pnpm lint && pnpm typecheck && pnpm test && pnpm build` pass, both in the working tree and in a clean export of `HEAD` (`git archive`, then the README quick start against a fresh database).
+- The seeded database's checksums match the legacy DB for all six reference tables.
+- The home page shows live counts under `pnpm dev` and `pnpm start`. The developer checked it in a browser at desktop and mobile widths.
+
+**Follow-ups noted during M1** (not blocking):
+
+- Vite 8 resolves tsconfig paths natively, so `vite-tsconfig-paths` can be dropped.
+- ESLint 9 is deprecated upstream; moving to 10 is a separate decision.
+- Verify `compose.yaml` on a machine with Docker.
+- M2: add DB-backed integration tests once query code exists.
+- M4/M5: decide how the single user row is provided (it isn't in `data/seed`).
 
 ## Phase 2 — First complete feature and early deployment (milestones M2, M2b)
 
@@ -228,6 +242,6 @@ Not required for the initial migration:
 
 ## Current next action
 
-**Phase 1 (M1):** the setup is approved (see Phase 1 → Agreed setup). Work is on branch `m1-foundation`. Commits 1–5 (scaffold, tooling, env + DB + baseline migration, seed + parity check, shadcn + app shell) are done. Next is commit 6: README rewrite, `compose.yaml`, setup docs and roadmap ticks, then the M1 exit check. Pause for review before each commit.
+**Phase 1 (M1) is complete on branch `m1-foundation`.** Next: with the developer's approval, merge it into `master`. Then start Phase 2 (M2, the recipe browser) on a new branch, beginning with "Define the feature's expected behaviour". Pause for review before each commit.
 
 Environment state in the current agent container: PostgreSQL 16 is installed. The `legacy` cluster runs on 5433. The `main` cluster on 5432 holds `flan_dev`, owned by the non-superuser role `flan`, with credentials in `.env.local`. The legacy app runs from a worktree at `../flan-legacy`, with its venv at `../.venv-legacy`, on port 8000 (see assessment §4.4). Legacy reference outputs are in `../legacy-fixtures/`, outside the repo.
