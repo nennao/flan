@@ -3,14 +3,7 @@ import "server-only";
 import { connection } from "next/server";
 
 import { db } from "../db/client";
-import {
-  foods,
-  ingredients,
-  measurements,
-  recipes,
-  recipeTags,
-  units,
-} from "../db/schema";
+import { foods, ingredients, measurements, recipes, recipeTags, units } from "../db/schema";
 
 export type ReferenceCounts = {
   recipes: number;

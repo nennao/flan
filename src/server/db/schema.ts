@@ -11,15 +11,7 @@
  * (e.g. `recipes_name_key`, `ingredients_recipe_id_fkey`) rather than Drizzle's
  * own naming, so the two schemas can be compared directly.
  */
-import {
-  date,
-  foreignKey,
-  integer,
-  pgTable,
-  real,
-  serial,
-  varchar,
-} from "drizzle-orm/pg-core";
+import { date, foreignKey, integer, pgTable, real, serial, varchar } from "drizzle-orm/pg-core";
 
 export const recipes = pgTable("recipes", {
   id: serial("id").primaryKey(),

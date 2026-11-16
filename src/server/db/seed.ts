@@ -11,14 +11,7 @@ import { count } from "drizzle-orm";
 import { z } from "zod";
 
 import type { Db } from "./create-db";
-import {
-  foods,
-  ingredients,
-  measurements,
-  recipes,
-  recipeTags,
-  units,
-} from "./schema";
+import { foods, ingredients, measurements, recipes, recipeTags, units } from "./schema";
 
 // --- Row schemas (lengths match the varchar limits in schema.ts) -----------
 
@@ -45,11 +38,7 @@ const rowSchemas = {
   }),
   recipes: z.strictObject({
     name: text(100),
-    batch: z
-      .string()
-      .trim()
-      .min(1)
-      .pipe(z.coerce.number<string>().int().positive()),
+    batch: z.string().trim().min(1).pipe(z.coerce.number<string>().int().positive()),
   }),
   recipe_tags: z.strictObject({ recipe: text(100), tag: text(100) }),
   ingredients: z.strictObject({
@@ -130,17 +119,9 @@ function checkReferences(data: SeedData): string[] {
     });
     return seen;
   };
-  const exists = (
-    file: SeedFile,
-    i: number,
-    kind: string,
-    set: Set<string>,
-    name: string,
-  ) => {
+  const exists = (file: SeedFile, i: number, kind: string, set: Set<string>, name: string) => {
     if (!set.has(name)) {
-      problems.push(
-        `${file}.csv:${i + 2}: unknown ${kind} ${JSON.stringify(name)}`,
-      );
+      problems.push(`${file}.csv:${i + 2}: unknown ${kind} ${JSON.stringify(name)}`);
     }
   };
 
@@ -179,10 +160,7 @@ function checkReferences(data: SeedData): string[] {
 
 export async function readSeedData(dir: string): Promise<SeedData> {
   const entries = await Promise.all(
-    seedFiles.map(
-      async (file) =>
-        [file, await readFile(path.join(dir, `${file}.csv`), "utf8")] as const,
-    ),
+    seedFiles.map(async (file) => [file, await readFile(path.join(dir, `${file}.csv`), "utf8")] as const),
   );
   return parseSeedData(Object.fromEntries(entries) as Record<SeedFile, string>);
 }
@@ -203,10 +181,7 @@ const referenceTables = {
  * any reference table already has rows: seeding is for an empty database,
  * not an upsert. Returns the number of rows inserted per table.
  */
-export async function seedDatabase(
-  db: Db,
-  data: SeedData,
-): Promise<Record<SeedFile, number>> {
+export async function seedDatabase(db: Db, data: SeedData): Promise<Record<SeedFile, number>> {
   return db.transaction(async (tx) => {
     const nonEmpty: string[] = [];
     for (const [name, table] of Object.entries(referenceTables)) {
@@ -220,27 +195,13 @@ export async function seedDatabase(
       );
     }
 
-    const idsByName = (rows: { id: number; key: string | null }[]) =>
-      new Map(rows.map((r) => [r.key!, r.id]));
+    const idsByName = (rows: { id: number; key: string | null }[]) => new Map(rows.map((r) => [r.key!, r.id]));
     const id = (map: Map<string, number>, key: string) => map.get(key)!; // validated by parseSeedData
 
-    const foodIds = idsByName(
-      await tx
-        .insert(foods)
-        .values(data.foods)
-        .returning({ id: foods.id, key: foods.name }),
-    );
-    const unitIds = idsByName(
-      await tx
-        .insert(units)
-        .values(data.units)
-        .returning({ id: units.id, key: units.unit }),
-    );
+    const foodIds = idsByName(await tx.insert(foods).values(data.foods).returning({ id: foods.id, key: foods.name }));
+    const unitIds = idsByName(await tx.insert(units).values(data.units).returning({ id: units.id, key: units.unit }));
     const recipeIds = idsByName(
-      await tx
-        .insert(recipes)
-        .values(data.recipes)
-        .returning({ id: recipes.id, key: recipes.name }),
+      await tx.insert(recipes).values(data.recipes).returning({ id: recipes.id, key: recipes.name }),
     );
 
     await tx.insert(measurements).values(
@@ -265,8 +226,6 @@ export async function seedDatabase(
       })),
     );
 
-    return Object.fromEntries(
-      seedFiles.map((file) => [file, data[file].length]),
-    ) as Record<SeedFile, number>;
+    return Object.fromEntries(seedFiles.map((file) => [file, data[file].length])) as Record<SeedFile, number>;
   });
 }

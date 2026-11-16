@@ -2,22 +2,15 @@ import path from "node:path";
 
 import { describe, expect, test } from "vitest";
 
-import {
-  parseSeedData,
-  readSeedData,
-  SeedDataError,
-  type SeedFile,
-} from "./seed";
+import { parseSeedData, readSeedData, SeedDataError, type SeedFile } from "./seed";
 
 const valid: Record<SeedFile, string> = {
-  foods:
-    "name,protein,fat,carbs,fibre\nEgg,12.5,9.5,0.7,0\nToast,9,3.2,49.5,2.7\n",
+  foods: "name,protein,fat,carbs,fibre\nEgg,12.5,9.5,0.7,0\nToast,9,3.2,49.5,2.7\n",
   units: "unit,measure\ng,mass\n#,unit\nrho,density\n",
   measurements: "food,unit,grams\nEgg,#,50\n",
   recipes: "name,batch\nEggs On Toast,1\n",
   recipe_tags: "recipe,tag\nEggs On Toast,breakfast\n",
-  ingredients:
-    "recipe,food,unit,amount\nEggs On Toast,Egg,#,2\nEggs On Toast,Toast,g,60\n",
+  ingredients: "recipe,food,unit,amount\nEggs On Toast,Egg,#,2\nEggs On Toast,Toast,g,60\n",
 };
 
 function problemsFor(overrides: Partial<Record<SeedFile, string>>): string[] {
@@ -47,37 +40,31 @@ describe("parseSeedData", () => {
   test("reports bad values with file and line", () => {
     expect(
       problemsFor({
-        foods:
-          "name,protein,fat,carbs,fibre\nEgg,12.5,9.5,0.7,0\nToast,abc,3.2,,2.7\n",
+        foods: "name,protein,fat,carbs,fibre\nEgg,12.5,9.5,0.7,0\nToast,abc,3.2,,2.7\n",
       }),
-    ).toEqual([
-      expect.stringMatching(/^foods\.csv:3: protein: /),
-      expect.stringMatching(/^foods\.csv:3: carbs: /),
-    ]);
+    ).toEqual([expect.stringMatching(/^foods\.csv:3: protein: /), expect.stringMatching(/^foods\.csv:3: carbs: /)]);
   });
 
   test.each([
     ["0", "a zero batch"],
     ["1.5", "a fractional batch"],
   ])("rejects %s (%s)", (batch) => {
-    expect(
-      problemsFor({ recipes: `name,batch\nEggs On Toast,${batch}\n` }),
-    ).toEqual([expect.stringMatching(/^recipes\.csv:2: batch: /)]);
+    expect(problemsFor({ recipes: `name,batch\nEggs On Toast,${batch}\n` })).toEqual([
+      expect.stringMatching(/^recipes\.csv:2: batch: /),
+    ]);
   });
 
   test("rejects unknown and missing columns", () => {
     expect(problemsFor({ units: "unit,measure,extra\ng,mass,x\n" })).toEqual([
       expect.stringMatching(/^units\.csv:2: \(row\): .*extra/),
     ]);
-    expect(problemsFor({ units: "unit\ng\n" })).toEqual([
-      expect.stringMatching(/^units\.csv:2: measure: /),
-    ]);
+    expect(problemsFor({ units: "unit\ng\n" })).toEqual([expect.stringMatching(/^units\.csv:2: measure: /)]);
   });
 
   test("rejects values longer than the column allows", () => {
-    expect(
-      problemsFor({ units: `unit,measure\n${"x".repeat(17)},mass\n` }),
-    ).toEqual([expect.stringMatching(/^units\.csv:2: unit: /)]);
+    expect(problemsFor({ units: `unit,measure\n${"x".repeat(17)},mass\n` })).toEqual([
+      expect.stringMatching(/^units\.csv:2: unit: /),
+    ]);
   });
 
   test("rejects an unknown measure", () => {
@@ -95,9 +82,9 @@ describe("parseSeedData", () => {
   });
 
   test("rejects a second conversion for the same food and unit", () => {
-    expect(
-      problemsFor({ measurements: "food,unit,grams\nEgg,#,50\nEgg,#,60\n" }),
-    ).toEqual(['measurements.csv:3: duplicate "Egg / #"']);
+    expect(problemsFor({ measurements: "food,unit,grams\nEgg,#,50\nEgg,#,60\n" })).toEqual([
+      'measurements.csv:3: duplicate "Egg / #"',
+    ]);
   });
 
   test("rejects references to unknown names", () => {

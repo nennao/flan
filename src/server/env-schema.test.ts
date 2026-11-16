@@ -14,11 +14,7 @@ describe("parseEnv", () => {
     expect(() => parseEnv({})).toThrow(/DATABASE_URL/);
   });
 
-  test.each([
-    "not a url",
-    "mysql://flan@localhost/flan",
-    "https://example.com",
-  ])("rejects %s", (url) => {
+  test.each(["not a url", "mysql://flan@localhost/flan", "https://example.com"])("rejects %s", (url) => {
     expect(() => parseEnv({ DATABASE_URL: url })).toThrow(/DATABASE_URL/);
   });
 

@@ -6,14 +6,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const navItems = [
   { href: "/recipes", label: "Recipes" },
@@ -51,16 +44,7 @@ export function MobileNav() {
   const isActive = useIsActive();
   return (
     <Sheet>
-      <SheetTrigger
-        render={
-          <Button
-            variant="ghost"
-            size="icon"
-            className="sm:hidden"
-            aria-label="Open menu"
-          />
-        }
-      >
+      <SheetTrigger render={<Button variant="ghost" size="icon" className="sm:hidden" aria-label="Open menu" />}>
         <MenuIcon />
       </SheetTrigger>
       <SheetContent side="right">
@@ -73,12 +57,7 @@ export function MobileNav() {
             <SheetClose
               key={href}
               nativeButton={false}
-              render={
-                <Link
-                  href={href}
-                  aria-current={isActive(href) ? "page" : undefined}
-                />
-              }
+              render={<Link href={href} aria-current={isActive(href) ? "page" : undefined} />}
               className={cn(
                 "rounded-md px-3 py-2 text-base text-muted-foreground hover:bg-muted hover:text-foreground",
                 isActive(href) && "font-medium text-foreground",

@@ -61,9 +61,7 @@ const commands = { seed, reset, checksum } as const;
 async function main() {
   const name = process.argv[2];
   if (!(name && name in commands)) {
-    throw new Error(
-      `Usage: tsx src/server/db/cli.ts <${Object.keys(commands).join("|")}>`,
-    );
+    throw new Error(`Usage: tsx src/server/db/cli.ts <${Object.keys(commands).join("|")}>`);
   }
   loadEnvConfig(root);
   const { DATABASE_URL } = parseEnv(process.env);

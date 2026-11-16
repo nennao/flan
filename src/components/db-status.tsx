@@ -1,16 +1,7 @@
 import { unstable_rethrow } from "next/navigation";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  getReferenceCounts,
-  type ReferenceCounts,
-} from "@/server/queries/status";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { getReferenceCounts, type ReferenceCounts } from "@/server/queries/status";
 
 // Temporary (M1): replaced by real pages at M2.
 
@@ -23,13 +14,7 @@ const labels: Record<keyof ReferenceCounts, string> = {
   recipeTags: "Recipe tags",
 };
 
-function StatusCard({
-  description,
-  children,
-}: {
-  description: React.ReactNode;
-  children?: React.ReactNode;
-}) {
+function StatusCard({ description, children }: { description: React.ReactNode; children?: React.ReactNode }) {
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
@@ -54,8 +39,7 @@ export async function DbStatus() {
       <StatusCard
         description={
           <span className="text-destructive">
-            Can’t reach the database. Check DATABASE_URL and that PostgreSQL is
-            running.
+            Can’t reach the database. Check DATABASE_URL and that PostgreSQL is running.
           </span>
         }
       />
